@@ -50,3 +50,9 @@ Ograniczenia: obliczenia synchroniczne w RAM, brak importu OSM, przyciągania
 współrzędnych do grafu, testu wydajności na rzeczywistym mieście i prowadzenia
 terenowego. Nowy snapshot v2 nie zmienia starych fixtures v1. Integracja
 mobile z HTTP i test telefonu pozostają osobnymi zadaniami.
+# Resolver dowodów B-03
+
+`resolveEvidence` oraz jego typy są eksportowane z `@krok/routing`.
+Funkcja wymaga jawnej polityki i zegara, zwraca istniejący model faktu
+oraz wewnętrzny audyt. Nie jest automatycznie włączana do API/plannera.
+Reguły, użycie i ograniczenia: [B-03](../../docs/b03-evidence.md).

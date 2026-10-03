@@ -1,5 +1,15 @@
 # Status prac
 
+## Osoba B / Codex — B-03, resolver dowodów, 2026-10-03
+
+- Zrealizowano pierwszy zakres nowego podziału: czysty `resolveEvidence` w packages/routing, z obowiązkowym wstrzykiwanym zegarem, jawną polityką i wewnętrznym audytem. Zakres zapisano przed implementacją w [handoffie B](handoff-backend.md); pełne reguły i ograniczenia: [B-03](b03-evidence.md). Bez zmian API/kontraktów/fixtures/rankingu, zależności i plików A.
+- Obsługa unknown/known(false)/conflicting, dokładnego zakresu, publikacji i deduplikacji pochodzenia. Fetch nie odmładza danych; daty/wiarygodność pochodzą z jednego dowodu. Wygaśnięta lub niedatowana obserwacja przeszkody nie staje się potwierdzeniem jej usunięcia. Jawne zastąpienie wymaga opublikowanej weryfikacji terenowej, chronologii, uzasadnienia i audytu; cykle oraz niejednoznaczne decyzje są odrzucane.
+- Ograniczenie aktualnego kontraktu: przeciwne rewizje jednego pochodzenia nie spełniają definicji niezależnego conflicting. Resolver blokuje known i zwraca unknown/unsupported_value z wewnętrznym inconsistent_origin. Wymaga przeglądu prezentacji przez A przed podłączeniem realnych danych; nie zmieniono samodzielnie kontraktu. Już wykazany konflikt niezależnych obserwacji nie znika wskutek dodatkowego błędnego rekordu.
+- Pliki: `packages/routing/src/evidence/{types,resolve}.ts`, eksport `src/index.ts`, `test/evidence.test.ts`, README pakietu, `docs/b03-evidence.md`, raport B i ten wpis. Źródła korzystają z istniejących schematów; nie powstała druga definicja API.
+- Node 24.21.0 / pnpm 10.34.6: lint/typecheck PASS; routing **87 PASS (47 nowych + 40 wcześniejszych)**, contracts **121 PASS**, API **86 PASS**, generated **29 plików zgodnych**. Po ostatnim dodanym teście ponowiono routing/typecheck pakietu i lint pakietu — PASS. Próba integracyjna odtworzyła fakty pełnego grafu synthetic identycznie z oryginałem, przeszła rzeczywisty planner i RouteResponseSchema, zachowała 740/980/1120 oraz rekomendację 980 m i brak dopasowania przy field_verified_recent. Diff zakresu B bez błędów whitespace.
+- Nie uruchamiano test:mobile/build:web (A pracuje na swoich portach), bazy, importu ani urządzenia. To implementacja modułu gotowa do przeglądu i przyszłego importera, nie odbiór realnego pilotażu ani automatyczne podłączenie do działającego API. Pozostawiono wszystkie niezatwierdzone pliki A bez zmian.
+- **Przekazanie A:** kontynuować M-04 na obecnym HTTP, następnie przejrzeć opis unknown dla rewizji jednego pochodzenia w handoffie B. Nie trzeba zmieniać aplikacji dla tej iteracji resolvera. B następnie przygotowuje ograniczony B-04; wspólna publikacja nowych danych wymaga osobnego okna integracji.
+
 ## Osoba B / Codex — nowy podział dwóch rozmów, 2026-10-03
 
 - Na prośbę użytkownika ustalono nowy podział po konsolidacji: **B (dotychczasowa rozmowa) — B-03 resolver, potem dane OSM/graf; A (świeża rozmowa) — podłączenie istniejącego M-04 do UI i jednej kolejki mowy**. Zakres, kryteria i granice zapisu: [bieżący plan dwóch rozmów](two-codex-plan.md). To plan kolejnej implementacji, nie deklaracja jej wykonania.

@@ -12,6 +12,8 @@ export * from './policy/default';
 export * from './graph';
 export * from './engine';
 export * from './alternatives';
+export * from './evidence/types';
+export * from './evidence/resolve';
 export function createPlanner(input: Snapshot, configuration: Policy, now: () => number = () => performance.now()) {
   const snapshot = structuredClone(input); const policy = structuredClone(configuration);
   validateSnapshot(snapshot); validatePolicy(policy);
