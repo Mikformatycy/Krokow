@@ -1,0 +1,10 @@
+{
+  "name": "@krok/ingestion",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": { ".": "./src/index.ts" },
+  "scripts": { "typecheck": "tsc --noEmit", "test": "vitest run", "import:osm": "tsx src/cli.ts" },
+  "dependencies": { "@krok/contracts": "workspace:*", "@krok/routing": "workspace:*" },
+  "devDependencies": { "tsx": "4.23.15", "vitest": "4.1.11" }
+}

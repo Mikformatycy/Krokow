@@ -15,7 +15,7 @@ cd Kroków
 ```
 
 Stare worktrees backendu i symulacji nie są potrzebne do uruchomienia.
-Ich kod został zintegrowany tutaj; rdzeń symulacji nie ma jeszcze ekranu.
+Ich kod został zintegrowany tutaj; symulacja jest dostępna na ekranie wyniku.
 
 ## Nawigacja piesza uwzględniająca infrastrukturę istotną dla osoby niewidomej
 
@@ -188,7 +188,7 @@ Uruchomienie lokalnego API: `pnpm start:api` lub `pnpm dev:api` z obserwowaniem 
 
 `pnpm test:api` uruchamia testy HTTP i konfiguracji, a `pnpm test:routing` sprawdza algorytm grafu. `pnpm test:contracts` sprawdza wspólny kontrakt, `pnpm contracts:export` generuje przykłady i OpenAPI, a `pnpm check:generated` sprawdza ich aktualność. Wszystkie te skrypty są zintegrowane z workspace. Readiness wymaga aktywnego grafu i działającej bazy; w trybie synthetic można obliczać trasy w RAM także przy niedostępnej bazie.
 
-`db:migrate` i `data:seed:demo` **nie są jeszcze zaimplementowane**. API wyznacza trasy na grafie synthetic w RAM. Import rzeczywistego obszaru i zapis grafu w bazie pozostają do wykonania.
+`db:migrate` i `data:seed:demo` **nie są jeszcze zaimplementowane**. API wyznacza trasy na grafie synthetic w RAM. `pnpm import:osm` uruchamia osobny lokalny adapter i audyt małego obszaru OSM; `pnpm test:ingestion` sprawdza normalizację i zachowanie danych po awarii. [Instrukcja importera](packages/ingestion/README.md) opisuje zapis oraz import z pliku. Pobranie z publicznego Overpass nie powiodło się w ostatniej próbie. Realny graf, jego publikacja do API i zapis w bazie pozostają do wykonania.
 
 Na telefonie `localhost` oznacza telefon, nie laptop. Przed startem Expo ustaw `EXPO_PUBLIC_API_URL` na osiągalny adres komputera w sieci lokalnej, np. `http://192.168.1.10:3001`, oraz uruchom API z `API_HOST=0.0.0.0`. Podstaw rzeczywisty adres komputera; oba urządzenia muszą być w tej samej sieci. Bez konfiguracji native pokazuje jawną informację, a web używa `http://localhost:3001`. Zmienna jest publiczną konfiguracją bundla, nigdy miejscem na sekrety. Tunel Metro nie wystawia automatycznie API. Publiczny deployment HTTPS pozostaje poza zakresem lokalnego demo.
 

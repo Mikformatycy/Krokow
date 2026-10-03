@@ -13,6 +13,8 @@
     "start:api": "pnpm --filter @krok/api start",
     "test:api": "pnpm --filter @krok/api test",
     "test:routing": "pnpm --filter @krok/routing test",
+    "test:ingestion": "pnpm --filter @krok/ingestion test",
+    "import:osm": "pnpm --filter @krok/ingestion import:osm",
     "test:contracts": "pnpm --filter @krok/contracts test",
     "contracts:export": "pnpm --filter @krok/contracts export",
     "check:generated": "pnpm --filter @krok/contracts check:generated",

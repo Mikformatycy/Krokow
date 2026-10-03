@@ -1,5 +1,14 @@
 # Status prac
 
+## Osoba B / Codex — B-04, adapter lokalnego snapshotu, 2026-10-03
+
+- Dodano `packages/ingestion/**`: parser OSM, normalizację do istniejącego kontraktu, audyt resolverem B-03, ograniczone pobieranie, niezmienne snapshoty/checksum, atomowy wskaźnik ostatniego poprawnego stagingu i CLI. Brak tagu nie generuje false, pobranie/edycja nie generują dat obserwacji. Zakres i wynik: [B-04](b04-ingestion.md); komendy: [README pakietu](../packages/ingestion/README.md).
+- Pliki poza pakietem: root `package.json` i `pnpm-lock.yaml` (tylko nowy importer workspace, istniejące przypięte tsx/Vitest), README, `docs/data-sources.md`, dokument B-04, handoff B i ten wpis. Kontrakt, fixtures, wagi, API i mobile bez zmian. Nie uruchomiono migracji ani publikacji realnego grafu.
+- Node 24.21.0 / pnpm 10.34.6: instalacja offline PASS; lint/typecheck całego repo PASS; ingestion **42 PASS**, routing **87 PASS**, contracts **121 PASS**, API **86 PASS**, `check:generated` **29 plików zgodnych**. Pierwszy typecheck ujawnił błędną nazwę importu schematu, a lint typ chunku streamu i atrapy async; poprawiono i ponowiono wszystkie powyższe kontrole. Testy mobilne/web wykonano wcześniej w tej iteracji przy integracji A (wpis poniżej); nie powtarzano ich dla niezależnego adaptera.
+- Próba `pnpm import:osm` NIEUDANA: obie próby do jednego Overpass zakończyły się network_or_timeout. Wcześniejszy POST PowerShell również timeout; DNS działa, osobna próba połączenia HTTPS timeout. Zapisano lokalny raport awarii, brak surowego wyniku i statystyk realnego pokrycia. Nie podmieniono ich fixtures. **B-04 pozostaje nieodebrane do udanego pobrania i audytu realnego snapshotu.**
+- Ograniczenia: staging plikowy, nie PostGIS ani graf; bez testu utraty zasilania. Nie testowano telefonu/bazy. `current.json` dotyczy tylko importera, nie danych serwowanych aplikacji. Historia rewizji nie jest automatycznym rozstrzygnięciem konfliktów. Wykryto nowe dopiski A w `docs/handoff-mobile.md` o podglądzie telefonu; pozostawiono je i procesy A bez zmian, poza commitem B-04.
+- **Przekazanie A:** kontynuować próbę iPhone/VoiceOver i zapisać faktyczne wyniki w handoffie mobile; import OSM nie wymaga zmian aplikacji. Kolejny krok B: pozyskać realny snapshot, przejrzeć pokrycie i dopiero wtedy budować graf B-05.
+
 ## Osoba B / Codex — integracja handoffu A, 2026-10-03
 
 - Po zgłoszeniu przez użytkownika gotowości A przejrzano i zintegrowano dziewięć plików z [handoffu mobile](handoff-mobile.md). Symulacja jest teraz podłączona do wyniku trasy, ze wspólną kolejką mowy, sterowaniem, historią tekstową i obsługą tła/wyjścia. Nadal synthetic/preview_only, bez GPS. Kontrakt i zależności bez zmian.

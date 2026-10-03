@@ -1,5 +1,12 @@
 # B — B-03 EvidenceResolver
 
+Aktualizacja B-04 po integracji A: dodano lokalny importer i audyt;
+[wyniki i ograniczenia](b04-ingestion.md), [komendy](../packages/ingestion/README.md).
+42 testy ingestion oraz lint/typecheck/routing/contracts/API/generated PASS.
+Realne pobranie z Overpass kończy się timeoutem, więc B-04 nie jest w pełni
+odebrane, a dane synthetic w API pozostają aktualnym trybem demonstratora.
+A może kontynuować próbę iPhone/VoiceOver; nie zmieniam jej procesów.
+
 Status: **IMPLEMENTACJA I TESTY GOTOWE — do przeglądu przed podłączeniem do API**,
 2026-10-03. Właściciel: dotychczasowa rozmowa B.
 
