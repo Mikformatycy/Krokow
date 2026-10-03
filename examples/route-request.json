@@ -1,0 +1,21 @@
+{
+  "cityId": "synthetic-city",
+  "origin": {
+    "kind": "place",
+    "placeId": "demo-start"
+  },
+  "destination": {
+    "kind": "place",
+    "placeId": "demo-end"
+  },
+  "preferences": {
+    "preferAudibleSignals": true,
+    "preferTactilePaving": false,
+    "preferSeparatedFootways": false,
+    "avoidKnownSteps": false,
+    "audibleRequirement": "none",
+    "maxDetourRatio": 1.6
+  },
+  "maxAlternatives": 3,
+  "locale": "pl-PL"
+}

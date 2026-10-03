@@ -1,0 +1,10 @@
+{
+  "name": "@krok/routing",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": { ".": "./src/index.ts", "./synthetic": "./src/synthetic.ts" },
+  "scripts": { "typecheck": "tsc --noEmit", "test": "vitest run" },
+  "dependencies": { "@krok/contracts": "workspace:*" },
+  "devDependencies": { "vitest": "4.1.11" }
+}

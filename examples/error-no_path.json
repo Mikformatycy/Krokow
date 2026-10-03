@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "1.0.0-draft.2",
+  "requestId": "synthetic-example",
+  "error": {
+    "code": "NO_PATH",
+    "messageKey": "error.no_path",
+    "retryable": false,
+    "details": {
+      "cityId": "synthetic-city"
+    }
+  }
+}

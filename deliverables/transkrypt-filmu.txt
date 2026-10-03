@@ -1,0 +1,35 @@
+Krok po kroku — transkrypt filmu
+
+Plansza tytułowa: Demonstracja. Dane syntetyczne. Krok po kroku. Informacje o trasie. Z miejscem na niewiadome.
+
+Najkrótsza trasa nie mówi wszystkiego.
+Porównujemy infrastrukturę i jawne braki danych. To fikcyjne miejsca — wyłącznie podgląd.
+
+Wybieramy punkty i preferencje.
+Aplikacja wysyła ustawienia do API. Algorytm oblicza warianty na syntetycznym grafie.
+
+Najkrótszy wariant: 740 metrów.
+Akustyka na etapach przejść: jedna opisana obecność, jeden opisany brak, jedna niewiadoma.
+
+Rekomendacja: 980 metrów.
+O 240 metrów dłużej. Na wszystkich trzech etapach przejść opisana obecność akustyki.
+
+Zmiana preferencji zmienia wynik.
+Po wyłączeniu preferencji akustyki rekomendacja ma 740 metrów. To wynik nowego obliczenia.
+
+Każda informacja ma pochodzenie.
+Oddzielnie pokazujemy datę pobrania, obserwacji i potwierdzenia. Import nie jest kontrolą w terenie.
+
+Brak danych też jest informacją.
+Niewiadoma nie oznacza ani obecności, ani braku udogodnienia. Nie dopowiadamy faktów.
+
+Twarde wymagania pozostają twarde.
+Deklaracja źródła nie jest potwierdzeniem terenowym. Brak pasującej trasy zachowuje ustawienia.
+
+Plan dostępny w tekście i przez moduł odsłuchu.
+Odczyt na żądanie, zatrzymanie i powtórzenie. Brak polskiego głosu pozostawia pełny tekst.
+
+Tekst pozostaje podstawą.
+Nagranie pokazuje aplikację web. Nie jest testem dźwięku ani czytnika na telefonie.
+
+Plansza końcowa: Co dalej. Realny obszar. Audyt danych. Testy z użytkownikami. Dziś: obliczenia, wyjaśnienia i widoczne niewiadome. Bez prowadzenia terenowego. Bez deklaracji bezpieczeństwa.

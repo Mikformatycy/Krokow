@@ -1,0 +1,10 @@
+{
+  "schemaVersion": "1.0.0-draft.2",
+  "requestId": "synthetic-example",
+  "error": {
+    "code": "SAME_ENDPOINT",
+    "messageKey": "error.same_endpoint",
+    "retryable": false,
+    "details": {}
+  }
+}

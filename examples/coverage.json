@@ -1,0 +1,17 @@
+{
+  "schemaVersion": "1.0.0-draft.2",
+  "requestId": "synthetic-example",
+  "cityId": "synthetic-city",
+  "name": "Fikcyjny obszar demonstracyjny",
+  "description": "Fikcyjne punkty i trasy; tylko podgląd. Brak rzeczywistego obszaru terenowego.",
+  "mode": "synthetic",
+  "navigationEligibility": "preview_only",
+  "capabilities": [
+    "catalog_routes"
+  ],
+  "polygon": null,
+  "policy": {
+    "policyVersion": "synthetic-acoustic-v1",
+    "fieldVerificationMaxAgeDays": 180
+  }
+}

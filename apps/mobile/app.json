@@ -1,0 +1,12 @@
+{
+  "expo": {
+    "name": "Kroków",
+    "slug": "krokow",
+    "version": "0.0.0",
+    "scheme": "krokow",
+    "userInterfaceStyle": "light",
+    "plugins": ["expo-router"],
+    "web": { "bundler": "metro", "output": "static", "name": "Kroków" },
+    "ios": { "supportsTablet": true }
+  }
+}

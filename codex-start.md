@@ -1,6 +1,6 @@
 # Prompt startowy dla osoby A / Codexa
 
-Pracujesz jako właściciel aplikacji mobilnej "Krok po kroku". Przeczytaj AGENTS.md, apps/mobile/AGENTS.md, README.md, plan.md, architecture.md, docs/contracts.md i docs/status.md. Nie zakładaj, że aplikacja jest już zaimplementowana.
+Pracujesz jako właściciel aplikacji mobilnej "Kroków". Przeczytaj AGENTS.md, apps/mobile/AGENTS.md, README.md, plan.md, architecture.md, docs/contracts.md i docs/status.md. Nie zakładaj, że aplikacja jest już zaimplementowana.
 
 Najpierw sprawdź stan repozytorium i kontrakt. Jeżeli F-01/F-02 nie są odebrane, przygotuj plan ekranów oraz wymagania do kontraktu, bez tworzenia konkurencyjnego root package.json/lockfile. Zgłoś konkretną zależność osobie B. Po scaleniu fundamentu wykonaj F-03, a potem M-01 i M-02 w osobnych iteracjach.
 

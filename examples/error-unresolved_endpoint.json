@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "1.0.0-draft.2",
+  "requestId": "synthetic-example",
+  "error": {
+    "code": "UNRESOLVED_ENDPOINT",
+    "messageKey": "error.unresolved_endpoint",
+    "retryable": false,
+    "details": {
+      "endpoint": "origin"
+    }
+  }
+}

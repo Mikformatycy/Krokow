@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "1.0.0-draft.2",
+  "requestId": "synthetic-example",
+  "error": {
+    "code": "RATE_LIMITED",
+    "messageKey": "error.rate_limited",
+    "retryable": true,
+    "details": {
+      "retryAfterSec": 30
+    }
+  }
+}

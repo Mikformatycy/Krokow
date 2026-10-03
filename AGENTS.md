@@ -2,7 +2,7 @@
 
 ## Misja i aktualny stan
 
-Budujemy "Krok po kroku": planowanie pieszych tras dla osób niewidomych, uwzględniające konkretne udogodnienia i jawne braki danych. Na starcie to pakiet dokumentacji, bez aplikacji. Nie pisz, że coś działa, dopóki nie masz wyniku testu.
+Budujemy "Kroków": planowanie pieszych tras dla osób niewidomych, uwzględniające konkretne udogodnienia i jawne braki danych. Na starcie to pakiet dokumentacji, bez aplikacji. Nie pisz, że coś działa, dopóki nie masz wyniku testu.
 
 Na początku zadania przeczytaj `docs/status.md`, odpowiedni etap w `plan.md`, odpowiednie sekcje `architecture.md` i `docs/contracts.md`. W razie konfliktu zaakceptowany kontrakt i udokumentowana decyzja człowieka mają pierwszeństwo przed przykładem. Zgłoś rozbieżność; nie uzgadniaj jej samodzielnie zmianą drugiego modułu.
 

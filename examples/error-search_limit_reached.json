@@ -1,0 +1,10 @@
+{
+  "schemaVersion": "1.0.0-draft.2",
+  "requestId": "synthetic-example",
+  "error": {
+    "code": "SEARCH_LIMIT_REACHED",
+    "messageKey": "error.search_limit_reached",
+    "retryable": true,
+    "details": {}
+  }
+}

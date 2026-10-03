@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "1.0.0-draft.2",
+  "requestId": "synthetic-example",
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "messageKey": "error.validation_error",
+    "retryable": false,
+    "details": {
+      "fields": [
+        {
+          "path": [
+            "maxAlternatives"
+          ],
+          "code": "out_of_range"
+        }
+      ]
+    }
+  }
+}

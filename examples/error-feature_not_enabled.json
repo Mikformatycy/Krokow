@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "1.0.0-draft.2",
+  "requestId": "synthetic-example",
+  "error": {
+    "code": "FEATURE_NOT_ENABLED",
+    "messageKey": "error.feature_not_enabled",
+    "retryable": false,
+    "details": {
+      "capability": "coordinate_endpoints"
+    }
+  }
+}

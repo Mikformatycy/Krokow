@@ -1,0 +1,126 @@
+{
+  "schemaVersion": "1.0.0-draft.2",
+  "requestId": "synthetic-example",
+  "generatedAt": "2026-10-03T10:00:00Z",
+  "asOf": "2026-10-03T10:00:00Z",
+  "mode": "synthetic",
+  "navigationEligibility": "preview_only",
+  "dataContext": {
+    "graphVersion": "synthetic-graph-v1",
+    "evidenceVersion": "synthetic-evidence-v1",
+    "policyVersion": "synthetic-acoustic-v1",
+    "cityId": "synthetic-city",
+    "snapshotFetchedAt": "2026-10-03T10:00:00Z",
+    "sourceStatus": "ok",
+    "sourceIds": [
+      "synthetic-source"
+    ]
+  },
+  "policy": {
+    "policyVersion": "synthetic-acoustic-v1",
+    "fieldVerificationMaxAgeDays": 180
+  },
+  "calculation": {
+    "status": "finished",
+    "exhaustive": false
+  },
+  "baseline": {
+    "distanceM": 740,
+    "walkingDurationSec": 616.6666666666667,
+    "basis": "same_hard_constraints"
+  },
+  "routes": [
+    {
+      "id": "no-crossings",
+      "labels": [
+        "shortest",
+        "recommended"
+      ],
+      "geometry": null,
+      "edgeIds": [
+        "A-start",
+        "A-end"
+      ],
+      "metrics": {
+        "distanceM": 740,
+        "walkingDurationSec": 616.6666666666667,
+        "assumedWalkingSpeedMps": 1.2,
+        "crossingWaitDurationSec": null,
+        "extraDistanceM": 0,
+        "crossingCount": 0,
+        "crossingStageCount": 0,
+        "audibleSignals": {
+          "present": 0,
+          "absent": 0,
+          "unknown": 0,
+          "conflicting": 0
+        },
+        "unknownSegmentLengthM": null
+      },
+      "steps": [
+        {
+          "id": "A-start-step",
+          "startM": 0,
+          "endM": 0,
+          "instructionKey": "route.start",
+          "params": {
+            "placeName": "Fikcyjny start"
+          }
+        },
+        {
+          "id": "A-segment",
+          "startM": 0,
+          "endM": 740,
+          "instructionKey": "route.follow_segment",
+          "params": {
+            "segmentName": "Fikcyjny odcinek A"
+          }
+        },
+        {
+          "id": "A-arrive",
+          "startM": 740,
+          "endM": 740,
+          "instructionKey": "route.arrive",
+          "params": {
+            "placeName": "Fikcyjny cel"
+          }
+        }
+      ],
+      "events": []
+    }
+  ],
+  "recommendation": {
+    "routeId": "no-crossings",
+    "reasons": [
+      {
+        "code": "SHORTER_DISTANCE",
+        "params": {
+          "distanceM": 740
+        },
+        "evidenceIds": []
+      }
+    ]
+  },
+  "evidenceCatalog": [],
+  "sourceCatalog": [
+    {
+      "id": "synthetic-source",
+      "kind": "synthetic",
+      "name": "Fikcyjne dane demonstracyjne",
+      "sourceUrl": null,
+      "attribution": "Kroków — fikcyjne przykłady",
+      "license": "CC0-1.0",
+      "lastFetchedAt": "2026-10-03T10:00:00Z",
+      "status": "ok"
+    }
+  ],
+  "warnings": [
+    {
+      "code": "SYNTHETIC_DATA",
+      "severity": "warning",
+      "messageKey": "warning.synthetic_data",
+      "params": {},
+      "evidenceIds": []
+    }
+  ]
+}

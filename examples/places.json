@@ -1,0 +1,23 @@
+{
+  "schemaVersion": "1.0.0-draft.2",
+  "requestId": "synthetic-example",
+  "cityId": "synthetic-city",
+  "mode": "synthetic",
+  "navigationEligibility": "preview_only",
+  "places": [
+    {
+      "id": "demo-start",
+      "cityId": "synthetic-city",
+      "name": "Fikcyjny start",
+      "description": "Punkt A demonstracji",
+      "coordinate": null
+    },
+    {
+      "id": "demo-end",
+      "cityId": "synthetic-city",
+      "name": "Fikcyjny cel",
+      "description": "Punkt B demonstracji",
+      "coordinate": null
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "schemaVersion": "1.0.0-draft.2",
+  "requestId": "synthetic-example",
+  "error": {
+    "code": "NO_MATCHING_ROUTE",
+    "messageKey": "error.no_matching_route",
+    "retryable": false,
+    "details": {
+      "blockingRequirements": [
+        "audibleRequirement"
+      ]
+    }
+  }
+}

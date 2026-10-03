@@ -1,0 +1,11 @@
+{
+  "schemaVersion": "1.0.0-draft.2",
+  "requestId": "synthetic-example",
+  "status": "not_ready",
+  "checkedAt": "2026-10-03T10:00:00Z",
+  "checks": {
+    "database": true,
+    "graph": false,
+    "contract": true
+  }
+}

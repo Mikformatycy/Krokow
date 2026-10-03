@@ -1,0 +1,639 @@
+{
+  "schemaVersion": "1.0.0-draft.2",
+  "requestId": "synthetic-example",
+  "generatedAt": "2026-10-03T10:00:00Z",
+  "asOf": "2026-10-03T10:00:00Z",
+  "mode": "synthetic",
+  "navigationEligibility": "preview_only",
+  "dataContext": {
+    "graphVersion": "synthetic-graph-v1",
+    "evidenceVersion": "synthetic-evidence-v1",
+    "policyVersion": "synthetic-acoustic-v1",
+    "cityId": "synthetic-city",
+    "snapshotFetchedAt": "2026-10-03T10:00:00Z",
+    "sourceStatus": "ok",
+    "sourceIds": [
+      "synthetic-source"
+    ]
+  },
+  "policy": {
+    "policyVersion": "synthetic-acoustic-v1",
+    "fieldVerificationMaxAgeDays": 180
+  },
+  "calculation": {
+    "status": "finished",
+    "exhaustive": false
+  },
+  "baseline": {
+    "distanceM": 740,
+    "walkingDurationSec": 616.6666666666667,
+    "basis": "same_hard_constraints"
+  },
+  "routes": [
+    {
+      "id": "A",
+      "labels": [
+        "shortest"
+      ],
+      "geometry": null,
+      "edgeIds": [
+        "A-start",
+        "A-end"
+      ],
+      "metrics": {
+        "distanceM": 740,
+        "walkingDurationSec": 616.6666666666667,
+        "assumedWalkingSpeedMps": 1.2,
+        "crossingWaitDurationSec": null,
+        "extraDistanceM": 0,
+        "crossingCount": 3,
+        "crossingStageCount": 3,
+        "audibleSignals": {
+          "present": 1,
+          "absent": 1,
+          "unknown": 1,
+          "conflicting": 0
+        },
+        "unknownSegmentLengthM": null
+      },
+      "steps": [
+        {
+          "id": "A-start-step",
+          "startM": 0,
+          "endM": 0,
+          "instructionKey": "route.start",
+          "params": {
+            "placeName": "Fikcyjny start"
+          }
+        },
+        {
+          "id": "A-segment",
+          "startM": 0,
+          "endM": 740,
+          "instructionKey": "route.follow_segment",
+          "params": {
+            "segmentName": "Fikcyjny odcinek A"
+          }
+        },
+        {
+          "id": "A-arrive",
+          "startM": 740,
+          "endM": 740,
+          "instructionKey": "route.arrive",
+          "params": {
+            "placeName": "Fikcyjny cel"
+          }
+        }
+      ],
+      "events": [
+        {
+          "id": "A-object-0-event",
+          "kind": "crossing",
+          "offsetM": 100,
+          "objectId": "A-object-0",
+          "crossingId": "A-crossing-0",
+          "stageId": "A-stage-0",
+          "instructionKey": "route.crossing_approach",
+          "facts": {
+            "audible_signal": {
+              "state": "known",
+              "value": true,
+              "evidenceIds": [
+                "A-object-0-audible"
+              ],
+              "reliability": "source_declared",
+              "freshness": "unknown",
+              "observedAt": null,
+              "verifiedAt": null
+            },
+            "tactile_paving": {
+              "state": "unknown",
+              "reason": "missing",
+              "evidenceIds": []
+            }
+          }
+        },
+        {
+          "id": "A-object-1-event",
+          "kind": "crossing",
+          "offsetM": 200,
+          "objectId": "A-object-1",
+          "crossingId": "A-crossing-1",
+          "stageId": "A-stage-1",
+          "instructionKey": "route.crossing_approach",
+          "facts": {
+            "audible_signal": {
+              "state": "known",
+              "value": false,
+              "evidenceIds": [
+                "A-object-1-audible"
+              ],
+              "reliability": "source_declared",
+              "freshness": "unknown",
+              "observedAt": null,
+              "verifiedAt": null
+            },
+            "tactile_paving": {
+              "state": "unknown",
+              "reason": "missing",
+              "evidenceIds": []
+            }
+          }
+        },
+        {
+          "id": "A-object-2-event",
+          "kind": "crossing",
+          "offsetM": 300,
+          "objectId": "A-object-2",
+          "crossingId": "A-crossing-2",
+          "stageId": "A-stage-2",
+          "instructionKey": "route.crossing_approach",
+          "facts": {
+            "audible_signal": {
+              "state": "unknown",
+              "reason": "missing",
+              "evidenceIds": []
+            },
+            "tactile_paving": {
+              "state": "unknown",
+              "reason": "missing",
+              "evidenceIds": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "labels": [
+        "recommended",
+        "better_documented"
+      ],
+      "geometry": null,
+      "edgeIds": [
+        "B-start",
+        "B-end"
+      ],
+      "metrics": {
+        "distanceM": 980,
+        "walkingDurationSec": 816.6666666666667,
+        "assumedWalkingSpeedMps": 1.2,
+        "crossingWaitDurationSec": null,
+        "extraDistanceM": 240,
+        "crossingCount": 3,
+        "crossingStageCount": 3,
+        "audibleSignals": {
+          "present": 3,
+          "absent": 0,
+          "unknown": 0,
+          "conflicting": 0
+        },
+        "unknownSegmentLengthM": null
+      },
+      "steps": [
+        {
+          "id": "B-start-step",
+          "startM": 0,
+          "endM": 0,
+          "instructionKey": "route.start",
+          "params": {
+            "placeName": "Fikcyjny start"
+          }
+        },
+        {
+          "id": "B-segment",
+          "startM": 0,
+          "endM": 980,
+          "instructionKey": "route.follow_segment",
+          "params": {
+            "segmentName": "Fikcyjny odcinek B"
+          }
+        },
+        {
+          "id": "B-arrive",
+          "startM": 980,
+          "endM": 980,
+          "instructionKey": "route.arrive",
+          "params": {
+            "placeName": "Fikcyjny cel"
+          }
+        }
+      ],
+      "events": [
+        {
+          "id": "B-object-0-event",
+          "kind": "crossing",
+          "offsetM": 100,
+          "objectId": "B-object-0",
+          "crossingId": "B-crossing-0",
+          "stageId": "B-stage-0",
+          "instructionKey": "route.crossing_approach",
+          "facts": {
+            "audible_signal": {
+              "state": "known",
+              "value": true,
+              "evidenceIds": [
+                "B-object-0-audible"
+              ],
+              "reliability": "source_declared",
+              "freshness": "unknown",
+              "observedAt": null,
+              "verifiedAt": null
+            },
+            "tactile_paving": {
+              "state": "unknown",
+              "reason": "missing",
+              "evidenceIds": []
+            }
+          }
+        },
+        {
+          "id": "B-object-1-event",
+          "kind": "crossing",
+          "offsetM": 200,
+          "objectId": "B-object-1",
+          "crossingId": "B-crossing-1",
+          "stageId": "B-stage-1",
+          "instructionKey": "route.crossing_approach",
+          "facts": {
+            "audible_signal": {
+              "state": "known",
+              "value": true,
+              "evidenceIds": [
+                "B-object-1-audible"
+              ],
+              "reliability": "source_declared",
+              "freshness": "unknown",
+              "observedAt": null,
+              "verifiedAt": null
+            },
+            "tactile_paving": {
+              "state": "unknown",
+              "reason": "missing",
+              "evidenceIds": []
+            }
+          }
+        },
+        {
+          "id": "B-object-2-event",
+          "kind": "crossing",
+          "offsetM": 300,
+          "objectId": "B-object-2",
+          "crossingId": "B-crossing-2",
+          "stageId": "B-stage-2",
+          "instructionKey": "route.crossing_approach",
+          "facts": {
+            "audible_signal": {
+              "state": "known",
+              "value": true,
+              "evidenceIds": [
+                "B-object-2-audible"
+              ],
+              "reliability": "source_declared",
+              "freshness": "unknown",
+              "observedAt": null,
+              "verifiedAt": null
+            },
+            "tactile_paving": {
+              "state": "unknown",
+              "reason": "missing",
+              "evidenceIds": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "C",
+      "labels": [
+        "fewer_crossings"
+      ],
+      "geometry": null,
+      "edgeIds": [
+        "C-start",
+        "C-end"
+      ],
+      "metrics": {
+        "distanceM": 1120,
+        "walkingDurationSec": 933.3333333333334,
+        "assumedWalkingSpeedMps": 1.2,
+        "crossingWaitDurationSec": null,
+        "extraDistanceM": 380,
+        "crossingCount": 1,
+        "crossingStageCount": 1,
+        "audibleSignals": {
+          "present": 1,
+          "absent": 0,
+          "unknown": 0,
+          "conflicting": 0
+        },
+        "unknownSegmentLengthM": null
+      },
+      "steps": [
+        {
+          "id": "C-start-step",
+          "startM": 0,
+          "endM": 0,
+          "instructionKey": "route.start",
+          "params": {
+            "placeName": "Fikcyjny start"
+          }
+        },
+        {
+          "id": "C-segment",
+          "startM": 0,
+          "endM": 1120,
+          "instructionKey": "route.follow_segment",
+          "params": {
+            "segmentName": "Fikcyjny odcinek C"
+          }
+        },
+        {
+          "id": "C-arrive",
+          "startM": 1120,
+          "endM": 1120,
+          "instructionKey": "route.arrive",
+          "params": {
+            "placeName": "Fikcyjny cel"
+          }
+        }
+      ],
+      "events": [
+        {
+          "id": "C-object-0-event",
+          "kind": "crossing",
+          "offsetM": 100,
+          "objectId": "C-object-0",
+          "crossingId": "C-crossing-0",
+          "stageId": "C-stage-0",
+          "instructionKey": "route.crossing_approach",
+          "facts": {
+            "audible_signal": {
+              "state": "known",
+              "value": true,
+              "evidenceIds": [
+                "C-object-0-audible"
+              ],
+              "reliability": "source_declared",
+              "freshness": "unknown",
+              "observedAt": null,
+              "verifiedAt": null
+            },
+            "tactile_paving": {
+              "state": "unknown",
+              "reason": "missing",
+              "evidenceIds": []
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "recommendation": {
+    "routeId": "B",
+    "reasons": [
+      {
+        "code": "MORE_DOCUMENTED_AUDIBLE_SIGNALS",
+        "params": {
+          "routePresentCount": 3,
+          "baselinePresentCount": 1
+        },
+        "evidenceIds": [
+          "B-object-0-audible",
+          "B-object-1-audible",
+          "B-object-2-audible"
+        ]
+      },
+      {
+        "code": "DETOUR_FOR_PREFERENCES",
+        "params": {
+          "extraDistanceM": 240
+        },
+        "evidenceIds": []
+      }
+    ]
+  },
+  "evidenceCatalog": [
+    {
+      "id": "A-object-0-audible",
+      "sourceId": "synthetic-source",
+      "sourceRecordId": "A-object-0-audible",
+      "objectId": "A-object-0",
+      "fetchedAt": "2026-10-03T10:00:00Z",
+      "sourceModifiedAt": null,
+      "observedAt": null,
+      "verifiedAt": null,
+      "validUntil": null,
+      "verificationStatus": "source_declared",
+      "scope": {
+        "side": null,
+        "direction": "forward",
+        "level": 0
+      },
+      "note": "Fikcyjny dowód; nie opisuje prawdziwego miejsca.",
+      "featureKey": "audible_signal",
+      "value": true
+    },
+    {
+      "id": "A-object-1-audible",
+      "sourceId": "synthetic-source",
+      "sourceRecordId": "A-object-1-audible",
+      "objectId": "A-object-1",
+      "fetchedAt": "2026-10-03T10:00:00Z",
+      "sourceModifiedAt": null,
+      "observedAt": null,
+      "verifiedAt": null,
+      "validUntil": null,
+      "verificationStatus": "source_declared",
+      "scope": {
+        "side": null,
+        "direction": "forward",
+        "level": 0
+      },
+      "note": "Fikcyjny dowód; nie opisuje prawdziwego miejsca.",
+      "featureKey": "audible_signal",
+      "value": false
+    },
+    {
+      "id": "B-object-0-audible",
+      "sourceId": "synthetic-source",
+      "sourceRecordId": "B-object-0-audible",
+      "objectId": "B-object-0",
+      "fetchedAt": "2026-10-03T10:00:00Z",
+      "sourceModifiedAt": null,
+      "observedAt": null,
+      "verifiedAt": null,
+      "validUntil": null,
+      "verificationStatus": "source_declared",
+      "scope": {
+        "side": null,
+        "direction": "forward",
+        "level": 0
+      },
+      "note": "Fikcyjny dowód; nie opisuje prawdziwego miejsca.",
+      "featureKey": "audible_signal",
+      "value": true
+    },
+    {
+      "id": "B-object-1-audible",
+      "sourceId": "synthetic-source",
+      "sourceRecordId": "B-object-1-audible",
+      "objectId": "B-object-1",
+      "fetchedAt": "2026-10-03T10:00:00Z",
+      "sourceModifiedAt": null,
+      "observedAt": null,
+      "verifiedAt": null,
+      "validUntil": null,
+      "verificationStatus": "source_declared",
+      "scope": {
+        "side": null,
+        "direction": "forward",
+        "level": 0
+      },
+      "note": "Fikcyjny dowód; nie opisuje prawdziwego miejsca.",
+      "featureKey": "audible_signal",
+      "value": true
+    },
+    {
+      "id": "B-object-2-audible",
+      "sourceId": "synthetic-source",
+      "sourceRecordId": "B-object-2-audible",
+      "objectId": "B-object-2",
+      "fetchedAt": "2026-10-03T10:00:00Z",
+      "sourceModifiedAt": null,
+      "observedAt": null,
+      "verifiedAt": null,
+      "validUntil": null,
+      "verificationStatus": "source_declared",
+      "scope": {
+        "side": null,
+        "direction": "forward",
+        "level": 0
+      },
+      "note": "Fikcyjny dowód; nie opisuje prawdziwego miejsca.",
+      "featureKey": "audible_signal",
+      "value": true
+    },
+    {
+      "id": "C-object-0-audible",
+      "sourceId": "synthetic-source",
+      "sourceRecordId": "C-object-0-audible",
+      "objectId": "C-object-0",
+      "fetchedAt": "2026-10-03T10:00:00Z",
+      "sourceModifiedAt": null,
+      "observedAt": null,
+      "verifiedAt": null,
+      "validUntil": null,
+      "verificationStatus": "source_declared",
+      "scope": {
+        "side": null,
+        "direction": "forward",
+        "level": 0
+      },
+      "note": "Fikcyjny dowód; nie opisuje prawdziwego miejsca.",
+      "featureKey": "audible_signal",
+      "value": true
+    }
+  ],
+  "sourceCatalog": [
+    {
+      "id": "synthetic-source",
+      "kind": "synthetic",
+      "name": "Fikcyjne dane demonstracyjne",
+      "sourceUrl": null,
+      "attribution": "Kroków — fikcyjne przykłady",
+      "license": "CC0-1.0",
+      "lastFetchedAt": "2026-10-03T10:00:00Z",
+      "status": "ok"
+    }
+  ],
+  "warnings": [
+    {
+      "code": "SYNTHETIC_DATA",
+      "severity": "warning",
+      "messageKey": "warning.synthetic_data",
+      "params": {},
+      "evidenceIds": []
+    },
+    {
+      "code": "MISSING_FEATURE_DATA",
+      "severity": "warning",
+      "messageKey": "warning.missing_feature_data",
+      "params": {
+        "objectId": "A-object-0",
+        "featureKey": "tactile_paving"
+      },
+      "evidenceIds": []
+    },
+    {
+      "code": "MISSING_FEATURE_DATA",
+      "severity": "warning",
+      "messageKey": "warning.missing_feature_data",
+      "params": {
+        "objectId": "A-object-1",
+        "featureKey": "tactile_paving"
+      },
+      "evidenceIds": []
+    },
+    {
+      "code": "MISSING_FEATURE_DATA",
+      "severity": "warning",
+      "messageKey": "warning.missing_feature_data",
+      "params": {
+        "objectId": "A-object-2",
+        "featureKey": "audible_signal"
+      },
+      "evidenceIds": []
+    },
+    {
+      "code": "MISSING_FEATURE_DATA",
+      "severity": "warning",
+      "messageKey": "warning.missing_feature_data",
+      "params": {
+        "objectId": "A-object-2",
+        "featureKey": "tactile_paving"
+      },
+      "evidenceIds": []
+    },
+    {
+      "code": "MISSING_FEATURE_DATA",
+      "severity": "warning",
+      "messageKey": "warning.missing_feature_data",
+      "params": {
+        "objectId": "B-object-0",
+        "featureKey": "tactile_paving"
+      },
+      "evidenceIds": []
+    },
+    {
+      "code": "MISSING_FEATURE_DATA",
+      "severity": "warning",
+      "messageKey": "warning.missing_feature_data",
+      "params": {
+        "objectId": "B-object-1",
+        "featureKey": "tactile_paving"
+      },
+      "evidenceIds": []
+    },
+    {
+      "code": "MISSING_FEATURE_DATA",
+      "severity": "warning",
+      "messageKey": "warning.missing_feature_data",
+      "params": {
+        "objectId": "B-object-2",
+        "featureKey": "tactile_paving"
+      },
+      "evidenceIds": []
+    },
+    {
+      "code": "MISSING_FEATURE_DATA",
+      "severity": "warning",
+      "messageKey": "warning.missing_feature_data",
+      "params": {
+        "objectId": "C-object-0",
+        "featureKey": "tactile_paving"
+      },
+      "evidenceIds": []
+    }
+  ]
+}

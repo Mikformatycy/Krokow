@@ -1,0 +1,21 @@
+{
+  "schemaVersion": "1.0.0-draft.2",
+  "requestId": "synthetic-example",
+  "error": {
+    "code": "DATA_VERSION_CHANGED",
+    "messageKey": "error.data_version_changed",
+    "retryable": false,
+    "details": {
+      "requested": {
+        "graphVersion": "synthetic-graph-retired",
+        "evidenceVersion": "synthetic-evidence-v1",
+        "policyVersion": "synthetic-acoustic-v1"
+      },
+      "available": {
+        "graphVersion": "synthetic-graph-v1",
+        "evidenceVersion": "synthetic-evidence-v1",
+        "policyVersion": "synthetic-acoustic-v1"
+      }
+    }
+  }
+}

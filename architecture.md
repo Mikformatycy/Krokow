@@ -1,4 +1,4 @@
-# Architektura - Krok po kroku
+# Architektura - Kroków
 
 **Wersja specyfikacji:** 1.0, 2026-10-03. **Status:** projekt do implementacji. **Zespół:** dwie osoby; Codex wspiera frontend, Claude Code backend. **Pierwszy obszar:** mały, jawnie ograniczony fragment Krakowa, wybrany po audycie danych.
 

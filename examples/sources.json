@@ -1,0 +1,17 @@
+{
+  "schemaVersion": "1.0.0-draft.2",
+  "requestId": "synthetic-example",
+  "mode": "synthetic",
+  "sources": [
+    {
+      "id": "synthetic-source",
+      "kind": "synthetic",
+      "name": "Fikcyjne dane demonstracyjne",
+      "sourceUrl": null,
+      "attribution": "Kroków — fikcyjne przykłady",
+      "license": "CC0-1.0",
+      "lastFetchedAt": "2026-10-03T10:00:00Z",
+      "status": "ok"
+    }
+  ]
+}

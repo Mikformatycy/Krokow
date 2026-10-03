@@ -1,0 +1,41 @@
+{
+  "name": "krokow",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.34.6",
+  "engines": {
+    "node": ">=24.0.0 <25",
+    "pnpm": "10.34.6"
+  },
+  "scripts": {
+    "dev:api": "pnpm --filter @krok/api dev",
+    "start:api": "pnpm --filter @krok/api start",
+    "test:api": "pnpm --filter @krok/api test",
+    "test:routing": "pnpm --filter @krok/routing test",
+    "test:contracts": "pnpm --filter @krok/contracts test",
+    "contracts:export": "pnpm --filter @krok/contracts export",
+    "check:generated": "pnpm --filter @krok/contracts check:generated",
+    "dev:mobile": "pnpm --filter @krok/mobile start",
+    "dev:web": "pnpm --filter @krok/mobile web",
+    "build:web": "pnpm --filter @krok/mobile build:web",
+    "test:mobile": "pnpm --filter @krok/mobile test",
+    "test:e2e:web": "pnpm --filter @krok/mobile test",
+    "lint": "eslint . --max-warnings 0",
+    "typecheck": "pnpm -r --if-present typecheck",
+    "test": "pnpm -r --if-present test",
+    "test:db": "pnpm --filter @krok/infra test:db",
+    "db:config": "docker compose --env-file .env -f infra/compose.yaml config --quiet",
+    "db:up": "docker compose --env-file .env -f infra/compose.yaml up -d --wait",
+    "db:stop": "docker compose --env-file .env -f infra/compose.yaml stop",
+    "db:check": "pnpm --filter @krok/infra db:check"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@types/node": "24.19.1",
+    "eslint": "10.12.0",
+    "globals": "17.13.0",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.71.0"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "1.0.0-draft.2",
+  "requestId": "synthetic-example",
+  "error": {
+    "code": "SOURCE_UNAVAILABLE",
+    "messageKey": "error.source_unavailable",
+    "retryable": true,
+    "details": {
+      "cityId": "synthetic-city"
+    }
+  }
+}

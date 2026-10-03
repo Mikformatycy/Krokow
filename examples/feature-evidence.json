@@ -1,0 +1,41 @@
+{
+  "schemaVersion": "1.0.0-draft.2",
+  "requestId": "synthetic-example",
+  "mode": "synthetic",
+  "objectId": "A-object-0",
+  "evidenceVersion": "synthetic-evidence-v1",
+  "evidence": [
+    {
+      "id": "A-object-0-audible",
+      "sourceId": "synthetic-source",
+      "sourceRecordId": "A-object-0-audible",
+      "objectId": "A-object-0",
+      "featureKey": "audible_signal",
+      "value": true,
+      "fetchedAt": "2026-10-03T10:00:00Z",
+      "sourceModifiedAt": null,
+      "observedAt": null,
+      "verifiedAt": null,
+      "validUntil": null,
+      "verificationStatus": "source_declared",
+      "scope": {
+        "side": null,
+        "direction": "forward",
+        "level": 0
+      },
+      "note": "Fikcyjny dowód; nie opisuje prawdziwego miejsca."
+    }
+  ],
+  "sources": [
+    {
+      "id": "synthetic-source",
+      "kind": "synthetic",
+      "name": "Fikcyjne dane demonstracyjne",
+      "sourceUrl": null,
+      "attribution": "Kroków — fikcyjne przykłady",
+      "license": "CC0-1.0",
+      "lastFetchedAt": "2026-10-03T10:00:00Z",
+      "status": "ok"
+    }
+  ]
+}

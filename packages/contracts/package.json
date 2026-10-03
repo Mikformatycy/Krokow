@@ -1,0 +1,19 @@
+{
+  "name": "@krok/contracts",
+  "version": "1.0.0-draft.2",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./fixtures": "./src/fixtures.ts",
+    "./openapi": "./src/openapi.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "export": "tsx scripts/generate.ts",
+    "check:generated": "tsx scripts/generate.ts --check"
+  },
+  "dependencies": { "zod": "4.6.5" },
+  "devDependencies": { "tsx": "4.23.15", "vitest": "4.1.11" }
+}
