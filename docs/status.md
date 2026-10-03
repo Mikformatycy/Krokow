@@ -1,5 +1,14 @@
 # Status prac
 
+## Osoba B / Codex — porządkowanie katalogów zakończone, 2026-10-03
+
+- Użytkownik jawnie nadał porządkowaniu priorytet i zezwolił na zakończenie blokujących procesów. Microsoft Sysinternals Handle wskazał uchwyty starego katalogu w launcherze Node (PID 9924) i starej sesji Codexa (PID 20252). Po zakończeniu zweryfikowanego launchera sesja również zakończyła działanie. Pozostałe procesy nie wymagały zatrzymania.
+- Główny stary checkout przeniesiono do `%LOCALAPPDATA%/Krokow/archive/2026-10-03/main`; wcześniejsze worktrees `backend` i `simulation` są obok. `git worktree repair` naprawił ich odnośniki do przeniesionego `.git`. Sprawdzenie `rev-parse --show-toplevel` we wszystkich trzech katalogach PASS. Wszystkie źródła i niezatwierdzone historyczne snapshoty zachowano, bez usuwania plików.
+- W `C:/Users/rapma/Documents/GitHUb` jedynym folderem projektu jest teraz **Kroków**. Kontrola skryptu zakończyła się `success: true`: stary katalog nie istnieje, docelowy checkout był czysty i jego HEAD zgodny z GitHub `main`. Raport lokalny: `%LOCALAPPDATA%/Krokow/cleanup-result.json`; log: `cleanup.log` w tym samym katalogu.
+- Końcowe `git fsck --connectivity-only --no-dangling` w bieżącym repo i archiwalnym głównym repo: oba exit 0. Skrypty jednorazowego porządkowania przeniesiono do archiwum `cleanup-scripts`, aby nie zostawiać ich obok projektu. API lokalne `/healthz` nadal odpowiada `ok`, Metro/gateway nasłuchują na 8081/8082. Po zamknięciu starej sesji agent ngrok nie jest już uruchomiony (brak portu 4040, próba publicznego połączenia nieudana); telefon przez tunel wymaga ponownego uruchomienia ngrok. Nie deklarujemy aktualnego działania publicznego QR.
+- Przed archiwizacją wykryto dodatkową zmianę nazwy PDF. Porównanie SHA-256 potwierdziło identyczną treść; zachowano `deliverables/Kroków-prezentacja.pdf`, poprawiono linki i nazwę wyjściową eksportera. Commit `aba750f` opublikowany na `main`. `node --check apps/mobile/scripts/export-slides.mjs` oraz `git diff --check` PASS. Nie regenerowano historycznej prezentacji i nie powtarzano testów aplikacji dla operacji na katalogach.
+- **Przekazanie A:** dalszą pracę prowadzić wyłącznie w `C:/Users/rapma/Documents/GitHUb/Kroków` na aktualnym `main`. Archiwum służy odzyskaniu historii; nie kopiować go nad aktualnym kodem. Podłączenie M-04 do UI i testy czytnika/odsłuchu pozostają następnym zadaniem.
+
 ## Osoba B / Codex — Kroków, integracja i publikacja, 2026-10-03
 
 - Na polecenie użytkownika poprawiono markę na **Kroków** i przemianowano istniejące repozytorium GitHub na `Mikformatycy/Krokow`, zachowując jego tożsamość i historię. Zaktualizowano `origin`; techniczne npm/Expo pozostają `krokow`. Zmiany obejmują UI, metadane, atrybucje, tytuł OpenAPI, regenerowane fixtures i dokumentację. Zakres: [nazwa i konsolidacja](rename-krokow.md).

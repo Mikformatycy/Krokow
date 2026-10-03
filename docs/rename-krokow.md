@@ -21,9 +21,11 @@ node_modules i lokalnych logów w repozytorium.
 Windows odrzucił próbę zmiany nazwy głównego katalogu, bo korzystają
 z niego procesy. Utworzono docelowy checkout `Kroków` z opublikowanego
 repozytorium, zainstalowano zależności i uruchomiono z niego podgląd.
-Dwa dodatkowe worktrees zachowano w lokalnym archiwum aplikacji Krokow.
-Stary główny checkout można zarchiwizować po zamknięciu korzystających
-z niego procesów, lokalnym skryptem `../Porzadkuj-Krokow.ps1`.
+Po jawnym zezwoleniu użytkownika zakończono blokującą starą sesję Codexa.
+Archiwizacja jest zakończona: główny dawny checkout i oba worktrees są
+w `%LOCALAPPDATA%/Krokow/archive/2026-10-03/{main,backend,simulation}`.
+Powiązania Git zostały naprawione i sprawdzone. Jedynym bieżącym folderem
+projektu w `Documents/GitHUb` jest **Kroków**.
 Wcześniejsze ścieżki we wpisach historycznych opisują miejsce powstania
 zmian, a nie dodatkowe repozytoria na GitHubie.
 
