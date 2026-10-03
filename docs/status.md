@@ -9,6 +9,13 @@
 - Ograniczenia: lokalny PostGIS/Docker i zdalne CI nie są wynikiem powyższych testów. Materiały binarne pozostają archiwalnym szkicem ze starą marką. Windows zablokował przeniesienie otwartego głównego folderu; docelowy checkout `Kroków` zostanie utworzony z opublikowanego repozytorium. Stare foldery mają pozostać zachowane do zamknięcia procesów, bez usuwania pracy.
 - **Jedno przekazanie A:** kontynuować z opublikowanego `main` w docelowym checkoutcie `Kroków`, nie kopiować całego starego worktree. Następny zakres mobile: podłączenie zintegrowanej sesji M-04 do UI i rozstrzygnięcie kolejności przy remisach w dotychczasowym `speechText.ts` według kontraktu; test odsłuchu/VoiceOver nadal wymagany.
 
+### Wynik publikacji i nowego checkoutu
+
+- Commit integracji `8b9e576` jest na zdalnym `main`. [GitHub Actions](https://github.com/Mikformatycy/Krokow/actions/runs/37140473996) zakończył się **success**: instalacja, lint/typecheck, testy, generowane artefakty, eksport web oraz konfiguracja/uruchomienie/kontrola/testy PostGIS na runnerze Ubuntu. To dodatkowy wynik zdalny; nie jest testem lokalnego Dockera ani telefonu.
+- Z GitHuba utworzono niezależny, kompletny checkout `C:/Users/rapma/Documents/GitHUb/Kroków`. Instalacja `pnpm install --offline --frozen-lockfile` PASS, 736 pakietów z cache, bez zmiany lockfile. W tym folderze działają już API, Metro i gateway. Ten sam ngrok odpowiada health 200, manifestem iOS **Kroków** i bundlem iOS 200 (6 858 310 bajtów). Publiczny QR jest zachowany; nie potwierdzano ponownie odsłuchu na urządzeniu.
+- Dwa dawne worktrees przeniesiono poleceniem `git worktree move` do `%LOCALAPPDATA%/Krokow/archive/2026-10-03/{backend,simulation}`. Zachowano wszystkie pliki i powiązania Git. Główny dawny checkout czeka na zwolnienie blokady procesów. Lokalny skrypt `../Porzadkuj-Krokow.ps1` archiwizuje go bez usuwania plików i naprawia powiązania; parser i tryb `-CheckOnly` PASS. Sprawdza też, czy przed archiwizacją nie doszły nowe niezatwierdzone zmiany.
+- W trakcie porządkowania w głównym starym folderze pojawił się nowy `logo.png`; zachowano go w repozytorium i dodano podgląd w README. Końcowy commit dokumentacji/logo nie zmienia przetestowanego kodu aplikacji. Źródłem dalszej pracy jest wyłącznie checkout **Kroków**.
+
 ## Osoba A / Codex — M-04, sesja symulacji i kolejka mowy, 2026-10-03
 
 - Kontynuacja wyłącznie w `slepa-genia-simulation` / `feat/M-04-simulation` podczas prac B nad telefonem. Zakres, pliki i instrukcja integracji: [sesja M-04 w worktree A](../../slepa-genia-simulation/docs/m04-speech-session.md). W głównym checkoutcie zmieniono tylko ten wpis A; bez zmian ekranów, serwerów i konfiguracji telefonu.

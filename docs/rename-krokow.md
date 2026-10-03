@@ -19,9 +19,11 @@ ten sam commit na lokalnym i zdalnym `main`. Bez sekretów, `.env`,
 node_modules i lokalnych logów w repozytorium.
 
 Windows odrzucił próbę zmiany nazwy głównego katalogu, bo korzystają
-z niego procesy. Plan migracji: utworzyć docelowy checkout `Kroków`
-z opublikowanego repozytorium. Stare katalogi zachować do zamknięcia
-korzystających z nich terminali i edytorów; nie usuwać cudzej pracy.
+z niego procesy. Utworzono docelowy checkout `Kroków` z opublikowanego
+repozytorium, zainstalowano zależności i uruchomiono z niego podgląd.
+Dwa dodatkowe worktrees zachowano w lokalnym archiwum aplikacji Krokow.
+Stary główny checkout można zarchiwizować po zamknięciu korzystających
+z niego procesów, lokalnym skryptem `../Porzadkuj-Krokow.ps1`.
 Wcześniejsze ścieżki we wpisach historycznych opisują miejsce powstania
 zmian, a nie dodatkowe repozytoria na GitHubie.
 

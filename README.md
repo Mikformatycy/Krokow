@@ -1,5 +1,7 @@
 # Kroków
 
+<img src="logo.png" alt="Logo Kroków: litera K z białych lasek" width="160">
+
 Repozytorium: [Mikformatycy/Krokow](https://github.com/Mikformatycy/Krokow).
 Frontend, API, routing, kontrakty i rdzeń symulacji znajdują się razem
 w tym monorepo. `Kroków` to nazwa produktu; `krokow` jest identyfikatorem
