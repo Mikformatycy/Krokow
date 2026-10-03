@@ -62,3 +62,22 @@ test('spoken plan keeps unknown distinct from absence, bounded chunks and one ev
   expect(text.indexOf('Etap przejścia 3')).toBeLessThan(text.indexOf('Cel planu:'));
   expect(text).not.toMatch(/teraz możesz przejść|jest zielone|trasa bezpieczna|brak przeszkód/i);
 });
+
+test('spoken timeline sorts distance first, then start, stable events, segment and arrival', () => {
+  const response = createRouteResponse(); const route = response.routes[0]!;
+  route.events[0]!.offsetM = 0; route.events[1]!.offsetM = 0;
+  route.events[2]!.offsetM = route.metrics.distanceM;
+  const timeline = speechText(route, response).filter((part) => /^(Start:|Etap przejścia|Odcinek:|Cel planu:)/.test(part));
+  expect(timeline.map((part) => part.split('.')[0])).toEqual([
+    'Start: Fikcyjny start',
+    expect.stringMatching(/^Etap przejścia 1, 0 metrów/),
+    expect.stringMatching(/^Etap przejścia 2, 0 metrów/),
+    expect.stringMatching(/^Odcinek:/),
+    expect.stringMatching(/^Etap przejścia 3, 740 metrów/),
+    'Cel planu: Fikcyjny cel',
+  ]);
+  // Distance outranks kind even if the input array lists a later event first.
+  route.events[0]!.offsetM = 400; route.events[1]!.offsetM = 100;
+  const text = speechText(route, response).join(' ');
+  expect(text.indexOf('Etap przejścia 2')).toBeLessThan(text.indexOf('Etap przejścia 1'));
+});

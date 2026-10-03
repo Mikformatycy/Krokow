@@ -12,10 +12,11 @@ export function createSpeechPort(): SpeechPort {
     },
   };
 }
-export function watchSpeechEnvironment(onReader: (enabled: boolean | null) => void, onInactive: () => void): () => void {
+export function watchSpeechEnvironment(onReader: (enabled: boolean | null) => void, onActive: (active: boolean) => void): () => void {
   let active = true; let changed = false;
   const reader = AccessibilityInfo.addEventListener('screenReaderChanged', (enabled) => { changed = true; onReader(enabled); });
   void AccessibilityInfo.isScreenReaderEnabled().then((enabled) => { if (active && !changed) onReader(enabled); }).catch(() => { if (active && !changed) onReader(null); });
-  const app = AppState.addEventListener('change', (state) => { if (state !== 'active') onInactive(); });
+  onActive(AppState.currentState === 'active');
+  const app = AppState.addEventListener('change', (state) => onActive(state === 'active'));
   return () => { active = false; reader.remove(); app.remove(); };
 }

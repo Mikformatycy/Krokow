@@ -28,10 +28,12 @@ export function createSpeechPort(): SpeechPort {
     },
   };
 }
-export function watchSpeechEnvironment(onReader: (enabled: boolean | null) => void, onInactive: () => void): () => void {
+export function watchSpeechEnvironment(onReader: (enabled: boolean | null) => void, onActive: (active: boolean) => void): () => void {
   // Browsers have no reliable screen-reader detection. The UI provides an explicit switch.
   onReader(false);
-  const hidden = () => { if (document.visibilityState !== 'visible') onInactive(); };
-  document.addEventListener('visibilitychange', hidden); window.addEventListener('pagehide', onInactive);
-  return () => { document.removeEventListener('visibilitychange', hidden); window.removeEventListener('pagehide', onInactive); };
+  const visibility = () => onActive(document.visibilityState === 'visible');
+  const hidden = () => onActive(false);
+  visibility();
+  document.addEventListener('visibilitychange', visibility); window.addEventListener('pagehide', hidden); window.addEventListener('pageshow', visibility);
+  return () => { document.removeEventListener('visibilitychange', visibility); window.removeEventListener('pagehide', hidden); window.removeEventListener('pageshow', visibility); };
 }

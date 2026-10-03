@@ -1,5 +1,12 @@
 # Status prac
 
+## Osoba B / Codex — integracja handoffu A, 2026-10-03
+
+- Po zgłoszeniu przez użytkownika gotowości A przejrzano i zintegrowano dziewięć plików z [handoffu mobile](handoff-mobile.md). Symulacja jest teraz podłączona do wyniku trasy, ze wspólną kolejką mowy, sterowaniem, historią tekstową i obsługą tła/wyjścia. Nadal synthetic/preview_only, bez GPS. Kontrakt i zależności bez zmian.
+- Kontrole integracji B: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm check:generated`, `pnpm build:web` — PASS. Testy: contracts 121, infra 14, routing 87, mobile 128 wykonań (desktop/narrow), API 86. Zgodne 29 artefaktów generowanych; eksport pięciu stron. Przegląd kodu obejmował unieważnianie sesji, współdzielenie koordynatora, fokus i kolejność zdarzeń. Pełna lista plików w raporcie A.
+- iPhone/VoiceOver, Android/TalkBack i rzeczywisty dźwięk: **nieprzetestowane na urządzeniu** w tej integracji; M-03/M-04 nie są w pełni odebrane. Tempo demonstracji 16× może wyprzedzać kolejkę głosu. B kontynuuje B-04 osobno, bez publikowania realnego grafu.
+- **Przekazanie A:** przejrzeć B-03 i przygotować scenariusz odbioru na iPhonie z handoffu mobile; nie zmieniać teraz kontraktu ani włączać trybu pilot. Integracja kodu A nie wymaga ponownego kopiowania plików.
+
 ## Osoba B / Codex — B-03, resolver dowodów, 2026-10-03
 
 - Zrealizowano pierwszy zakres nowego podziału: czysty `resolveEvidence` w packages/routing, z obowiązkowym wstrzykiwanym zegarem, jawną polityką i wewnętrznym audytem. Zakres zapisano przed implementacją w [handoffie B](handoff-backend.md); pełne reguły i ograniczenia: [B-03](b03-evidence.md). Bez zmian API/kontraktów/fixtures/rankingu, zależności i plików A.
