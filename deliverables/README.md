@@ -12,7 +12,7 @@ PDF, MP4, notatki prezentera i transkrypt.
 
 | Plik | Zawartość |
 | --- | --- |
-| [Krok-po-kroku-prezentacja.pdf](Krok-po-kroku-prezentacja.pdf) | 8 slajdów, format 16:9, tekst i rzeczywisty zrzut aplikacji. |
+| [Kroków-prezentacja.pdf](Kroków-prezentacja.pdf) | 8 slajdów, format 16:9, tekst i rzeczywisty zrzut aplikacji. |
 | [Krok-po-kroku-demo.mp4](Krok-po-kroku-demo.mp4) | 143,52 s; H.264, 1280 × 720, 25 kl./s. Napisy w obrazie, bez ścieżki dźwiękowej. |
 | [notatki-prezentera.md](notatki-prezentera.md) | Tekst wystąpienia i odpowiedzi na pytania. Przećwicz z własnym tempem mówienia. |
 | [transkrypt-filmu.txt](transkrypt-filmu.txt) | Tekst plansz i napisów, do odczytu niezależnie od wideo. |

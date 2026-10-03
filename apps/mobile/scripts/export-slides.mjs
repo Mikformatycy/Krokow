@@ -21,7 +21,7 @@ try {
     await slide.screenshot({ path: path.join(root, 'work', 'slides', `slide-${i + 1}.png`) });
   }
   if (layout.some((item) => item.width > 1280 || item.height > 720)) throw new Error('Slide overflow');
-  await page.pdf({ path: path.join(root, 'Krok-po-kroku-prezentacja.pdf'), printBackground: true, preferCSSPageSize: true, tagged: true });
+  await page.pdf({ path: path.join(root, 'Kroków-prezentacja.pdf'), printBackground: true, preferCSSPageSize: true, tagged: true });
   await writeFile(path.join(root, 'work', 'slides-layout.json'), JSON.stringify(layout, null, 2));
   console.log('Exported 8 slides to PDF');
 } finally { await browser.close(); }
