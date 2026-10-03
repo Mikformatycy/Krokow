@@ -7,9 +7,10 @@ import { ActionButton } from '../../components/ActionButton';
 import { SectionHeading } from '../../components/SectionHeading';
 import { formStyles } from './styles';
 
-export function PlacePicker({ label, value, onChange, api, cityId, inputRef, error }: {
+export function PlacePicker({ label, value, onChange, api, cityId, mode, inputRef, error }: {
   label: string; value: string; onChange: (id: string) => void; api: RouteApi; cityId: string;
   inputRef: RefObject<TextInput | null>; error: string | undefined;
+  mode: PlacesResponse['mode'];
 }) {
   const [query, setQuery] = useState('');
   const [places, setPlaces] = useState<PlacesResponse['places']>([]);
@@ -23,11 +24,12 @@ export function PlacePicker({ label, value, onChange, api, cityId, inputRef, err
     setMessage('Wczytywanie katalogu…');
     void api.places(cityId, search).then((response) => {
       if (!active) return;
+      if (response.mode !== mode) throw new Error('Catalog mode mismatch');
       setPlaces(response.places);
       setMessage(response.places.length ? '' : 'Brak punktów pasujących do wyszukiwania.');
     }).catch(() => { if (active) setMessage('Nie można wczytać katalogu. Zmień wyszukiwanie, aby ponowić.'); });
     return () => { active = false; };
-  }, [api, cityId, query]);
+  }, [api, cityId, mode, query]);
   return <View style={formStyles.section}>
     <SectionHeading>{label}</SectionHeading>
     <Text style={formStyles.body}>Wyszukaj nazwę lub wybierz punkt poniżej.</Text>

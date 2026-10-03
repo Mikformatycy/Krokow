@@ -51,7 +51,7 @@ export function buildApi(dependencies: ApiDependencies) {
   });
   app.register(cors, {
     origin: dependencies.allowedOrigins ?? [], methods: ['GET', 'POST'],
-    allowedHeaders: ['Content-Type'], exposedHeaders: ['X-Request-Id', 'Retry-After'], credentials: false,
+    allowedHeaders: ['Content-Type', 'ngrok-skip-browser-warning'], exposedHeaders: ['X-Request-Id', 'Retry-After'], credentials: false,
   });
   app.addHook('onRequest', async (_request, reply) => {
     reply.header('Cache-Control', 'no-store');

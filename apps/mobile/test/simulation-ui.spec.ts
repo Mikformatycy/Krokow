@@ -3,6 +3,7 @@ import type { Page } from '@playwright/test';
 import { createRouteResponse } from '@krok/contracts/fixtures';
 import { prepareSimulation } from '../src/features/simulation/plan';
 import { simulationItemText } from '../src/features/simulation/text';
+import { demoOptions, details, editForm, formSettings } from './ui-helpers';
 
 interface Tracker { clock: number; spoken: string[]; cancelled: number; utterances: SpeechSynthesisUtterance[]; gps: number }
 async function prepare(page: Page, polish = true) {
@@ -25,11 +26,13 @@ async function prepare(page: Page, polish = true) {
     Object.defineProperty(window, 'speechSynthesis', { configurable: true, value: engine });
   }, polish);
   await page.goto('/plan');
+  await demoOptions(page);
   await page.getByRole('button', { name: 'Przygotowane przykłady bez API', exact: true }).click();
-  await page.getByRole('button', { name: 'Przywróć punkty i ustawienia przykładu A/B/C' }).click();
+  await page.getByRole('button', { name: 'Użyj przykładu A/B/C' }).click();
   await page.getByRole('button', { name: 'Pokaż przykład dla ustawień', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Symulacja wybranego wariantu' })).toBeVisible();
-  await page.getByRole('button', { name: 'Odsłuch: wariant 1, 740 m' }).click();
+  await details(page, 'Zmień wariant');
+  await page.getByRole('button', { name: 'Wybierz wariant 1, 740 m' }).click();
 }
 const state = (page: Page) => page.evaluate(() => {
   const tracker = Reflect.get(window, '__simulationTest') as Tracker;
@@ -62,9 +65,10 @@ test('keyboard controls replay once, preserve every event as text and reset with
   await time(page, 10_000);
   await expect(page.getByTestId('simulation-progress')).toHaveText('Postęp symulacji: 192 m z 740 m.');
   await button(page, 'Pauza symulacji').click();
+  await details(page, 'Szczegóły symulacji');
   const history = await page.getByTestId('simulation-events').innerText();
   await time(page, 500_000);
-  await button(page, 'Powtórz zdarzenie symulacji').click();
+  await button(page, 'Powtórz komunikat').click();
   await expect(page.getByTestId('simulation-status')).toHaveText('Symulacja wstrzymana.');
   await expect(page.getByTestId('simulation-events')).toHaveText(history, { useInnerText: true });
   await button(page, 'Wznów symulację').click();
@@ -74,7 +78,7 @@ test('keyboard controls replay once, preserve every event as text and reset with
   const expected = prepareSimulation(createRouteResponse(), 'A').items.map(simulationItemText);
   const rendered = await page.getByTestId('simulation-events').locator('div[dir="auto"]').allTextContents();
   expect(rendered.filter((part) => part.startsWith('Symulacja.'))).toEqual(expected);
-  await expect(button(page, 'Rozpocznij symulację')).toBeDisabled();
+  await expect(button(page, 'Rozpocznij symulację')).toHaveCount(0);
   await button(page, 'Resetuj symulację').click();
   await expect(page.getByTestId('simulation-events')).toHaveCount(0);
   await expect(page.getByTestId('simulation-progress')).toHaveText('Postęp symulacji: 0 m z 740 m.');
@@ -97,11 +101,11 @@ test('plan and simulation share speech, discard stale callbacks and reader block
   await expect(page.getByTestId('simulation-progress')).toContainText('192 m');
   await button(page, 'Pauza symulacji').click();
   await callbacks(page, 1); expect((await state(page)).spoken).toHaveLength(2);
-  await button(page, 'Powtórz zdarzenie symulacji').click();
+  await button(page, 'Powtórz komunikat').click();
   await expect.poll(async () => (await state(page)).spoken.length).toBe(3);
   await page.getByRole('checkbox', { name: 'Korzystam z czytnika — wyłącz głos aplikacji' }).click();
   await expect(page.getByRole('checkbox', { name: 'Włącz głos symulacji' })).toBeDisabled();
-  await button(page, 'Powtórz zdarzenie symulacji').click();
+  await button(page, 'Powtórz komunikat').click();
   await callbacks(page); expect((await state(page)).spoken).toHaveLength(3);
   await page.getByRole('checkbox', { name: 'Korzystam z czytnika — wyłącz głos aplikacji' }).click();
   expect((await state(page)).spoken).toHaveLength(3);
@@ -136,13 +140,14 @@ test('variant, form edit and replacement response remove the old simulation', as
   await page.getByRole('checkbox', { name: 'Włącz głos symulacji' }).click();
   await button(page, 'Rozpocznij symulację').click();
   await expect.poll(async () => (await state(page)).spoken.length).toBe(1);
-  await button(page, 'Odsłuch: wariant 2, 980 m').click();
+  await button(page, 'Wybierz wariant 2, 980 m').click();
   await expect(page.getByTestId('simulation-events')).toHaveCount(0);
   await expect(page.getByRole('checkbox', { name: 'Włącz głos symulacji' })).not.toBeChecked();
   await callbacks(page); expect((await state(page)).spoken).toHaveLength(1);
   await button(page, 'Rozpocznij symulację').click();
   await expect(page.getByTestId('simulation-progress')).toContainText('z 980 m');
   const stops = (await state(page)).cancelled;
+  await formSettings(page);
   await page.getByRole('textbox', { name: 'Maksymalny mnożnik długości' }).fill('1,5');
   await expect(page.getByTestId('simulation')).toHaveCount(0);
   await expect.poll(async () => (await state(page)).cancelled).toBeGreaterThan(stops);
@@ -175,9 +180,10 @@ test('missing voice leaves simulation progress and event text usable', async ({ 
   await button(page, 'Rozpocznij symulację').click();
   await expect(page.getByText(/Brak dostępnego polskiego głosu/)).toBeVisible();
   await time(page, 10_000); await expect(page.getByTestId('simulation-progress')).toContainText('192 m');
+  await details(page, 'Szczegóły symulacji');
   await expect(page.getByTestId('simulation-events')).toContainText('Etap przejścia');
   await button(page, 'Pauza symulacji').click();
-  await button(page, 'Powtórz zdarzenie symulacji').click();
+  await button(page, 'Powtórz komunikat').click();
   await expect(page.getByText(/Brak dostępnego polskiego głosu/)).toBeVisible();
   expect((await state(page)).spoken).toHaveLength(0);
 });
@@ -197,12 +203,17 @@ test('finishing a voiced replay speaks each item once even with duplicated callb
 
 test('HTTP result can be simulated and new calculation cannot resume the old session', async ({ page }) => {
   await prepare(page);
+  await demoOptions(page);
   await button(page, 'Obliczanie tras przez API').click();
+  // A different data source can have a different catalog; choose its points explicitly.
+  await expect(page.getByRole('button', { name: 'Start: Fikcyjny start', exact: true })).toHaveAttribute('aria-pressed', 'false');
+  await button(page, 'Użyj przykładu A/B/C').click();
   await button(page, 'Oblicz trasy').click();
   await expect(page.getByRole('heading', { name: 'Symulacja wybranego wariantu' })).toBeVisible();
   await button(page, 'Rozpocznij symulację').click();
   await time(page, 100_000);
   await expect(page.getByTestId('simulation-status')).toContainText('dotarła do końca');
+  await editForm(page);
   await button(page, 'Oblicz trasy').click();
   await expect(page.getByTestId('simulation-status')).toHaveText('Symulacja gotowa do rozpoczęcia.');
   await expect(page.getByTestId('simulation-events')).toHaveCount(0);
@@ -219,7 +230,7 @@ test('speech error preserves text and stopping voice prevents later automatic ut
   });
   await expect(page.getByText('Nie udało się odtworzyć tekstu. Pozostaje on dostępny na ekranie.')).toBeVisible();
   await expect(page.getByTestId('simulation-current')).toContainText('Symulacja.');
-  await button(page, 'Powtórz zdarzenie symulacji').click();
+  await button(page, 'Powtórz komunikat').click();
   await expect.poll(async () => (await state(page)).spoken.length).toBe(2);
   await button(page, 'Zatrzymaj odsłuch').click();
   await expect(page.getByRole('checkbox', { name: 'Włącz głos symulacji' })).not.toBeChecked();

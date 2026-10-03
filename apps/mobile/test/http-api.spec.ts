@@ -4,6 +4,20 @@ import { HttpRouteApi, RequestTimeout, TransportUnavailable } from '../src/adapt
 import { InvalidResponse, RouteFailure } from '../src/adapters/api/MockRouteApi';
 
 const json = (value: unknown, status = 200) => new Response(JSON.stringify(value), { status, headers: { 'content-type': 'application/json; charset=utf-8' } });
+test('free ngrok API requests suppress the browser interstitial without cookies or headers on other hosts', async () => {
+  for (const [origin, needsHeader] of [
+    ['https://preview.ngrok-free.dev', true], ['https://preview.ngrok-free.app', true],
+    ['http://localhost:3001', false], ['https://ngrok-free.dev.example.com', false],
+  ] as const) {
+    const api = new HttpRouteApi(origin, (_input, init) => {
+      expect(init?.credentials).toBe('omit');
+      const headers = new Headers(init?.headers);
+      expect(headers.get('ngrok-skip-browser-warning')).toBe(needsHeader ? '1' : null);
+      return Promise.resolve(json(coverageResponse));
+    });
+    expect((await api.coverage()).cityId).toBe(coverageResponse.cityId);
+  }
+});
 test('HTTP validates catalogs, encodes queries and sends only the route request', async () => {
   const calls: { url: string; init: RequestInit | undefined }[] = [];
   const api = new HttpRouteApi('http://localhost:3001', (input, init) => {

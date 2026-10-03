@@ -1,6 +1,6 @@
-import { ApiErrorSchema, CoverageResponseSchema, ERROR_HTTP_STATUS, PlacesQuerySchema, PlacesResponseSchema, RouteRequestSchema } from '@krok/contracts';
+import { ApiErrorSchema, CoverageResponseSchema, ERROR_HTTP_STATUS, PlacesQuerySchema, PlacesResponseSchema, RouteRequestSchema, RouteResponseSchema } from '@krok/contracts';
 import type { CoverageResponse, PlacesResponse, RouteRequest, RouteResponse } from '@krok/contracts';
-import { InvalidResponse, parseDemoResponse, RouteFailure } from './MockRouteApi';
+import { InvalidResponse, RouteFailure } from './MockRouteApi';
 import type { RouteApi } from './MockRouteApi';
 
 export class TransportUnavailable extends Error {}
@@ -9,10 +9,14 @@ export class RequestTimeout extends Error {}
 /** Explicit HTTP transport. Never substitutes fixtures for a failed request. */
 export class HttpRouteApi implements RouteApi {
   private readonly base: string;
+  private readonly tunnelHeaders: Record<string, string>;
   constructor(baseUrl: string, private readonly fetcher: typeof fetch = fetch, private readonly timeoutMs = 8000) {
     const url = new URL(baseUrl);
     if (!['http:', 'https:'].includes(url.protocol) || url.username || url.password || url.search || url.hash || url.pathname !== '/') throw new Error('Invalid API origin');
     this.base = url.origin;
+    // Free development tunnels otherwise return an interstitial to browser fetch.
+    this.tunnelHeaders = ['.ngrok-free.dev', '.ngrok-free.app'].some((suffix) => url.hostname.endsWith(suffix))
+      ? { 'ngrok-skip-browser-warning': '1' } : {};
   }
   private async send(path: string, body?: RouteRequest): Promise<unknown> {
     const controller = new AbortController();
@@ -22,7 +26,7 @@ export class HttpRouteApi implements RouteApi {
       const fetcher = this.fetcher;
       const response = await fetcher(this.base + path, {
         method: body ? 'POST' : 'GET', signal: controller.signal, credentials: 'omit',
-        headers: { Accept: 'application/json', ...(body ? { 'Content-Type': 'application/json' } : {}) },
+        headers: { Accept: 'application/json', ...this.tunnelHeaders, ...(body ? { 'Content-Type': 'application/json' } : {}) },
         ...(body ? { body: JSON.stringify(body) } : {}),
       });
       if (!response.headers.get('content-type')?.includes('application/json')) throw new InvalidResponse();
@@ -42,18 +46,20 @@ export class HttpRouteApi implements RouteApi {
   }
   async coverage(): Promise<CoverageResponse> {
     const result = CoverageResponseSchema.safeParse(await this.send('/v1/coverage'));
-    if (!result.success || result.data.mode !== 'synthetic' || result.data.navigationEligibility !== 'preview_only') throw new InvalidResponse();
+    if (!result.success || result.data.navigationEligibility !== 'preview_only') throw new InvalidResponse();
     return result.data;
   }
   async places(cityId: string, query: string): Promise<PlacesResponse> {
     const input = PlacesQuerySchema.parse({ cityId, query });
     const result = PlacesResponseSchema.safeParse(await this.send(`/v1/places?cityId=${encodeURIComponent(input.cityId)}&query=${encodeURIComponent(input.query)}`));
-    if (!result.success || result.data.cityId !== cityId || result.data.mode !== 'synthetic' || result.data.navigationEligibility !== 'preview_only') throw new InvalidResponse();
+    if (!result.success || result.data.cityId !== cityId || result.data.navigationEligibility !== 'preview_only') throw new InvalidResponse();
     return result.data;
   }
   async plan(input: RouteRequest): Promise<RouteResponse> {
     const request = RouteRequestSchema.parse(input);
-    const result = parseDemoResponse(await this.send('/v1/routes', request));
+    const parsed = RouteResponseSchema.safeParse(await this.send('/v1/routes', request));
+    if (!parsed.success || parsed.data.navigationEligibility !== 'preview_only') throw new InvalidResponse();
+    const result = parsed.data;
     if (result.dataContext.cityId !== request.cityId || result.routes.length > request.maxAlternatives
       || result.routes.some((r) => r.metrics.distanceM > result.baseline.distanceM * request.preferences.maxDetourRatio + .001)) throw new InvalidResponse();
     if (request.expectedVersions && (['graphVersion', 'evidenceVersion', 'policyVersion'] as const).some((key) => result.dataContext[key] !== request.expectedVersions?.[key])) throw new InvalidResponse();

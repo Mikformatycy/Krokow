@@ -22,8 +22,8 @@ export function Screen({ children }: { children: ReactNode }) {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.background },
-  scroll: { flexGrow: 1, paddingHorizontal: 24, paddingVertical: 28 },
-  content: { width: '100%', maxWidth: 1080, alignSelf: 'center', gap: 32 },
+  scroll: { flexGrow: 1, paddingHorizontal: 12, paddingVertical: 20 },
+  content: { width: '100%', maxWidth: 760, alignSelf: 'center', gap: 24 },
   brandRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 16, alignItems: 'center', justifyContent: 'space-between', paddingBottom: 24, borderBottomWidth: 1, borderBottomColor: colors.border },
   brand: { fontSize: 24, fontWeight: '700', color: colors.ink },
   tag: { color: colors.accent, fontSize: 12, letterSpacing: 1.3, fontWeight: '700', paddingVertical: 8, paddingHorizontal: 12, backgroundColor: colors.accentLight, borderRadius: 8 },

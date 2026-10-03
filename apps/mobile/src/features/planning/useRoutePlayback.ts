@@ -90,7 +90,7 @@ export function useRoutePlayback(response: RouteResponse) {
     void owner.current.play(parts);
   }
   function start() {
-    if (!active || session.current || !owner.current) return;
+    if (response.mode !== 'synthetic' || response.navigationEligibility !== 'preview_only' || !active || session.current || !owner.current) return;
     const current = new SimulationSession(response, route.id, () => performance.now(), owner.current, 16);
     session.current = current; setEnded(false); setEvents([]);
     current.setReader(environment.current.manual ? true : environment.current.reader);

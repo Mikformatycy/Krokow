@@ -6,7 +6,12 @@ Aktualny origin: `https://chaos-virtuous-mumble.ngrok-free.dev`;
 adres do Expo Go: `exps://chaos-virtuous-mumble.ngrok-free.dev`.
 Nowy QR `apps/mobile/.expo/krokow-ngrok-qr.png` otwarto w Windows Zdjęcia.
 Adres działa, gdy procesy ngrok, gateway, API i Metro są uruchomione.
-Próba na fizycznym iPhonie pozostaje do potwierdzenia przez użytkownika.
+Użytkownik potwierdził wcześniejsze otwarcie projektu i mowę symulacji.
+Po integracji rzeczywistych danych API na 3001 pracuje z `API_DATA_MODE=pilot`;
+ten sam tunel zwraca pięć rzeczywistych wejść i trasę ok. 420 m Galeria–High5ive.
+Przeładuj projekt w Expo Go, aby pobrać nowy katalog. Użytkownik potwierdził
+już rzeczywiste punkty i trasę ok. 420 m na iPhonie. Odsłuch realnego pilota,
+VoiceOver i pełna macierz nowego UX pozostają nieprzetestowane na urządzeniu.
 
 Na tym komputerze LAN nie pozwolił użytkownikowi uruchomić Expo Go.
 Wspólny tunel Expo odmówił uruchomienia: `ERR_NGROK_108`, limit wspólnego

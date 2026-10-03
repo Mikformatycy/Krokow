@@ -1,16 +1,19 @@
 import { expect, test } from '@playwright/test';
 import { routeScenarios } from '@krok/contracts/fixtures';
+import { demoOptions, details, editForm, formSettings } from './ui-helpers';
 
 test('computes routes over real HTTP, compares metrics and exposes evidence with keyboard', async ({ page }, testInfo) => {
   const errors: string[] = []; page.on('pageerror', (error) => errors.push(error.message));
   await page.addInitScript(() => { Object.defineProperty(navigator, 'geolocation', { value: { getCurrentPosition() { throw new Error('Unexpected GPS'); }, watchPosition() { throw new Error('Unexpected GPS'); } } }); });
   await page.goto('/plan');
+  await demoOptions(page);
   await expect(page.getByRole('button', { name: 'Obliczanie tras przez API', exact: true })).toHaveAttribute('aria-pressed', 'true');
   // Re-selecting the active mode must not leave the catalog in permanent loading.
   await page.getByRole('button', { name: 'Obliczanie tras przez API', exact: true }).click();
-  await page.getByRole('button', { name: 'Przywróć punkty i ustawienia przykładu A/B/C' }).click();
+  await page.getByRole('button', { name: 'Użyj przykładu A/B/C' }).click();
   await page.getByRole('button', { name: 'Oblicz trasy', exact: true }).click();
   await expect(page.getByText('Obliczono 3 warianty. Rekomendacja: 980 m.')).toBeVisible();
+  await details(page, 'Porównaj trasy i sprawdź źródła');
   const recommended = page.getByTestId('route-card-2');
   await expect(recommended).toContainText('Rekomendowany');
   await expect(recommended).toContainText('Wariant dłuższy o 240 m');
@@ -24,6 +27,7 @@ test('computes routes over real HTTP, compares metrics and exposes evidence with
   await expect(page.getByText(/Źródło: Fikcyjny graf A\/B\/C/).first()).toBeVisible();
   await expect(page.getByText(/Brak opisany\. Deklaracja źródła/)).toBeVisible();
   await expect(page.getByText(/Brak danych — nie oznacza/).first()).toBeVisible();
+  await formSettings(page);
   await page.getByRole('checkbox', { name: 'Preferuj opisaną sygnalizację dźwiękową' }).click();
   await expect(page.getByRole('heading', { name: 'Porównanie tras' })).toHaveCount(0);
   await page.getByRole('button', { name: 'Oblicz trasy', exact: true }).click();
@@ -36,7 +40,8 @@ test('computes routes over real HTTP, compares metrics and exposes evidence with
 
 test('preserves hard requirements on real API failure, then computes one constrained option', async ({ page }) => {
   await page.goto('/plan');
-  await page.getByRole('button', { name: 'Przywróć punkty i ustawienia przykładu A/B/C' }).click();
+  await page.getByRole('button', { name: 'Użyj przykładu A/B/C' }).click();
+  await formSettings(page);
   const requirement = page.getByRole('button', { name: 'Wymagaj potwierdzenia w terenie w ciągu 180 dni' });
   await requirement.click(); await page.getByRole('button', { name: 'Oblicz trasy', exact: true }).click();
   await expect(page.getByRole('alert')).toContainText('Brak trasy spełniającej wybrane wymagania');
@@ -45,16 +50,18 @@ test('preserves hard requirements on real API failure, then computes one constra
   await page.getByRole('button', { name: 'Maksymalnie 1', exact: true }).click();
   await page.getByRole('button', { name: 'Oblicz trasy', exact: true }).click();
   await expect(page.getByText('Obliczono 1 wariant. Rekomendacja: 980 m.')).toBeVisible();
+  await details(page, 'Porównaj trasy i sprawdź źródła');
   await expect(page.getByText(/Najkrótsza trasa spełniająca te same twarde wymagania: 980 m/)).toBeVisible();
 });
 
 test('does not replace network failure with a mock and allows explicit retry', async ({ page }) => {
   await page.goto('/plan');
-  await page.getByRole('button', { name: 'Przywróć punkty i ustawienia przykładu A/B/C' }).click();
+  await page.getByRole('button', { name: 'Użyj przykładu A/B/C' }).click();
   await page.route('**/v1/routes', (route) => route.abort('failed'));
   await page.getByRole('button', { name: 'Oblicz trasy', exact: true }).click();
   await expect(page.getByRole('alert')).toContainText('Brak połączenia z API');
   await expect(page.getByRole('heading', { name: 'Porównanie tras' })).toHaveCount(0);
+  await demoOptions(page);
   await expect(page.getByRole('button', { name: 'Obliczanie tras przez API', exact: true })).toHaveAttribute('aria-pressed', 'true');
   await page.unroute('**/v1/routes');
   await page.getByRole('button', { name: 'Oblicz trasy', exact: true }).click();
@@ -79,9 +86,10 @@ test('ignores a delayed result after preferences change', async ({ page }) => {
     await route.fulfill({ response }); delivered = true;
   });
   await page.goto('/plan');
-  await page.getByRole('button', { name: 'Przywróć punkty i ustawienia przykładu A/B/C' }).click();
+  await page.getByRole('button', { name: 'Użyj przykładu A/B/C' }).click();
   await page.getByRole('button', { name: 'Oblicz trasy', exact: true }).click();
   await expect.poll(() => received).toBe(true);
+  await formSettings(page);
   await page.getByRole('checkbox', { name: 'Preferuj opisaną sygnalizację dźwiękową' }).click();
   release(); await expect.poll(() => delivered).toBe(true);
   await expect(page.getByRole('heading', { name: 'Porównanie tras' })).toHaveCount(0);
@@ -94,13 +102,15 @@ test('renders conflict and budget-limited warnings from validated contract scena
   const conflict = routeScenarios.find((s) => s.response.routes.some((r) => r.metrics.audibleSignals.conflicting > 0))!;
   await page.route('**/v1/routes', (route) => route.fulfill({ json: conflict.response }));
   await page.goto('/plan');
-  await page.getByRole('button', { name: 'Przywróć punkty i ustawienia przykładu A/B/C' }).click();
+  await page.getByRole('button', { name: 'Użyj przykładu A/B/C' }).click();
   await page.getByRole('button', { name: 'Oblicz trasy', exact: true }).click();
+  await details(page, 'Porównaj trasy i sprawdź źródła');
   await page.getByRole('button', { name: 'Pokaż przebieg i dowody wariantu 1' }).click();
   await expect(page.getByText('Sprzeczne informacje — źródła podają różne wartości.')).toBeVisible();
   await page.unroute('**/v1/routes');
   const limited = routeScenarios.find((s) => s.response.calculation.status === 'budget_limited')!;
   await page.route('**/v1/routes', (route) => route.fulfill({ json: limited.response }));
+  await editForm(page);
   await page.getByRole('button', { name: 'Oblicz trasy', exact: true }).click();
   await expect(page.getByText(/Wynik częściowy: osiągnięto limit obliczeń/)).toBeVisible();
 });

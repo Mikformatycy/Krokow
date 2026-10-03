@@ -13,22 +13,20 @@ test('opens an honest preview without asking for location or offering field navi
   await expect(page.locator('html')).toHaveAttribute('lang', 'pl');
   await expect(page.getByRole('heading', { name: 'Poznaj trasę, zanim wyruszysz.' })).toBeVisible();
   await expect(page.getByText('PODGLĄD APLIKACJI')).toBeVisible();
-  await expect(page.getByText(/Planowanie rzeczywistych tras nie jest jeszcze dostępne/)).toBeVisible();
+  await expect(page.getByText('Poznaj plan trasy. Bez prowadzenia w terenie.')).toBeVisible();
   await expect(page.getByRole('button', { name: /nawig|wyznacz|porównaj/i })).toHaveCount(0);
   await expect(page.getByRole('link', { name: 'Jak czytać informacje o trasie' })).toBeVisible();
-  if (page.viewportSize()!.width < 850) {
-    const linkBox = await page.getByRole('link', { name: 'Jak czytać informacje o trasie' }).boundingBox();
-    const stepsBox = await page.getByRole('heading', { name: 'Docelowo, krok po kroku' }).boundingBox();
-    expect(linkBox).not.toBeNull();
-    expect(stepsBox).not.toBeNull();
-    expect(stepsBox!.y).toBeGreaterThan(linkBox!.y + linkBox!.height);
-  }
+  await expect(page.getByText(/Dostępny obszar i rodzaj danych/)).toHaveCount(0);
+  await page.getByRole('button', { name: 'Więcej o aplikacji' }).click();
+  await expect(page.getByText(/Dostępny obszar i rodzaj danych/)).toBeVisible();
   expect(errors).toEqual([]);
 });
 
 test('supports keyboard navigation between screens and focuses their headings', async ({ page }) => {
   await page.goto('/');
   await expect(page.getByRole('heading', { name: 'Poznaj trasę, zanim wyruszysz.' })).toBeFocused();
+  await page.keyboard.press('Tab');
+  await expect(page.getByRole('link', { name: 'Zaplanuj trasę' })).toBeFocused();
   await page.keyboard.press('Tab');
   const details = page.getByRole('link', { name: 'Jak czytać informacje o trasie' });
   await expect(details).toBeFocused();

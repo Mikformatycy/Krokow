@@ -27,14 +27,42 @@ przejście; akustyka unknown. Domyślny `audibleRequirement=none` daje trasę,
 Wszystkie 10 par w audycie wyznaczyło trasy. Geometry jest rzeczywistą
 LineString; źródło OSM, pobranie 2026-10-03T19:17:26.330Z.
 Nie zmieniono schematów/wersji ani wag istniejącego `PILOT_POLICY`.
-Po gotowości UI B przełączy publiczne API na 3001; A odświeży Metro.
+### Integracja publicznego podglądu
+
+A przekazała UX i pilot jako gotowe do integracji: sześć testów realnego
+HTTP/UI PASS, przegląd istniejącego kontraktu bez zmiany DTO. B przełączyła
+API **3001 na pilot** po tym przekazaniu. Gateway 8082, ngrok i Metro 8081
+pozostały uruchomione; A wcześniej odświeżyła bundle. Adres Expo Go bez zmiany:
+`exps://chaos-virtuous-mumble.ngrok-free.dev`.
+Kontrola publicznego HTTPS: coverage pilot/preview_only, pięć miejsc i POST
+420,217 m / 18 punktów geometrii / akustyka unknown / źródło OSM — PASS.
+Użytkownik po przeładowaniu Expo Go na iPhonie potwierdził prawdziwe punkty
+i trasę ok. 420 m. Odsłuch realnego pilota i VoiceOver jeszcze bez testu.
+**Przekazanie A:** utrzymać obsługę pilot i sprawdzić odsłuch oraz VoiceOver
+na nowym UX; nie przywracać API synthetic przy restarcie.
+Historyczny ignorowany launcher A `phone-preview-start.ps1 -Role Api` ustawia
+synthetic, więc do kolejnego uruchomienia API użyć `API_DATA_MODE=pilot`
+zgodnie z README (B nie edytowała lokalnego skryptu A).
+
+Przy końcowym sprawdzeniu B znalazła błąd web przez tunel: ngrok odpowiadał
+ostrzeżeniem ERR_NGROK_6024 zamiast JSON. Po odebraniu plików A B dodaje
+wyłącznie do HttpRouteApi nagłówek `ngrok-skip-browser-warning` dla domen
+`.ngrok-free.dev`/`.ngrok-free.app` oraz dopuszcza go w CORS API, zachowując
+zamkniętą listę originów i `credentials: omit`. Osobne testy adaptera i
+preflight; konieczny kolejny restart Metro dla tej poprawki integracyjnej.
+Końcowe kontrole: 136 mobile przed poprawką tunelu; po poprawce 10 adaptera,
+92 API, lint/typecheck całości i build web PASS. Test widoku 390 px przez
+publiczny tunel: realne punkty → wynik 420,217 m PASS. Końcowy bundle iOS
+HTTP 200, 6 890 869 bajtów, zawiera poprawkę; Metro zrestartowane przez B.
+To [udokumentowana opcja ngrok](https://ngrok.com/docs/pricing-limits/free-plan-limits#using-headers),
+bez zmiany kontraktu, konta ani płatnego planu.
 
 Aktualizacja B-04 po integracji A: dodano lokalny importer i audyt;
 [wyniki i ograniczenia](b04-ingestion.md), [komendy](../packages/ingestion/README.md).
 42 testy ingestion oraz lint/typecheck/routing/contracts/API/generated PASS.
-Realne pobranie z Overpass kończy się timeoutem, więc B-04 nie jest w pełni
-odebrane, a dane synthetic w API pozostają aktualnym trybem demonstratora.
-A może kontynuować próbę iPhone/VoiceOver; nie zmieniam jej procesów.
+Historyczna próba pobrania z Overpass zakończyła się timeoutem. Późniejszy
+pilot korzysta z jednorazowego, zarchiwizowanego eksportu OSM API, opisanego
+wyżej; nie deklarujemy sprawności pobierania Overpass na tej podstawie.
 
 Status: **IMPLEMENTACJA I TESTY GOTOWE — do przeglądu przed podłączeniem do API**,
 2026-10-03. Właściciel: dotychczasowa rozmowa B.

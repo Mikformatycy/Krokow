@@ -19,9 +19,14 @@ Ich kod został zintegrowany tutaj; symulacja jest dostępna na ekranie wyniku.
 
 ## Nawigacja piesza uwzględniająca infrastrukturę istotną dla osoby niewidomej
 
-**Status: demonstrator synthetic z HTTP, porównaniem i minimalnym odsłuchem.** Wspólny workspace zawiera schematy Zod, fixtures, OpenAPI, serwer katalogu i silnik tras na syntetycznym grafie. Aplikacja ma tryb obliczeń HTTP oraz jawnie wybierane przykłady; pokazuje porównanie, przebieg tekstowy i dowody. Dane demonstracyjne mają blokadę nawigacji terenowej. Kontrakt pozostaje draftem do przeglądu. Wyniki kontroli i ograniczenia są w [docs/status.md](docs/status.md). Finalna nazwa produktu: **Kroków**; identyfikator techniczny: `krokow`.
+**Status: backend z prawdziwymi trasami OSM i aplikacja podglądu planu.** Wspólny workspace zawiera schematy Zod, fixtures, OpenAPI, katalog miejsc i silnik tras. Tryb `pilot` obejmuje pięć rzeczywistych wejść w okolicy Galerii Krakowskiej; `synthetic` zachowuje fikcyjne przykłady do testów. Oba tryby służą podglądowi, bez prowadzenia GPS. Kontrakt pozostaje draftem do przeglądu. Bieżący stan integracji interfejsu, wyniki kontroli i ograniczenia są w [docs/status.md](docs/status.md).
 
-Aktualny priorytet: uruchomienie na iPhonie w Expo Go, następnie dalszy rozwój; użytkownik zgłosił jeszcze siedem sesji po pięć godzin. Film i prezentacja są odłożone. Dotychczasowe [materiały](deliverables/README.md) zachowano jako historyczną wersję roboczą ze starą nazwą.
+Aplikacja wyszukuje pięć rzeczywistych wejść w okolicy Galerii Krakowskiej i pobiera obliczone trasy na zarchiwizowanych danych OSM; [zakres pilota i wyniki](docs/real-pilot.md). Testy integracji UI opisano w [handoffie mobile](docs/handoff-mobile.md) i statusie B. Film i prezentacja są odłożone. Dotychczasowe [materiały](deliverables/README.md) zachowano jako historyczną wersję roboczą ze starą nazwą.
+
+API prawdziwych danych uruchamia się przez `API_DATA_MODE=pilot`; korzysta
+z dołączonego snapshotu i nie wymaga pobierania OSM ani Dockera do obliczeń.
+Opcjonalny tryb `synthetic` zachowuje fikcyjne trasy A/B/C.
+Instrukcja obu trybów: [API](apps/api/README.md).
 
 Produkt ma odpowiadać na pytanie: **"Którą trasę wybrać i co, według dostępnych danych, spotkam po drodze?"** Nie ocenia trasy jako bezwarunkowo bezpiecznej. Oddziela przydatność infrastruktury od tego, jak dobrze jest ona udokumentowana.
 
@@ -36,12 +41,12 @@ npm.cmd exec --yes --package=node@24.21.0 --package=pnpm@10.34.6 --call "pnpm in
 Otwórz dwa terminale PowerShell w katalogu
 repozytorium. iPhone z Expo Go i komputer muszą mieć połączenie w tej samej
 sieci lokalnej (komputer może być podłączony kablem). Nie trzeba uruchamiać
-Dockera do demonstracji synthetic.
+Dockera do obliczania tras z dołączonego snapshotu.
 
 Terminal 1 — API:
 
 ```powershell
-$env:API_DATA_MODE = 'synthetic'
+$env:API_DATA_MODE = 'pilot'
 $env:API_HOST = '0.0.0.0'
 $env:API_PORT = '3001'
 npm.cmd exec --yes --package=node@24.21.0 --package=pnpm@10.34.6 --call "pnpm start:api"
@@ -62,9 +67,13 @@ Gdy pojawi się prośba iOS o dostęp Expo Go do sieci lokalnej, zezwól na nieg
 Zostaw oba terminale uruchomione; `Ctrl+C` zatrzymuje odpowiedni serwer.
 Nie uruchamiaj drugiej kopii, jeśli porty 3001/8081 są już zajęte przez tę aplikację.
 
-W aplikacji: **Otwórz demonstrację planowania → Przywróć punkty i ustawienia
-przykładu A/B/C → Oblicz trasy**. Oczekiwane 740/980/1120 m, rekomendacja 980 m.
-W sekcji „Odsłuch planu” wybierz „Odsłuchaj wybrany plan”.
+W aplikacji otwórz planowanie, wybierz start **Galeria Krakowska — wejście
+od Pawiej** i cel **High5ive, budynek 1 — wejście zachodnie**, potem **Oblicz
+trasy**. Backend wyznacza około **420 m**, z jednym przejściem i brakiem
+danych o jego akustyce. Katalog obejmuje wyłącznie pięć wejść opisanych
+w [zakresie pilota](docs/real-pilot.md), a nie wszystkie adresy Krakowa.
+Włączenie twardego wymagania akustyki może zwrócić brak dopasowanej trasy.
+Odsłuch opisuje plan; nie jest prowadzeniem na podstawie pozycji telefonu.
 Podgląd na komputerze: `http://localhost:8081`.
 
 Jeżeli telefon nie łączy się, otwórz w Safari `http://10.250.193.184:3001/healthz`.
@@ -90,7 +99,7 @@ Przygotowany gateway przekazuje przez jeden tunel zarówno Expo, jak i API.
 | [docs/mobile-ux.md](docs/mobile-ux.md) | Plan ekranów i wymagania frontendu do F-02. |
 | [docs/decisions.md](docs/decisions.md) | Wersje i decyzje techniczne bootstrapu. |
 
-Część materiałów wskazanych w pierwotnym planie nadal nie jest dostarczona: `docs/data-sources.md`, `docs/testing.md`, `docs/demo.md`, `docs/brief-requirements.md` i `docs/sources.md`. Nie są dowodami odbioru ani przeprowadzonych testów.
+Wyniki testów zapisujemy w `docs/status.md` i handoffach obu ról. Samo istnienie dokumentu planu nie oznacza odbioru ani wykonania testu urządzenia.
 
 ## Ustalony podział
 
@@ -101,7 +110,7 @@ Nie jest to twierdzenie o przewadze jednego modelu. To organizacyjny podział og
 ## Jak rozpocząć
 
 1. Sklonuj wspólne repozytorium według instrukcji na górze i przeczytaj [aktualny status](docs/status.md).
-2. Zainstaluj zależności i uruchom API synthetic oraz Expo. Docker jest potrzebny wyłącznie do osobnych prac z PostGIS.
+2. Zainstaluj zależności i uruchom API pilot oraz Expo. Docker jest potrzebny wyłącznie do osobnych prac z PostGIS.
 3. Dalszą pracę zacznij od [codex-start.md](codex-start.md) lub [claude-start.md](claude-start.md), zgodnie z rolą. Obie role korzystają z tego samego repozytorium, kontraktu i lockfile.
 
 ### Właściwe nazwy plików instrukcji

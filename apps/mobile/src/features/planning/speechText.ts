@@ -5,7 +5,8 @@ import { speechChunks } from '../../adapters/speech/chunks';
 /** Same data and templates as the visible plan; bounded chunks for native speech engines. */
 export function speechText(route: RouteOption, response: RouteResponse): string[] {
   const parts = [
-    'To fikcyjne dane demonstracyjne. Odsłuch planu, bez prowadzenia w terenie.',
+    response.mode === 'synthetic' ? 'To fikcyjne dane demonstracyjne. Odsłuch planu, bez prowadzenia w terenie.'
+      : 'To podgląd planu na rzeczywistych danych. Bez prowadzenia w terenie. Dane nie są potwierdzeniem warunków na miejscu.',
     `Długość wariantu: ${Math.round(route.metrics.distanceM)} metrów. Najkrótsza dopuszczalna trasa: ${Math.round(response.baseline.distanceM)} metrów.`,
     'Opis infrastruktury nie informuje o bieżącym świetle ani o możliwości wejścia na jezdnię.',
     ...new Set(response.warnings.filter((warning) => ['SEARCH_BUDGET_LIMITED', 'SOURCE_DEGRADED', 'SNAPSHOT_STALE'].includes(warning.code)).map(warningText)),

@@ -239,8 +239,9 @@ describe('privacy and transport', () => {
   });
   it('allows only configured web origins and supports preflight', async () => {
     const app = api({ allowedOrigins: ['http://localhost:8085'] });
-    const response = await app.inject({ method: 'OPTIONS', url: '/v1/routes', headers: { origin: 'http://localhost:8085', 'access-control-request-method': 'POST', 'access-control-request-headers': 'content-type' } });
+    const response = await app.inject({ method: 'OPTIONS', url: '/v1/routes', headers: { origin: 'http://localhost:8085', 'access-control-request-method': 'POST', 'access-control-request-headers': 'content-type,ngrok-skip-browser-warning' } });
     expect(response.statusCode).toBe(204); expect(response.headers['access-control-allow-origin']).toBe('http://localhost:8085');
+    expect(response.headers['access-control-allow-headers']).toContain('ngrok-skip-browser-warning');
     const denied = await app.inject({ url: '/v1/coverage', headers: { origin: 'https://untrusted.example' } });
     expect(denied.headers['access-control-allow-origin']).toBeUndefined();
   });

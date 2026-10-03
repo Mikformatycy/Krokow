@@ -110,6 +110,13 @@ go przez walidator. Test realnego HTTP wykrył nadmierne odrzucanie obrysów
 peronów jako torów; poprawiono klasyfikację oraz dodano regresję rozróżnienia.
 Końcowe wyniki powyżej pochodzą z ponowienia po poprawkach.
 
-Brak audytu terenowego i testu prawdziwych tras na urządzeniu. Baza/PostGIS
-i prowadzenie GPS pozostają osobnymi etapami. Integracja UI i przełączenie
-podglądu telefonu wymagają zakończenia bieżącej pracy A.
+Integracja UI zakończona: sześć testów realnego API/UI A i pełna regresja
+136 testów mobile B PASS. Publiczne API 3001 przełączone na pilot; test
+przeglądarki z rzeczywistym HTTPS ngrok potwierdził wybór punktów i wynik
+420,217 m. Opis, źródło OSM i unknown pozostają widoczne; sesja synthetic
+nie uruchamia się w pilot. Stan i późniejsze kontrole: [status](status.md).
+
+Użytkownik potwierdził rzeczywiste punkty i trasę ok. 420 m na iPhonie w Expo Go.
+Brak audytu terenowego, testu VoiceOver i odsłuchu realnego planu na urządzeniu.
+Baza/PostGIS i prowadzenie GPS pozostają osobnymi etapami. Ponowne otwarcie
+projektu w Expo Go pobiera katalog przez ten sam dotychczasowy adres tunelu.

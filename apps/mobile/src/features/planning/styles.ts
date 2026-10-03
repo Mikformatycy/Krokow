@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native';
 import { colors } from '../../components/theme';
 
 export const formStyles = StyleSheet.create({
-  card: { padding: 20, gap: 12, borderRadius: 16, borderWidth: 2, borderColor: colors.border, backgroundColor: colors.surface },
+  card: { padding: 12, gap: 12, borderRadius: 16, borderWidth: 2, borderColor: colors.border, backgroundColor: colors.surface },
   recommended: { borderColor: colors.accent, backgroundColor: colors.accentLight },
   strong: { fontSize: 18, lineHeight: 28, fontWeight: '600', color: colors.ink },
   fact: { gap: 6 },

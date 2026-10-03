@@ -3,6 +3,8 @@ import type { BooleanFact, RouteOption, RouteResponse, TactileFact } from '@krok
 import { Text, View } from 'react-native';
 import { ActionButton } from '../../components/ActionButton';
 import { SectionHeading } from '../../components/SectionHeading';
+import { Details } from '../../components/Details';
+import { ScreenHeading } from '../../adapters/accessibility/ScreenHeading';
 import { dateText, factText, metres, reasonText, stepText, warningText } from './routeText';
 import { formStyles as styles } from './styles';
 import { SpeechPlayer } from './SpeechPlayer';
@@ -57,21 +59,28 @@ function RouteCard({ route, index, response }: { route: RouteOption; index: numb
 export function RouteResults({ response, computed }: { response: RouteResponse; computed: boolean }) {
   const recommended = response.routes.find((route) => route.id === response.recommendation.routeId)!;
   const warnings = [...new Set(response.warnings.map(warningText))];
+  const importantWarnings = [...new Set(response.warnings.filter((warning) => !['SYNTHETIC_DATA', 'MISSING_FEATURE_DATA'].includes(warning.code)).map(warningText))];
   return <View style={styles.section}>
-    <SectionHeading>Porównanie tras</SectionHeading>
+    <ScreenHeading>Twój plan</ScreenHeading>
+    {response.mode === 'pilot' && <Text style={styles.body}>Źródła: {response.sourceCatalog.map((source) => source.attribution).join('; ')}.</Text>}
     <Text accessibilityLiveRegion="polite" style={styles.strong}>{computed ? 'Obliczono' : 'Wczytano'} {response.routes.length} {response.routes.length === 1 ? 'wariant' : 'warianty'}. Rekomendacja: {metres(recommended.metrics.distanceM)}.</Text>
-    <Text style={styles.body}>{computed ? 'Wynik obliczeń na syntetycznym grafie.' : 'Przygotowana odpowiedź demonstracyjna, a nie nowe obliczenie trasy.'} Najkrótsza trasa spełniająca te same twarde wymagania: {metres(response.baseline.distanceM)}.</Text>
-    <Text style={styles.body}>Liczba alternatyw jest ograniczona. Rekomendacja dotyczy znalezionych wariantów.</Text>
-    <View style={styles.notice}>{warnings.map((warning) => <Text key={warning} style={styles.body}>{warning}</Text>)}</View>
-    {response.routes.map((route, i) => <RouteCard key={`${response.requestId}-${route.id}`} route={route} index={i} response={response} />)}
+    {importantWarnings.map((warning) => <Text key={warning} style={styles.error}>{warning}</Text>)}
     <SpeechPlayer key={response.requestId} response={response} />
+    <Details label="Porównaj trasy i sprawdź źródła">
+    <SectionHeading>Porównanie tras</SectionHeading>
+    {!computed && <Text style={styles.body}>Wczytano warianty przykładu: {response.routes.map((route) => `${route.id} — ${route.metrics.distanceM} m`).join('; ')}.</Text>}
+    <Text style={styles.body}>{response.mode === 'pilot' ? 'Wynik obliczeń na rzeczywistych danych. Tylko podgląd.' : computed ? 'Wynik obliczeń na syntetycznym grafie.' : 'Przygotowana odpowiedź demonstracyjna, a nie nowe obliczenie trasy.'} Najkrótsza trasa spełniająca te same twarde wymagania: {metres(response.baseline.distanceM)}.</Text>
+    <Text style={styles.body}>Liczba alternatyw jest ograniczona. Rekomendacja dotyczy znalezionych wariantów.</Text>
+    <View style={styles.notice}>{warnings.filter((warning) => !importantWarnings.includes(warning)).map((warning) => <Text key={warning} style={styles.body}>{warning}</Text>)}</View>
+    {response.routes.map((route, i) => <RouteCard key={`${response.requestId}-${route.id}`} route={route} index={i} response={response} />)}
     <SectionHeading>Źródła i aktualność</SectionHeading>
     <Text style={styles.body}>Stan wiedzy na: {dateText(response.asOf)}. Pobranie zestawu danych: {dateText(response.dataContext.snapshotFetchedAt)}. Ponowne pobranie nie jest potwierdzeniem w terenie.</Text>
     {response.sourceCatalog.map((source) => <View key={source.id} style={styles.card}>
       <Text style={styles.strong}>{source.name}</Text>
-      <Text style={styles.body}>Źródło syntetyczne. Status: {{ ok: 'dostępne', degraded: 'ograniczona dostępność', unavailable: 'niedostępne' }[source.status]}. Ostatnie pobranie: {dateText(source.lastFetchedAt)}.</Text>
+      <Text style={styles.body}>{source.kind === 'synthetic' ? 'Źródło syntetyczne.' : 'Źródło rzeczywistych danych.'} Status: {{ ok: 'dostępne', degraded: 'ograniczona dostępność', unavailable: 'niedostępne' }[source.status]}. Ostatnie pobranie: {dateText(source.lastFetchedAt)}.</Text>
       <Text style={styles.body}>{source.attribution}. Licencja: {source.license}.</Text>
       {source.sourceUrl && <Text selectable style={styles.body}>{source.sourceUrl}</Text>}
     </View>)}
+    </Details>
   </View>;
 }

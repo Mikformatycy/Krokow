@@ -1,5 +1,100 @@
 # Handoff A — M-04, 2026-10-03
 
+## Bieżąca integracja UX i pilot — GOTOWE DO INTEGRACJI
+
+A przeczytała pilne przekazanie B o API pilot na 3003. Zakres rozszerzenia:
+HTTP przyjmuje istniejące pilot/preview_only, UI pokazuje nazwę obszaru,
+prawdziwe źródła i braki danych, odsłuch ma prawidłową etykietę, a sesja
+symulacji pozostaje wyłącznie synthetic. Bez zmiany kontraktów, GPS i B.
+Kryteria: test rzeczywistego HTTP na 3003, wybór realnych punktów, twardy
+warunek bez rozluźniania, brak przycisku symulacji i fikcyjnego oznaczenia.
+Publiczne 3001 pozostaje w gestii B; A odświeży własny Metro po kontroli UI.
+**Wynik integracji pilot:** 6/6 testów desktop/wąski web PASS na rzeczywistym
+API 3003: wyszukiwanie Galerii, trasa do High5ive, źródło OSM, unknown,
+blokada synthetic-only symulacji i zachowanie twardych wymagań przy braku
+trasy. Test odrzuca także pilot z foreground_experimental, obcy mode,
+brak geometrii i odpowiedź łamiącą wymaganie akustyki. Mobile lint/typecheck,
+121 contracts i 31 testów rdzenia PASS. Finalna regresja i export iOS
+zakończone; dokładne wyniki poniżej. B może przełączyć 3001 na pilot;
+klient obsługuje oba tryby. Wspólny lint początkowo zgłosił map-extract.ts:10
+w pracy B; ponowne lint/typecheck całego repo przeszły. A nie zmieniała B.
+
+### Rezultat UX i pliki
+
+- Kontrolki `ActionButton`, `ActionLink`: co najmniej 64 jednostki wysokości,
+  większy tekst i pełna szerokość. `Screen`, `SectionHeading` i planning/styles
+  mają ciaśniejsze marginesy, także dla wąskiego widoku przy powiększeniu 200%.
+- Nowe `components/Details.tsx`: dodatkowa treść domyślnie niewyrenderowana,
+  stan rozwinięcia dostępny czytnikowi. `WelcomeScreen` ma dwie główne akcje.
+- `PlanningScreen`, `PlacePicker`: ustawienia na żądanie, twardy warunek
+  zawsze widoczny; po obliczeniu formularz zastępuje wynik. Edycja zachowuje
+  ustawienia i unieważnia sesję. Zmiana źródła czyści punkty poprzedniego
+  katalogu, ale nie rozluźnia wymagań. Błędne ukryte pole otwiera ustawienia.
+- `RouteResults`, `SpeechPlayer`, `SimulationPanel`: krótki wybrany plan,
+  jeden stały przycisk Start/Pauza/Wznów, powtórzenie, rozwijana historia,
+  porównanie/źródła i pomoc. `focusControl.ts` przywraca fokus po końcu/reset.
+- `routeText.ts`, nowe `simulation/summary.ts`: krótszy tekst wizualny
+  zachowuje unknown, conflicting, known(false), wiarygodność i aktualność.
+  Daty nadal w pełnych szczegółach. Treść mowy synthetic bez zmiany.
+- `HttpRouteApi`, `speechText`, `useRoutePlayback`: pilot/preview_only,
+  prawidłowa zapowiedź rzeczywistych danych, brak symulacji dla pilot;
+  walidacja schematu i twardych wymagań zachowana. Nie zmieniono rdzenia
+  SimulationSession, koordynatora mowy, DTO, rankingu ani zależności.
+- Testy: zaktualizowane planning/http-planning/speech/simulation-ui/welcome,
+  nowe progressive-ui/simulation-summary/ui-helpers oraz
+  `test/pilot.config.ts` i `test/pilot/pilot.e2e.ts`. Runner pilot korzysta
+  z rzeczywistego API B na 3003, bez kopiowania jego danych lub uruchamiania API.
+
+### Komendy i wyniki końcowe
+
+Uruchamiane wrapperem Node 24.21.0 / pnpm 10.34.6:
+`npm.cmd exec --yes --package=node@24.21.0 --package=pnpm@10.34.6 --call "…"`.
+
+| Komenda | Wynik |
+| --- | --- |
+| `pnpm lint` / `pnpm typecheck` | PASS całego repo po aktualizacji równoległej pracy B. |
+| `pnpm exec eslint apps/mobile --max-warnings 0` / `pnpm --filter @krok/mobile typecheck` | PASS zakresu A, również po korekcie testu przełączania katalogu. |
+| `pnpm test:contracts` | 121 PASS. |
+| `pnpm --filter @krok/mobile exec playwright test --config test/simulation.config.ts` | 31 PASS. |
+| `pnpm test:mobile` | Po UX 136 PASS; po dodaniu pilot 134 PASS i 2 nieaktualne oczekiwania testu przełączania katalogu. Poprawiono test: po zmianie źródła wybiera punkty jawnie. |
+| `pnpm --filter @krok/mobile exec playwright test test/simulation-ui.spec.ts --grep HTTP --output .expo/ux-recheck` | Oba powyższe przypadki PASS (2/2). |
+| `pnpm --filter @krok/mobile exec playwright test test/progressive-ui.spec.ts --output .expo/ux-layout-check` | 6/6 PASS po końcowej korekcie odstępów; obejmuje fokus, ukrywanie ustawień, wysokość przycisków i 200%. |
+| `pnpm --filter @krok/mobile exec playwright test --config test/pilot.config.ts` | 6/6 PASS z realnym API na 3003. |
+| `pnpm --filter @krok/mobile build:web` | PASS, 5 stron. |
+| `pnpm --filter @krok/mobile exec expo export --platform ios --output-dir .expo/ux-pilot-ios --max-workers 2` | PASS, Hermes 3,2 MB. |
+| `git diff --check -- apps/mobile docs/handoff-mobile.md` | PASS. |
+
+Pierwsza próba UX wykryła rywalizujące dwa nagłówki o fokus; usunięto
+drugi autofocus i ponowiono testy. Skrypt pilot początkowo wymagał poprawy
+katalogu roboczego; końcowy runner podaje go jawnie. Screenshot wąski 200%
+obejrzany po korekcie: etykiety przycisków mieszczą całe słowa, bez poziomego
+przewijania. Nie jest to audyt WCAG ani wynik VoiceOver.
+
+### Telefon, ograniczenia i przekazanie B
+
+Użytkownik potwierdził uruchomienie wcześniejszej symulacji i mowę na iPhonie.
+Nowy UX, VoiceOver, powrót z tła i TalkBack **nieprzetestowane na urządzeniu**.
+Odsłuch pełnego planu nadal może być długi; szczegółów infrastruktury nie
+usuwano z mowy. Rzeczywisty pilot jest podglądem małego obszaru i nie ma
+prowadzenia ani potwierdzenia warunków na miejscu.
+
+**B: przełącz publiczne API 3001 na zweryfikowany pilot, pozostaw gateway
+8082/ngrok i Metro 8081, następnie zintegruj pliki A bez zmian kontraktu.**
+Metro A zostało odświeżone pod dotychczasowym adresem Expo Go; aplikacja
+po przeładowaniu odczyta aktualny coverage. Nie trzeba zmieniać jej API URL.
+Końcowa kontrola tunelu: manifest iOS SDK 57.0.0, bundle HTTP 200,
+6 889 116 bajtów; zawiera nowe rozwijane sekcje, sterowanie i mniejsze
+odstępy. W chwili kontroli publiczny coverage nadal synthetic/preview_only.
+Metro słucha na 8081 jako PID 7932 (launcher 29216); logi
+`.expo/phone-Metro-ux.out.log` i `.expo/phone-Metro-ux.err.log`.
+Gateway/API/ngrok bez restartu ze strony A w tej iteracji.
+Brak commitów/pushów/checkoutów/worktrees. A zapisywała wyłącznie mobile
+i ten raport. Centralny status i Git pozostają po stronie B.
+
+---
+
+## Poprzedni handoff M-04 (przed uproszczeniem UX)
+
 Stan: **GOTOWE DO INTEGRACJI**. Zakres zapisany przed implementacją.
 Po zakończeniu poniższych kontroli A przestaje edytować przekazane pliki.
 To gotowość integracji UI, nie pełny odbiór M-03/M-04 na telefonie.
@@ -222,3 +317,47 @@ Gdy użytkownik otworzy aktualny projekt, próba przebiega etapami:
 
 Do czasu zwrotu wyników: iPhone/VoiceOver i rzeczywisty dźwięk nadal
 **nieprzetestowane na urządzeniu**; Android/TalkBack również bez testu.
+
+### Podgląd telefonu uruchomiony na polecenie użytkownika
+
+Użytkownik uruchomił ngrok i polecił A wystawić projekt w Expo Go. To jawne
+upoważnienie do uruchomienia podglądu w tej próbie, poza wcześniejszym
+podziałem obsługi serwerów. Ngrok zastany na 4040 kieruje do 127.0.0.1:8082;
+A nie uruchamiała drugiego tunelu ani nie odczytywała tokenu.
+
+- Publiczny origin: `https://chaos-virtuous-mumble.ngrok-free.dev`.
+- Expo Go: `exps://chaos-virtuous-mumble.ngrok-free.dev`.
+- Przy wolnych portach uruchomiono synthetic API na 3001, istniejący gateway
+  na 8082 (KROK_GATEWAY_ONLY=1) i Expo Go/Metro na 8081. Procesy działają
+  w tle bez widocznych terminali; ngrok użytkownika pozostaje uruchomiony.
+- Metro korzysta z tego samego publicznego origin dla API i packager proxy.
+  Nie ustawiono REACT_NATIVE_PACKAGER_HOSTNAME. Tryb CI wyłącza automatyczne
+  przeładowania, dlatego po przyszłych poprawkach potrzebny restart Metro.
+- Kontrole publicznego adresu: health=ok; coverage synthetic/preview_only;
+  manifest iOS SDK 57.0.0, launchAsset przez ten sam HTTPS; pobranie bundla
+  HTTP 200, 6 882 966 bajtów. CLI zalogowane jako teodorsoprano.
+- QR: `apps/mobile/.expo/phone-expo-go-qr.png`. Lokalne skrypty uruchomienia,
+  logi, manifest i pobrany bundle znajdują się w ignorowanym `.expo`.
+  Nie zmieniono kodu aplikacji, API, manifestów ani lockfile.
+- Przekazanie B: pozostawić te procesy na czas próby iPhone'a; nie uruchamiać
+  drugiej kopii na tych portach. Wynik rzeczywistego dźwięku/VoiceOver nadal
+  wymaga odpowiedzi użytkownika. Aktualne uruchomienie nie oznacza testu telefonu.
+
+## Iteracja UX po próbie telefonu — zakres zapisany przed implementacją
+
+Użytkownik potwierdził, że symulacja uruchamia się na iPhonie i odtwarza mowę.
+Nie potwierdził VoiceOver, zachowania tła ani pełnej macierzy odbioru.
+Nowe polecenie: prostszy interfejs, duże przyciski, łatwe wybory i dodatkowy
+tekst wyłącznie na żądanie. Zakres M-02/M-04: uproszczenie ekranów startu,
+planowania, wyniku i sterowania symulacją; rozwijane szczegóły z jawnym stanem,
+bez usuwania faktów, źródeł ani zmiany twardych wymagań. Rdzeń, kontrakt,
+ranking i tekst wypowiadany przez TTS synthetic pozostają bez zmian.
+
+Kryteria: cele dotykowe co najmniej 64 px, główna akcja przed dodatkowymi
+opisami, schowane sekcje poza kolejnością czytnika/klawiatury, brak ukrywania
+braków danych i konfliktów, dostępne źródła i tekst pełnego komunikatu,
+stabilny fokus przy pauzie/wznowieniu, zachowanie ustawień po zwinięciu.
+Testy: lint/typecheck, kontrakty, runner symulacji, web desktop/narrow i 200%,
+build web/iOS. Po kontrolach A odświeży własny proces Metro tej próby pod
+tym samym adresem ngrok; nie zmieni tunelu/API B. Nowy UX wymaga ponownej
+oceny użytkownika na telefonie. Zapis wyłącznie mobile i ten handoff; bez Git.

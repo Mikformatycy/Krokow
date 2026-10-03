@@ -11,14 +11,18 @@ export function reasonText(reason: RouteReason): string {
     case 'FEWER_CROSSING_STAGES': return `Etapy przejść: ${reason.params.routeStageCount}, wobec ${reason.params.baselineStageCount} na najkrótszej dopuszczalnej trasie.`;
   }
 }
-export function factText(fact: BooleanFact | TactileFact): string {
+export function factSummary(fact: BooleanFact | TactileFact): string {
   if (fact.state === 'unknown') return 'Brak danych — nie oznacza obecności ani braku udogodnienia.';
   if (fact.state === 'conflicting') return 'Sprzeczne informacje — źródła podają różne wartości.';
   const value = typeof fact.value === 'boolean' ? fact.value ? 'Obecność opisana' : 'Brak opisany'
     : { yes: 'Obecność opisana', no: 'Brak opisany', partial: 'Częściowe oznaczenie', incorrect: 'Oznaczenie opisane jako nieprawidłowe' }[fact.value];
   const reliability = { field_verified: 'Potwierdzenie terenowe', source_declared: 'Deklaracja źródła', community_mapped: 'Wpis społeczności' }[fact.reliability];
   const freshness = { recent: 'Aktualność: w oknie polityki', stale: 'Aktualność: starsze niż okno polityki', unknown: 'Aktualność nieznana' }[fact.freshness];
-  return `${value}. ${reliability}. ${freshness}. Obserwacja: ${dateText(fact.observedAt)}. Potwierdzenie: ${dateText(fact.verifiedAt)}.`;
+  return `${value}. ${reliability}. ${freshness}.`;
+}
+export function factText(fact: BooleanFact | TactileFact): string {
+  const summary = factSummary(fact);
+  return fact.state === 'known' ? `${summary} Obserwacja: ${dateText(fact.observedAt)}. Potwierdzenie: ${dateText(fact.verifiedAt)}.` : summary;
 }
 export function stepText(step: RouteOption['steps'][number]): string {
   switch (step.instructionKey) {

@@ -24,8 +24,8 @@ export function ActionLink({ href, label, secondary = false }: {
 }
 
 const styles = StyleSheet.create({
-  link: { minHeight: 56, justifyContent: 'center', alignItems: 'center', alignSelf: 'flex-start', borderRadius: 12, borderWidth: 3, borderColor: colors.accent, backgroundColor: colors.accent, paddingVertical: 14, paddingHorizontal: 20 },
-  label: { color: colors.surface, fontSize: 17, lineHeight: 25, fontWeight: '600', textAlign: 'center', flexShrink: 1 },
+  link: { minHeight: 64, justifyContent: 'center', alignItems: 'center', alignSelf: 'stretch', borderRadius: 12, borderWidth: 3, borderColor: colors.accent, backgroundColor: colors.accent, paddingVertical: 16, paddingHorizontal: 20 },
+  label: { color: colors.surface, fontSize: 20, lineHeight: 29, fontWeight: '600', textAlign: 'center', flexShrink: 1 },
   secondary: { backgroundColor: colors.surface, borderColor: colors.border },
   secondaryLabel: { color: colors.ink },
   focused: { borderColor: colors.focus },
