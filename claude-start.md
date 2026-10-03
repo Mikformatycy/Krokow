@@ -1,11 +1,33 @@
-# Prompt startowy dla osoby B / Codex backend
+# Start roli B — backend i integracja Kroków
 
-Aktualny priorytet użytkownika: uruchomienie aplikacji na iPhonie w Expo Go, potem dalszy rozwój. Finalna nazwa to **Kroków**. Pozostało siedem sesji po pięć godzin; film i prezentacja są odłożone, a wcześniejsze zamrożenie funkcji nie jest aktualnym priorytetem. HTTP, porównanie i minimalny odsłuch są w aplikacji. Sprawdź najnowszy status i `docs/rename-krokow.md` przed wybraniem następnego zadania.
+Historyczna nazwa pliku nie oznacza używania Claude. B to dotychczasowa
+rozmowa Codexa, świeża rozmowa A ma mobile. Aktualne zasady są w
+docs/two-codex-plan.md: jeden folder Kroków, wspólny main, bez nowych kopii
+i worktrees oraz bez przełączania gałęzi podczas równoległej pracy.
 
-Pracujesz jako instancja Codexa w roli B, właściciela backendu "Kroków". Druga instancja (A) zajmuje się frontendem według AGENTS.md. Przeczytaj CLAUDE.md, AGENTS.md, README.md, plan.md, architecture.md, contracts.md, docs/mobile-ux.md i docs/status.md. Historyczna nazwa tego pliku nie określa już używanego modelu. Brakujących dokumentów nie traktuj jako istniejących decyzji.
+Przeczytaj AGENTS.md, CLAUDE.md, instrukcje edytowanych katalogów,
+docs/status.md, docs/two-codex-plan.md, B-03 w plan.md, sekcje 5–6
+architecture.md, docs/contracts.md oraz schematy/README packages/contracts.
+Sprawdź Git status i manifesty; cudze zmiany pozostaw.
 
-Najpierw wykonaj przegląd repozytorium bez zmian i wybierz następne zadanie na podstawie aktualnego statusu. F-01/F-03 przygotowała A, F-02 i API B-01 powstają po stronie B. Na polecenie użytkownika praca została zintegrowana w głównym checkoutcie `Kroków`. Osobny worktree backendu jest historycznym stanem F-02; nie nadpisuj jego starszym lockfile bieżącej instalacji. Po powrocie drugiej instancji uzgodnij zakres i używaj osobnego worktree. Nie implementuj od razu całego importera OSM. Nie nadpisuj instrukcji w niepustych katalogach.
+Pierwszy zakres: **B-03 EvidenceResolver**. Zapisz zakres i kryteria
+w docs/handoff-backend.md. Czyste funkcje w packages/routing, wstrzykiwany
+czas/polityka, obecne DTO faktów. Testy unknown/known(false)/conflicting,
+zakresu, pochodzenia, dat, idempotencji i jawnego audytu zastępowania.
+Import nie jest obserwacją ani rozstrzygnięciem konfliktu.
 
-Kontrakt ma obsługiwać 1-3 alternatywy, uzasadnienia, fakty z pochodzeniem, `unknown`, sprzeczność, brak trasy, niedostępne źródło i jawny tryb synthetic. Przygotuj shared fixtures dla Codexa i opisz sposób ich użycia. Przed zamrożeniem kontraktu pokaż listę decyzji osobie A.
+A podłącza istniejącą SimulationSession do UI i mowy. Nie edytuj mobile.
+Najpierw rozwijaj czysty moduł, podłączenie do API dopiero w oknie integracji,
+żeby nie destabilizować serwera testów A. Zmianę kontraktu przedstaw
+z przykładem do przeglądu A; nie zatwierdzaj samodzielnie.
 
-API B-01 i routing synthetic B-02 są w głównym checkoutcie; sprawdź wyniki w statusie. Następny osobny zakres B: B-03, resolver dowodów i aktualności. Dopiero po testach preferencji i topologii dodaj snapshot OSM. Najpierw zapisz zakres, potem kod i testy, na końcu przekaż status, wyniki komend, ograniczenia oraz gotowy interfejs dla frontendu. Nie wprowadzaj prawdziwych udogodnień z fikcyjnych danych.
+B odpowiada za root manifesty/lockfile, Git/CI, podgląd i tunel.
+Czytaj docs/handoff-mobile.md, gdy powstanie. Przed commitem zakresu A
+wymagaj GOTOWE DO INTEGRACJI, przejrzyj diff i wykonaj wspólne kontrole.
+Stage'uj tylko wskazane pliki, bez git add -A i bez cofania pracy A.
+W docs/status.md aktualizuj wyłącznie wpis B, z odnośnikiem do raportu A.
+
+Po B-03 i integracji M-04: audyt/import OSM B-04, graf/punkty B-05/B-06.
+Klient obecnie odrzuca pilot; uzgodnij przykłady z A przed rozszerzeniem.
+Nie twórz fikcyjnych udogodnień w prawdziwych miejscach.
+Film/prezentacja pozostają odłożone.

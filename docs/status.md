@@ -1,5 +1,13 @@
 # Status prac
 
+## Osoba B / Codex — nowy podział dwóch rozmów, 2026-10-03
+
+- Na prośbę użytkownika ustalono nowy podział po konsolidacji: **B (dotychczasowa rozmowa) — B-03 resolver, potem dane OSM/graf; A (świeża rozmowa) — podłączenie istniejącego M-04 do UI i jednej kolejki mowy**. Zakres, kryteria i granice zapisu: [bieżący plan dwóch rozmów](two-codex-plan.md). To plan kolejnej implementacji, nie deklaracja jej wykonania.
+- Wybrano jeden folder Kroków i wspólny main z rozdzielonymi ścieżkami. Git, instalacje, kontrakty/lockfile i publikacja po stronie B; A nie zmienia gałęzi ani nie wykonuje operacji zapisujących Git. Osobne raporty handoff-mobile/handoff-backend powstaną przy rozpoczęciu zadań. W czasie równoległej pracy centralny status aktualizuje B wyłącznie swoim wpisem, linkując raport A. Zmieniono wcześniejsze zalecenie osobnych worktrees w instrukcjach B.
+- Uaktualniono `codex-start.md`, `claude-start.md`, `CLAUDE.md`, `docs/two-codex-plan.md` i ten wpis B. Nowy prompt A zaczyna od istniejących Session/Controller/SpeechCoordinator; nie kieruje do ponownego bootstrapu ani kopiowania archiwum. Wskazano rzeczywistą rozbieżność kolejności w speechText i blokadę pilot w HttpRouteApi.
+- Kontrole: czysty Git na starcie, przegląd planu/architektury/kontraktów i wymienionych źródeł, manifestów oraz instrukcji; sprawdzenie ścieżek dokumentów i `git diff --check`. Nie uruchamiano testów aplikacji — zmiany wyłącznie organizacyjne. Wcześniejsze wyniki CI nie są wynikami tej iteracji. Wspólny checkout wymaga przestrzegania granic, zatrzymania edycji A po handoffie i jednego operatora Git/testowych portów.
+- **Przekazanie świeżej A:** otworzyć ten sam folder i wykonać `codex-start.md`, zaczynając od zakresu w `docs/handoff-mobile.md`. Dokończyć M-04 na obecnych fixtures, bez zależności od przyszłego importu. Film/prezentacja nadal odłożone. Nie uruchomiono dodatkowych agentów ani nie wysłano wiadomości do innej rozmowy.
+
 ## Osoba B / Codex — porządkowanie katalogów zakończone, 2026-10-03
 
 - Użytkownik jawnie nadał porządkowaniu priorytet i zezwolił na zakończenie blokujących procesów. Microsoft Sysinternals Handle wskazał uchwyty starego katalogu w launcherze Node (PID 9924) i starej sesji Codexa (PID 20252). Po zakończeniu zweryfikowanego launchera sesja również zakończyła działanie. Pozostałe procesy nie wymagały zatrzymania.

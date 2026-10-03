@@ -15,15 +15,15 @@ nie zmienia odpowiedzialności instancji A pracującej nad mobile.
   katalogu `Kroków`. F-02 zostało skopiowane z historycznego worktree
   backendu; bieżące źródła kontraktu i API są tutaj. Nie kopiuj
   starszego lockfile z tamtego worktree na zintegrowany projekt.
-- Przy powrocie do równoległej pracy używaj osobnych worktrees; nie przełączaj
-  współdzielonego brancha i nie nadpisuj niezatwierdzonej pracy A.
+- Aktualny podział po konsolidacji: `docs/two-codex-plan.md`. Jeden folder
+  i wspólny main, rozdzielone ścieżki, Git/instalacje tylko B. Nie twórz
+  kolejnych worktrees, nie przełączaj brancha i nie nadpisuj zmian A.
 - F-01/F-03/M-01 przygotowała A. F-02 jest draftem; B-01 dodaje API,
   B-02 routing synthetic. Następne osobne zadanie to B-03 — resolver.
   Import OSM później. Aktualne wyniki zawsze sprawdzaj w `docs/status.md`.
 - Nie zamrażaj kontraktu ani nie deklaruj wspólnego odbioru samodzielnie.
-- Najnowsza decyzja użytkownika: finalna nazwa **Kroków**, siedem pozostałych
-  sesji po pięć godzin. Teraz uruchomienie na iPhonie w Expo Go, potem dalszy
-  rozwój. Film/prezentacja odłożone; wcześniejsze zamrożenie funkcji nie jest
-  aktualnym priorytetem. Zakres bieżącej iteracji: `docs/rename-krokow.md`.
+- Finalna nazwa **Kroków**. B wraca do B-03, nowa instancja A podłącza M-04
+  do UI. Film/prezentacja odłożone. Nie zakładaj, że historyczny budżet sesji
+  nadal jest aktualny. Plan bieżący: `docs/two-codex-plan.md`.
 - W `docs/status.md` zmieniaj tylko wpis B; podaj testy, ograniczenia
   i konkretne przekazanie A. Nie uruchamiaj drugiego agenta do tych samych plików.
