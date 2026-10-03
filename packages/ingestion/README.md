@@ -1,5 +1,11 @@
 # @krok/ingestion — lokalny audyt OSM
 
+Aktualny pilot jest dostępny przez `loadKrakowPilot()` i `pnpm audit:pilot`:
+[rzeczywisty eksport](data/krakow/README.md), [reguły grafu](../../docs/real-pilot.md).
+API wybiera go jawnie przez `API_DATA_MODE=pilot`. Loader używa archiwum,
+bez ponownego pobierania. Poniższa instrukcja `import:osm` dotyczy osobnego
+adaptera Overpass i lokalnego stagingu.
+
 Adapter B-04 pobiera mały, stały bbox Krakowa: południe 50.065, zachód
 19.939, północ 50.071, wschód 19.950. Uruchamia go operator, poza obsługą
 zapytań użytkownika. Wynik jest stagingiem danych, bez grafu, katalogu

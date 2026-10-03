@@ -35,6 +35,9 @@ importers:
       '@krok/contracts':
         specifier: workspace:*
         version: link:../../packages/contracts
+      '@krok/ingestion':
+        specifier: workspace:*
+        version: link:../../packages/ingestion
       '@krok/routing':
         specifier: workspace:*
         version: link:../../packages/routing

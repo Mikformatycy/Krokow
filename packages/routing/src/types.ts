@@ -1,6 +1,6 @@
 import type { BooleanFact, CrossingEvent, Evidence, PublicSource } from '@krok/contracts';
 
-export interface GraphNode { id: string; level: number }
+export interface GraphNode { id: string; level: number; coordinate?: [number, number] }
 export interface Edge {
   id: string; from: string; to: string; objectId: string; name: string;
   lengthM: number; kind: 'walk' | 'crossing' | 'steps' | 'ramp';
@@ -8,10 +8,13 @@ export interface Edge {
   physical: { id: string; startM: number; endM: number };
   steps: BooleanFact; separatedFootway: BooleanFact;
   events: CrossingEvent[]; // Offsets local to this directed edge.
+  geometry?: [number, number][];
 }
 export interface Graph { nodes: GraphNode[]; edges: Edge[] }
-export interface Place { id: string; nodeId: string; name: string }
+export interface Place { id: string; nodeId: string; name: string; coordinate?: [number, number]; description?: string }
 export interface Snapshot {
+  mode?: 'synthetic' | 'pilot';
+  coverage?: { name: string; description: string; polygon: { type: 'Polygon'; coordinates: [number, number][][] } };
   graph: Graph; places: Place[]; cityId: string;
   graphVersion: string; evidenceVersion: string; snapshotFetchedAt: string;
   sources: PublicSource[]; evidence: Evidence[];

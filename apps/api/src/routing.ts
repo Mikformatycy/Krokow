@@ -8,18 +8,24 @@ import type { RoutePlanner } from './planner';
 
 /** Catalog and planner use one validated, privately copied synthetic snapshot. */
 export function createSyntheticServices(input: Snapshot = createSyntheticSnapshot(), policy: Policy = SYNTHETIC_POLICY, now?: () => number) {
+  if (input.mode === 'pilot') throw new Error('Use explicit pilot services');
+  return createSnapshotServices(input, policy, now);
+}
+
+export function createSnapshotServices(input: Snapshot, policy: Policy, now?: () => number) {
   const snapshot = structuredClone(input);
+  const mode = snapshot.mode ?? 'synthetic';
   const engine = createPlanner(snapshot, policy, now);
-  const envelope = { schemaVersion: SCHEMA_VERSION, requestId: 'synthetic-catalog' } as const;
+  const envelope = { schemaVersion: SCHEMA_VERSION, requestId: `${mode}-catalog` } as const;
   const versions = { graphVersion: snapshot.graphVersion, evidenceVersion: snapshot.evidenceVersion, policyVersion: policy.id };
   const dataset = validateDataset({
-    coverage: { ...envelope, cityId: snapshot.cityId, name: 'Fikcyjne miasto demonstracyjne',
-      description: 'Syntetyczny graf A/B/C. Wyłącznie podgląd, bez nawigacji terenowej.',
-      mode: 'synthetic', navigationEligibility: 'preview_only', capabilities: ['catalog_routes'], polygon: null,
+    coverage: { ...envelope, cityId: snapshot.cityId, name: snapshot.coverage?.name ?? 'Fikcyjne miasto demonstracyjne',
+      description: snapshot.coverage?.description ?? 'Syntetyczny graf A/B/C. Wyłącznie podgląd, bez nawigacji terenowej.',
+      mode, navigationEligibility: 'preview_only', capabilities: ['catalog_routes'], polygon: snapshot.coverage?.polygon ?? null,
       policy: { policyVersion: policy.id, fieldVerificationMaxAgeDays: policy.fieldVerificationMaxAgeDays } },
-    places: { ...envelope, cityId: snapshot.cityId, mode: 'synthetic', navigationEligibility: 'preview_only',
-      places: snapshot.places.map((p) => ({ id: p.id, cityId: snapshot.cityId, name: p.name, description: 'Fikcyjny punkt grafu demonstracyjnego.', coordinate: null })) },
-    sources: { ...envelope, mode: 'synthetic', sources: snapshot.sources }, versions, evidence: snapshot.evidence,
+    places: { ...envelope, cityId: snapshot.cityId, mode, navigationEligibility: 'preview_only',
+      places: snapshot.places.map((p) => ({ id: p.id, cityId: snapshot.cityId, name: p.name, description: p.description ?? 'Fikcyjny punkt grafu demonstracyjnego.', coordinate: p.coordinate ?? null })) },
+    sources: { ...envelope, mode, sources: snapshot.sources }, versions, evidence: snapshot.evidence,
   });
   const planner: RoutePlanner = {
     isReady: engine.isReady,

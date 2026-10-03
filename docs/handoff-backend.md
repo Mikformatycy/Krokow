@@ -1,5 +1,34 @@
 # B — B-03 EvidenceResolver
 
+## Pilne przekazanie A: realne dane, 2026-10-03
+
+Użytkownik nadał priorytet realnym punktom i trasom w aplikacji.
+B przygotowuje snapshot/graf/API `mode: pilot`, `navigationEligibility:
+preview_only` na istniejącym kontrakcie draft.2. Zakres: [real-pilot](real-pilot.md).
+**A:** przy uproszczeniu UX przygotować HTTP/UI do pilot/preview_only:
+HttpRouteApi nie może odrzucać pilot; walidacja RouteResponseSchema i
+twardych wymagań pozostaje. Odróżnić prawdziwe dane od przykładu synthetic,
+pokazać rzeczywistą nazwę obszaru i źródło, nie uruchamiać synthetic-only
+SimulationSession dla pilot. Brak automatycznej zamiany błędu na przykład.
+Katalog do 10 rzeczywistych punktów, współrzędne tylko pilot, bez GPS.
+B wystawi testowe API na 3003 i przekaże konkretne dane po walidacji.
+Nie zmieniać schematów/rankingu ani backendu; zapisać odbiór i wynik w
+handoffie mobile. Przeczytać tę sekcję przed kolejną integracją.
+
+### API pilot już uruchomione
+
+`http://127.0.0.1:3003`, bez zmiany podglądu 3001. `/v1/coverage` podaje
+`cityId=krakow-stare-miasto-pilot`, `mode=pilot`, `preview_only` i polygon.
+`/v1/places?cityId=krakow-stare-miasto-pilot&query=` zwraca pięć realnych
+wejść. Przykład: `osm-place-3719851597` (Galeria od Pawiej) do
+`osm-place-5213212813` (High5ive, wejście zachodnie): ok. 420 m, jedno
+przejście; akustyka unknown. Domyślny `audibleRequirement=none` daje trasę,
+`documented`/`field_verified_recent` nie może zgadywać akustyki.
+Wszystkie 10 par w audycie wyznaczyło trasy. Geometry jest rzeczywistą
+LineString; źródło OSM, pobranie 2026-10-03T19:17:26.330Z.
+Nie zmieniono schematów/wersji ani wag istniejącego `PILOT_POLICY`.
+Po gotowości UI B przełączy publiczne API na 3001; A odświeży Metro.
+
 Aktualizacja B-04 po integracji A: dodano lokalny importer i audyt;
 [wyniki i ograniczenia](b04-ingestion.md), [komendy](../packages/ingestion/README.md).
 42 testy ingestion oraz lint/typecheck/routing/contracts/API/generated PASS.

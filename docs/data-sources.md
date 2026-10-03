@@ -14,8 +14,11 @@
   nigdy automatyczne `observedAt` lub `verifiedAt`.
 - Surowe rekordy/checksum i wyniki są lokalne. Raw może zawierać publiczne
   metadane autorów OSM; znormalizowane elementy pomijają username/uid.
-- Stan próby 2026-10-03: **brak udanego pobrania**, timeout połączenia.
-  Nie podajemy statystyk pokrycia Krakowa na podstawie testowych fixtures.
+- Stan Overpass 2026-10-03: timeout połączenia. Później operator pozyskał
+  kompletny jednorazowy eksport OSM map API. Raw, checksum, licencja i data:
+  [archiwum Krakowa](../packages/ingestion/data/krakow/README.md).
+  Nowy [raport realnego pilota](real-pilot.md) pochodzi z tego eksportu,
+  nie z fixtures. Aplikacja korzysta z archiwum, bez żądań do dostawcy.
 - Instrukcja i ograniczenia: [ingestion](../packages/ingestion/README.md).
 
 ## Własne dane syntetyczne

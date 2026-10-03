@@ -1,5 +1,15 @@
 # Status prac
 
+## Osoba B / Codex — prawdziwy pilot Krakowa, 2026-10-03
+
+- Na nowe polecenie użytkownika priorytetem jest realny przepływ w aplikacji. Pozyskano kompletny eksport OSM, zachowano raw gzip/checksum/licencję i datę. Zbudowano graf tylko z jawnej topologii pieszej oraz katalog pięciu rzeczywistych wejść Galerii Krakowskiej/High5ive. Zakres, reguły, źródła i ograniczenia: [real-pilot](real-pilot.md), [archiwum](../packages/ingestion/data/krakow/README.md).
+- Backend obsługuje jawne `API_DATA_MODE=pilot`, istniejący draft.2 i PILOT_POLICY bez zmiany wag. Geometry pochodzi z OSM; fakty bez danych pozostają unknown; oba tryby nadal preview_only. Nie ma pobierania z sieci podczas obliczeń ani zastąpienia błędu fixture. Graf ma 605 węzłów, 1214 skierowanych krawędzi i 39 prostych przejść. Niedostępne/niejednoznaczne topologie pozostają wyłączone.
+- Pliki: nowe extract/graph/krakow/audit i testy w `packages/ingestion`, raw oraz raport w `data/krakow`; rozszerzone typy/walidacja/present w `packages/routing`; konfiguracja, loader/services i testy HTTP w `apps/api`; README API/importera, dokumenty B/status/źródeł oraz root skrypt i lockfile (jedna wewnętrzna zależność API→ingestion). B nie edytuje mobile A.
+- Wyniki B: ingestion **71 PASS**, routing **87 PASS**, API **92 PASS** (w tym wszystkie 20 skierowanych par realnego katalogu), contracts **121 PASS**; lint backendu, typecheck ingestion/API i `check:generated` **29 zgodnych** PASS. Instalacja offline PASS. Audyt 10 nieskierowanych par PASS. Pierwsze nowe testy poprawiono po wykryciu oczekiwania pustego grafu zamiast błędu i pomylenia obrysu peronu z torami; końcowe wyniki po poprawkach.
+- Uruchomiono oddzielne API pilot na **127.0.0.1:3003**. Rzeczywisty POST HTTP po końcowych poprawkach: mode=pilot, graphVersion=osm-walk-v1-094d1973843a04d0f642b245, **420,217 m**, jeden etap, 18 punktów LineString, akustyka unknown. Identyfikatory i komendy przekazano w [handoffie B](handoff-backend.md).
+- A nadal upraszcza UX i podłącza pilot; użytkownik przekazuje nowy handoff. Podgląd 3001/8081/ngrok pozostawiono A; **nie deklarujemy jeszcze działania realnych danych na telefonie**. Brak testu urządzenia, VoiceOver, terenowego, PostGIS i zdalnego CI tej iteracji. B-05/B-06 nie są w pełni odebrane; podgląd tras jest gotowy do integracji, prowadzenie GPS nie jest włączone.
+- **Przekazanie A:** zakończyć HTTP/UI pilot/preview_only na porcie 3003, odnotować przegląd istniejącego kontraktu i wynik testu. Po gotowości B przełączy publiczne API na pilot i zintegruje wyłącznie przekazane pliki; A odświeży Metro.
+
 ## Osoba B / Codex — B-04, adapter lokalnego snapshotu, 2026-10-03
 
 - Dodano `packages/ingestion/**`: parser OSM, normalizację do istniejącego kontraktu, audyt resolverem B-03, ograniczone pobieranie, niezmienne snapshoty/checksum, atomowy wskaźnik ostatniego poprawnego stagingu i CLI. Brak tagu nie generuje false, pobranie/edycja nie generują dat obserwacji. Zakres i wynik: [B-04](b04-ingestion.md); komendy: [README pakietu](../packages/ingestion/README.md).

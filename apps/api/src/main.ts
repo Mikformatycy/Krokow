@@ -1,13 +1,17 @@
 import { buildApi } from './app';
 import { readConfig } from './config';
 import { createDatabaseProbe } from './database';
-import { createSyntheticServices } from './routing';
+import { createSnapshotServices, createSyntheticServices } from './routing';
+import { loadKrakowPilot } from '@krok/ingestion';
+import { PILOT_POLICY } from '@krok/routing';
 
 async function main() {
   const config = readConfig(process.env);
   const database = createDatabaseProbe(config.database);
+  const services = config.dataMode === 'pilot' ? createSnapshotServices((await loadKrakowPilot()).snapshot, PILOT_POLICY)
+    : config.dataMode === 'synthetic' ? createSyntheticServices() : {};
   const app = buildApi({
-    ...(config.dataMode === 'synthetic' ? createSyntheticServices() : {}),
+    ...services,
     databaseReady: () => database.ready(), allowedOrigins: config.allowedOrigins,
   });
   app.addHook('onClose', () => database.close());

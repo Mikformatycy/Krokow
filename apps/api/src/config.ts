@@ -4,7 +4,7 @@ type Environment = Readonly<Record<string, string | undefined>>;
 export interface ApiConfig {
   host: string;
   port: number;
-  dataMode: 'unavailable' | 'synthetic';
+  dataMode: 'unavailable' | 'synthetic' | 'pilot';
   allowedOrigins: string[];
   database: PoolConfig | undefined;
 }
@@ -17,7 +17,7 @@ export function readConfig(env: Environment): ApiConfig {
   const host = env['API_HOST'] ?? '127.0.0.1';
   if (!['127.0.0.1', '0.0.0.0', '::1'].includes(host)) throw new Error('Invalid API_HOST');
   const dataMode = env['API_DATA_MODE'] ?? 'unavailable';
-  if (dataMode !== 'synthetic' && dataMode !== 'unavailable') throw new Error('Invalid API_DATA_MODE');
+  if (dataMode !== 'synthetic' && dataMode !== 'unavailable' && dataMode !== 'pilot') throw new Error('Invalid API_DATA_MODE');
   const allowedOrigins = (env['API_ALLOWED_ORIGINS'] ?? 'http://localhost:8081,http://localhost:8085').split(',').filter(Boolean);
   for (const origin of allowedOrigins) {
     let url: URL;

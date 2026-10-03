@@ -1,18 +1,22 @@
-import { BooleanFactSchema, CrossingEventSchema, EvidenceSchema, IdSchema, PublicSourceSchema, UtcSchema } from '@krok/contracts';
+import { BooleanFactSchema, CoordinateSchema, CrossingEventSchema, EvidenceSchema, IdSchema, LineStringSchema, PolygonSchema, PublicSourceSchema, UtcSchema } from '@krok/contracts';
 import type { BooleanFact, Evidence, TactileFact } from '@krok/contracts';
 import type { Edge, Snapshot } from './types';
 
 export function validateSnapshot(snapshot: Snapshot): void {
+  const mode = snapshot.mode ?? 'synthetic';
+  if (mode !== 'synthetic' && mode !== 'pilot') throw new Error('Invalid snapshot mode');
+  if (mode === 'pilot') PolygonSchema.parse(snapshot.coverage?.polygon);
   const nodes = new Map(snapshot.graph.nodes.map((n) => [n.id, n]));
   if (nodes.size !== snapshot.graph.nodes.length || nodes.size === 0) throw new Error('Invalid node IDs');
   for (const node of nodes.values()) {
     IdSchema.parse(node.id);
     if (!Number.isFinite(node.level)) throw new Error('Unknown node level');
+    if (mode === 'pilot') CoordinateSchema.parse(node.coordinate);
   }
   const sources = new Map(snapshot.sources.map((s) => [s.id, PublicSourceSchema.parse(s)]));
   const evidence = new Map(snapshot.evidence.map((e) => [e.id, EvidenceSchema.parse(e)]));
   if (sources.size === 0 || sources.size !== snapshot.sources.length || evidence.size !== snapshot.evidence.length) throw new Error('Invalid catalog IDs');
-  if ([...sources.values()].some((s) => s.kind !== 'synthetic')) throw new Error('B-02 accepts synthetic snapshots only');
+  if ([...sources.values()].some((s) => (s.kind === 'synthetic') !== (mode === 'synthetic'))) throw new Error('Snapshot/source mode mismatch');
   for (const e of evidence.values()) if (!sources.has(e.sourceId)) throw new Error('Missing evidence source');
   UtcSchema.parse(snapshot.snapshotFetchedAt);
   for (const id of [snapshot.cityId, snapshot.graphVersion, snapshot.evidenceVersion]) IdSchema.parse(id);
@@ -23,6 +27,10 @@ export function validateSnapshot(snapshot: Snapshot): void {
     if (edges.has(edge.id)) throw new Error('Duplicate edge'); edges.add(edge.id);
     const from = nodes.get(edge.from); const to = nodes.get(edge.to);
     if (!from || !to || edge.from === edge.to) throw new Error('Invalid edge topology');
+    if (mode === 'pilot') {
+      const geometry = LineStringSchema.parse({ type: 'LineString', coordinates: edge.geometry });
+      if (JSON.stringify(geometry.coordinates[0]) !== JSON.stringify(from.coordinate) || JSON.stringify(geometry.coordinates.at(-1)) !== JSON.stringify(to.coordinate)) throw new Error('Edge geometry does not match topology');
+    }
     if (from.level !== to.level && edge.kind !== 'steps' && edge.kind !== 'ramp') throw new Error('Unproven level connection');
     if (!['walk', 'crossing', 'steps', 'ramp'].includes(edge.kind) || !['allowed', 'denied', 'unknown'].includes(edge.access) || typeof edge.closed !== 'boolean') throw new Error('Invalid edge state');
     if (!Number.isFinite(edge.lengthM) || edge.lengthM <= 0 || !Number.isFinite(edge.physical.startM) || !Number.isFinite(edge.physical.endM)
@@ -49,6 +57,7 @@ export function validateSnapshot(snapshot: Snapshot): void {
   for (const place of snapshot.places) {
     IdSchema.parse(place.id);
     if (places.has(place.id) || !nodes.has(place.nodeId)) throw new Error('Invalid place binding');
+    if (mode === 'pilot' && JSON.stringify(CoordinateSchema.parse(place.coordinate)) !== JSON.stringify(nodes.get(place.nodeId)?.coordinate)) throw new Error('Place is not on its graph node');
     places.add(place.id);
   }
 }

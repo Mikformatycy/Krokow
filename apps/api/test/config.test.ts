@@ -7,7 +7,8 @@ describe('local runtime configuration', () => {
     expect(readConfig({})).toMatchObject({ host: '127.0.0.1', port: 3001, dataMode: 'unavailable', database: undefined });
   });
   it('requires explicit synthetic mode', () => expect(readConfig({ API_DATA_MODE: 'synthetic' }).dataMode).toBe('synthetic'));
-  it.each(['pilot', '', 'real'])('rejects unsupported mode %s', (API_DATA_MODE) => expect(() => readConfig({ API_DATA_MODE })).toThrow('Invalid API_DATA_MODE'));
+  it('requires explicit pilot mode for archived real data', () => expect(readConfig({ API_DATA_MODE: 'pilot' }).dataMode).toBe('pilot'));
+  it.each(['', 'real'])('rejects unsupported mode %s', (API_DATA_MODE) => expect(() => readConfig({ API_DATA_MODE })).toThrow('Invalid API_DATA_MODE'));
   it.each(['0', '-1', '65536', '3e3', '3001.5', ''])('rejects invalid API port %s', (API_PORT) => expect(() => readConfig({ API_PORT })).toThrow('Invalid API_PORT'));
   it.each(['*', 'https://example.com/path', 'http://user:password@example.com', 'file:///tmp/a', 'null'])('rejects broad or malformed CORS configuration %s', (API_ALLOWED_ORIGINS) => expect(() => readConfig({ API_ALLOWED_ORIGINS })).toThrow('Invalid API_ALLOWED_ORIGINS'));
   it('preserves passwords as connection fields and limits pool/timeouts', () => {

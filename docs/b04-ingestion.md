@@ -1,5 +1,10 @@
 # B-04 — ograniczony import OSM
 
+Aktualizacja po tej iteracji: realny eksport został pozyskany osobno z OSM
+map API i podłączony do grafu/HTTP. [Bieżący raport](real-pilot.md) oraz
+[archiwum źródłowe](../packages/ingestion/data/krakow/README.md).
+Opis nieudanej próby Overpass poniżej pozostaje historią tamtej operacji.
+
 Zakres zapisany przed implementacją, 2026-10-03, B: adapter snapshotu,
 surowe dane/checksum/licencja, konserwatywna normalizacja, raport pokrycia
 i odporne zapisanie ostatniego dobrego wyniku. Bez publikowania tras pilot,

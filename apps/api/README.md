@@ -1,4 +1,31 @@
-# API — B-01/B-02
+# API — katalog i routing synthetic/pilot
+
+## Prawdziwe dane Krakowa
+
+```powershell
+$env:API_DATA_MODE = 'pilot'
+npm.cmd exec --yes --package=node@24.21.0 --package=pnpm@10.34.6 --call "pnpm start:api"
+```
+
+Loader sprawdza checksum archiwalnego OSM i buduje graf pieszy w pamięci.
+Uruchomienie nie pobiera nic z sieci i nie wymaga bazy do obliczenia trasy.
+Katalog: `GET /v1/places?cityId=krakow-stare-miasto-pilot&query=`.
+Pięć punktów to wejścia Galerii Krakowskiej i High5ive. Wyszukiwanie np.
+`High5ive` zwraca dwa wejścia, a nazwa spoza katalogu pustą listę.
+
+Odpowiedzi mają `mode=pilot`, `navigationEligibility=preview_only`,
+rzeczywiste współrzędne i geometrię. Przykładowa trasa z
+`osm-place-3719851597` do `osm-place-5213212813` ma ok. 420 m i jedno
+przejście z nieznaną akustyką. Jawne wymaganie akustyki daje
+`NO_MATCHING_ROUTE`, a nie domyślne rozluźnienie preferencji.
+Prośba o punkt poza katalogiem nie tworzy łącznika przez bliskość.
+
+Ograniczenia i audyt: [real-pilot](../../docs/real-pilot.md).
+Do sprawdzenia danych służy `pnpm audit:pilot`. `/readyz` zachowuje osobne
+kryterium bazy i bez niej zwraca 503, mimo że katalog i routing w RAM
+obsługują żądania. To nie migracja ani deklaracja gotowości produkcyjnej.
+
+## Dotychczasowy demonstrator synthetic
 
 Fastify udostępnia katalog, źródła, opublikowane dowody, schemat OpenAPI oraz
 health/readiness. Schematy wejścia i wyjścia pochodzą z `@krok/contracts`.
@@ -14,7 +41,7 @@ npm.cmd exec --yes --package=node@24.21.0 --package=pnpm@10.34.6 --call "pnpm st
 `pnpm dev:api` uruchamia ten sam serwer z obserwowaniem plików. Zatrzymanie:
 Ctrl+C. Domyślny adres: `http://127.0.0.1:3001`. `.env` jest odczytywany
 z katalogu głównego; istniejące zmienne procesu mają pierwszeństwo.
-Bez `API_DATA_MODE=synthetic` katalog pozostaje niedostępny i zwraca 503.
+Bez jawnego `API_DATA_MODE=synthetic` lub `API_DATA_MODE=pilot` katalog pozostaje niedostępny i zwraca 503.
 Nie ma automatycznego przełączania na demo po błędzie bazy lub źródła.
 
 | Endpoint | Zachowanie B-01/B-02 |

@@ -12,6 +12,7 @@
   "dependencies": {
     "@krok/contracts": "workspace:*",
     "@krok/routing": "workspace:*",
+    "@krok/ingestion": "workspace:*",
     "fastify": "5.12.5",
     "@fastify/cors": "11.3.0",
     "pg": "8.23.1",
