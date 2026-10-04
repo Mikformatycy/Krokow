@@ -1,41 +1,38 @@
 import { expect, test } from '@playwright/test';
-import { details } from './ui-helpers';
+import { placesResponse } from '@krok/contracts/fixtures';
+import { calculate, details, example, heading } from './ui-helpers';
 
-test('large controls expose only needed choices and preserve hard settings when collapsed', async ({ page }) => {
+test('a step offers at most five of the ten catalog answers, reveals more on request and keeps large targets', async ({ page }) => {
+  const many = { ...placesResponse, places: Array.from({ length: 10 }, (_, i) => ({ ...placesResponse.places[0]!, id: `demo-place-${i + 1}`, name: `Punkt ${i + 1}` })) };
+  await page.route('**/v1/places**', (route) => route.fulfill({ json: many }));
   await page.goto('/plan');
-  const settings = page.getByRole('button', { name: 'Ustawienia trasy', exact: true });
-  await expect(settings).toHaveAttribute('aria-expanded', 'false');
-  await expect(page.getByRole('textbox', { name: 'Maksymalny mnożnik długości' })).toHaveCount(0);
-  await expect(page.getByRole('button', { name: 'Obliczanie tras przez API', exact: true })).toHaveCount(0);
-  for (const control of await page.getByRole('button').all()) {
+  const rows = page.getByRole('button', { name: /^Punkt \d+$/ });
+  await expect(rows).toHaveCount(5);
+  // The screen moves focus to its heading once on entry; wait for it so it cannot race the focus checks below.
+  await expect(heading(page, 'Skąd idziesz?')).toBeFocused();
+  const more = page.getByRole('button', { name: 'Więcej propozycji (5)', exact: true });
+  await expect(more).toHaveAttribute('aria-expanded', 'false');
+  await more.focus(); await page.keyboard.press('Enter');
+  await expect(rows).toHaveCount(10);
+  const fewer = page.getByRole('button', { name: 'Mniej propozycji', exact: true });
+  await expect(fewer).toBeFocused();
+  await expect(fewer).toHaveAttribute('aria-expanded', 'true');
+  for (const control of await page.locator('[role=button],[role=switch],[role=radio],[role=link]').all()) {
     const box = await control.boundingBox();
-    expect(box?.height).toBeGreaterThanOrEqual(64);
+    expect(box?.height).toBeGreaterThanOrEqual(48);
   }
-  await page.getByRole('button', { name: 'Użyj przykładu A/B/C' }).click();
-  await settings.focus(); await page.keyboard.press('Enter');
-  const requirement = page.getByRole('button', { name: 'Wymagaj opisanej obecności akustyki bez konfliktu' });
-  await requirement.click();
-  await settings.click();
-  await expect(settings).toBeFocused();
-  await expect(requirement).toHaveCount(0);
-  await expect(page.getByText('Akustyka: wymagana opisana obecność bez konfliktu.')).toBeVisible();
-  await settings.click(); await expect(requirement).toHaveAttribute('aria-pressed', 'true');
-  const detour = page.getByRole('textbox', { name: 'Maksymalny mnożnik długości' });
-  await detour.fill('2,1'); await settings.click();
-  await page.getByRole('button', { name: 'Oblicz trasy', exact: true }).click();
-  await expect(settings).toHaveAttribute('aria-expanded', 'true');
-  await expect(detour).toBeFocused();
+  for (const row of await rows.all()) expect((await row.boundingBox())?.height).toBeGreaterThanOrEqual(64);
 });
 
 test('result focuses the plan, simulation keeps one primary control and details never pause it', async ({ page }, testInfo) => {
   await page.goto('/plan');
-  await page.getByRole('button', { name: 'Użyj przykładu A/B/C' }).click();
-  await page.getByRole('button', { name: 'Oblicz trasy', exact: true }).click();
-  await expect(page.getByRole('heading', { name: 'Twój plan' })).toBeFocused();
+  await example(page);
+  await calculate(page);
+  await expect(heading(page, 'Twój plan')).toBeFocused();
   await expect(page.getByRole('textbox')).toHaveCount(0);
   await expect(page.getByTestId('route-card-1')).toHaveCount(0);
-  await expect(page.getByRole('button', { name: 'Wybierz wariant 1, 740 m' })).toHaveCount(0);
-  await expect(page.getByRole('button', { name: 'Powtórz plan od początku' })).toHaveCount(0);
+  await expect(page.getByRole('radio', { name: 'Wariant 1, 740 m' })).toHaveCount(0);
+  await expect(page.getByTestId('route-summary')).toContainText('980 m');
   const main = page.getByRole('button', { name: 'Rozpocznij symulację', exact: true });
   await main.focus(); await page.keyboard.press('Enter');
   const pause = page.getByRole('button', { name: 'Pauza symulacji', exact: true });
@@ -57,14 +54,18 @@ test('result focuses the plan, simulation keeps one primary control and details 
   await expect(main).toBeFocused();
 });
 
-test('unknown and conflict stay in the selected summary before opening source details', async ({ page }) => {
+test('unknown and absence stay distinct in the chosen summary before opening source details', async ({ page }) => {
   await page.goto('/plan');
-  await page.getByRole('button', { name: 'Użyj przykładu A/B/C' }).click();
-  await page.getByRole('button', { name: 'Oblicz trasy', exact: true }).click();
-  await details(page, 'Zmień wariant');
-  await page.getByRole('button', { name: 'Wybierz wariant 1, 740 m' }).click();
-  await expect(page.getByText('Akustyka: brak danych — 1, konflikt — 0, brak opisany — 1.')).toBeVisible();
-  await details(page, 'Porównaj trasy i sprawdź źródła');
+  await example(page);
+  await calculate(page);
+  await details(page, 'Inne warianty (2)');
+  await page.getByRole('radio', { name: 'Wariant 1, 740 m' }).click();
+  await expect(page.getByRole('radio', { name: 'Wariant 1, 740 m' })).toHaveAttribute('aria-checked', 'true');
+  const summary = page.getByTestId('route-summary');
+  await expect(summary).toContainText('zapisany brak: 1');
+  await expect(summary).toContainText('brak danych: 1');
+  await expect(summary).not.toContainText(/bezpieczn|wszystko potwierdzone|brak przeszkód/i);
+  await details(page, 'Porównanie, źródła i daty');
   await page.getByRole('button', { name: 'Pokaż przebieg i dowody wariantu 1' }).click();
   await expect(page.getByText(/Źródło: Fikcyjny graf A\/B\/C/).first()).toBeVisible();
 });

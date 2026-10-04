@@ -1,0 +1,300 @@
+{
+  "checkedAt": "2026-10-03T21:26:50.639Z",
+  "version": "krakow-search-1-9ed73bba57a4e06a82614a1e",
+  "graphVersion": "osm-walk-v1-4196644a76e0dfaae55e59dc",
+  "catalogSize": 96556,
+  "input": 114283,
+  "accepted": 96526,
+  "excluded": 4726,
+  "duplicates": 13031,
+  "buildMs": 15802,
+  "queries": 100,
+  "p50Ms": 0.44,
+  "p95Ms": 9.56,
+  "maxMs": 14.45,
+  "examples": [
+    {
+      "query": "Rynek Glowny",
+      "total": 122,
+      "results": [
+        {
+          "name": "Rynek Główny",
+          "address": null,
+          "routing": {
+            "status": "unavailable",
+            "reason": "unresolved"
+          }
+        },
+        {
+          "name": "Rynek Główny",
+          "address": null,
+          "routing": {
+            "status": "unavailable",
+            "reason": "unresolved"
+          }
+        },
+        {
+          "name": "Rynek Główny — punkt na ciągu pieszym",
+          "address": null,
+          "routing": {
+            "status": "available",
+            "cityId": "krakow-stare-miasto-pilot",
+            "placeId": "osm-place-14121238341"
+          }
+        }
+      ]
+    },
+    {
+      "query": "Wawel",
+      "total": 72,
+      "results": [
+        {
+          "name": "Wawel",
+          "address": null,
+          "routing": {
+            "status": "unavailable",
+            "reason": "outside_coverage"
+          }
+        },
+        {
+          "name": "Wawel",
+          "address": null,
+          "routing": {
+            "status": "unavailable",
+            "reason": "unresolved"
+          }
+        },
+        {
+          "name": "Wawel",
+          "address": null,
+          "routing": {
+            "status": "unavailable",
+            "reason": "unresolved"
+          }
+        }
+      ]
+    },
+    {
+      "query": "Nowa Huta",
+      "total": 67,
+      "results": [
+        {
+          "name": "Nowa Huta",
+          "address": null,
+          "routing": {
+            "status": "unavailable",
+            "reason": "outside_coverage"
+          }
+        },
+        {
+          "name": "Nowa Huta",
+          "address": null,
+          "routing": {
+            "status": "unavailable",
+            "reason": "outside_coverage"
+          }
+        },
+        {
+          "name": "Budowa centrum magazynowego 7R Hub Nowa Huta",
+          "address": null,
+          "routing": {
+            "status": "unavailable",
+            "reason": "outside_coverage"
+          }
+        }
+      ]
+    },
+    {
+      "query": "Wolica",
+      "total": 15,
+      "results": [
+        {
+          "name": "Wolica",
+          "address": null,
+          "routing": {
+            "status": "unavailable",
+            "reason": "outside_coverage"
+          }
+        },
+        {
+          "name": "Wolica Kościół 01",
+          "address": null,
+          "routing": {
+            "status": "unavailable",
+            "reason": "outside_coverage"
+          }
+        },
+        {
+          "name": "Wolica Kościół 01",
+          "address": null,
+          "routing": {
+            "status": "unavailable",
+            "reason": "outside_coverage"
+          }
+        }
+      ]
+    },
+    {
+      "query": "Pawia 7",
+      "total": 4,
+      "results": [
+        {
+          "name": "High5ive, budynek 1 — wejście wschodnie",
+          "address": "Pawia 7",
+          "routing": {
+            "status": "available",
+            "cityId": "krakow-stare-miasto-pilot",
+            "placeId": "osm-place-5213212811"
+          }
+        },
+        {
+          "name": "High5ive, budynek 1 — wejście zachodnie",
+          "address": "Pawia 7",
+          "routing": {
+            "status": "available",
+            "cityId": "krakow-stare-miasto-pilot",
+            "placeId": "osm-place-5213212813"
+          }
+        },
+        {
+          "name": "High5ive - Budynek 1",
+          "address": "Pawia 7",
+          "routing": {
+            "status": "unavailable",
+            "reason": "unresolved"
+          }
+        }
+      ]
+    },
+    {
+      "query": "apteka",
+      "total": 288,
+      "results": [
+        {
+          "name": "APTEKA",
+          "address": "Ciechocińska 20A",
+          "routing": {
+            "status": "unavailable",
+            "reason": "outside_coverage"
+          }
+        },
+        {
+          "name": "Apteka",
+          "address": "Księcia Józefa 170a",
+          "routing": {
+            "status": "unavailable",
+            "reason": "outside_coverage"
+          }
+        },
+        {
+          "name": "Anthoxanthum",
+          "address": null,
+          "routing": {
+            "status": "unavailable",
+            "reason": "outside_coverage"
+          }
+        }
+      ]
+    },
+    {
+      "query": "glaeria krakowska",
+      "total": 5,
+      "results": [
+        {
+          "name": "Galeria Krakowska — drugie wejście północno-zachodnie",
+          "address": "Pawia 5",
+          "routing": {
+            "status": "available",
+            "cityId": "krakow-stare-miasto-pilot",
+            "placeId": "osm-place-7157204495"
+          }
+        },
+        {
+          "name": "Galeria Krakowska — wejście od Pawiej",
+          "address": "Pawia 5",
+          "routing": {
+            "status": "available",
+            "cityId": "krakow-stare-miasto-pilot",
+            "placeId": "osm-place-3719851597"
+          }
+        },
+        {
+          "name": "Galeria Krakowska — wejście północno-zachodnie",
+          "address": "Pawia 5",
+          "routing": {
+            "status": "available",
+            "cityId": "krakow-stare-miasto-pilot",
+            "placeId": "osm-place-2443511648"
+          }
+        }
+      ]
+    },
+    {
+      "query": "High5",
+      "total": 8,
+      "results": [
+        {
+          "name": "High5ive, budynek 1 — wejście wschodnie",
+          "address": "Pawia 7",
+          "routing": {
+            "status": "available",
+            "cityId": "krakow-stare-miasto-pilot",
+            "placeId": "osm-place-5213212811"
+          }
+        },
+        {
+          "name": "High5ive, budynek 1 — wejście zachodnie",
+          "address": "Pawia 7",
+          "routing": {
+            "status": "available",
+            "cityId": "krakow-stare-miasto-pilot",
+            "placeId": "osm-place-5213212813"
+          }
+        },
+        {
+          "name": "High5ive - Budynek 1",
+          "address": "Pawia 7",
+          "routing": {
+            "status": "unavailable",
+            "reason": "unresolved"
+          }
+        }
+      ]
+    },
+    {
+      "query": "Aleja Solidarnosci",
+      "total": 9,
+      "results": [
+        {
+          "name": "Aleja Solidarności",
+          "address": null,
+          "routing": {
+            "status": "unavailable",
+            "reason": "outside_coverage"
+          }
+        },
+        {
+          "name": "Aleja Solidarności 11",
+          "address": "Aleja Solidarności 11",
+          "routing": {
+            "status": "unavailable",
+            "reason": "outside_coverage"
+          }
+        },
+        {
+          "name": "Aleja Solidarności 20",
+          "address": "Aleja Solidarności 20",
+          "routing": {
+            "status": "unavailable",
+            "reason": "outside_coverage"
+          }
+        }
+      ]
+    },
+    {
+      "query": "zzqxzzq",
+      "total": 0,
+      "results": []
+    }
+  ]
+}

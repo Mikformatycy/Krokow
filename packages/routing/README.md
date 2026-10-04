@@ -1,6 +1,6 @@
 # Routing — B-02
 
-Pakiet oblicza trasy z jawnych skierowanych połączeń syntetycznego grafu.
+Pakiet oblicza trasy z jawnych skierowanych połączeń grafu synthetic lub rzeczywistego snapshotu OSM. Aktualny runtime API używa loadKrakowPrototype i PILOT_POLICY przy API_DATA_MODE=pilot.
 `createPlanner(snapshot, policy, monotonicClock)` kopiuje i waliduje snapshot,
 a `plan(request, { requestId, asOf })` zwraca DTO sprawdzone przez wspólny Zod.
 `asOf` jest zegarem faktów, a monotoniczny zegar służy limitowi obliczeń.
@@ -37,8 +37,8 @@ Wszystkie odpowiedzi mają `synthetic`, `preview_only` oraz ostrzeżenie.
 `src/policy/default.ts` skupia parametry. Polityka `synthetic-acoustic-v1`
 wyłącza miękkie kary dotyku, oddzielenia i wieku, zachowując przykład
 architektury; nie jest skalibrowanym rankingiem produktu. `PILOT_POLICY`
-zawiera osobne hipotezy z architektury, ale runtime nie włącza pilotażu.
-Resolver obserwacji i ich starzenia to B-03; B-02 przyjmuje rozstrzygnięte
+zawiera osobne hipotezy z architektury i jest używana w trybie pilot.
+Resolver obserwacji i ich starzenia B-03 jest zaimplementowany; planner przyjmuje rozstrzygnięte
 fakty z dowodami i sam sprawdza datę twardego wymogu terenowego.
 
 Testy: `pnpm test:routing`, `pnpm test:api`, `pnpm test:contracts`,
@@ -46,13 +46,15 @@ Testy: `pnpm test:routing`, `pnpm test:api`, `pnpm test:contracts`,
 małych grafów, podział krawędzi, sprzeczności, aktualność, limity oraz HTTP.
 Pełne wyniki: [status](../../docs/status.md).
 
-Ograniczenia: obliczenia synchroniczne w RAM, brak importu OSM, przyciągania
-współrzędnych do grafu, testu wydajności na rzeczywistym mieście i prowadzenia
-terenowego. Nowy snapshot v2 nie zmienia starych fixtures v1. Integracja
-mobile z HTTP i test telefonu pozostają osobnymi zadaniami.
+Ograniczenia: obliczenia synchroniczne w RAM, brak przyciągania dowolnych
+współrzędnych i prowadzenia terenowego. Import OSM jest w osobnym pakiecie
+ingestion; wykonano lokalne pomiary wybranego grafu, nie test obciążeniowy
+całego miasta. Mobile korzysta z HTTP; zakres urządzenia: [odbiór](../../docs/testing.md).
+Snapshot synthetic v2 nie zmienia starych fixtures v1.
 # Resolver dowodów B-03
 
 `resolveEvidence` oraz jego typy są eksportowane z `@krok/routing`.
 Funkcja wymaga jawnej polityki i zegara, zwraca istniejący model faktu
-oraz wewnętrzny audyt. Nie jest automatycznie włączana do API/plannera.
+oraz wewnętrzny audyt. Ingestion używa jej przy budowie snapshotu;
+planner przyjmuje już rozstrzygnięte fakty.
 Reguły, użycie i ograniczenia: [B-03](../../docs/b03-evidence.md).

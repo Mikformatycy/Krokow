@@ -1,0 +1,48 @@
+{
+  "checkedAt": "2026-10-03T21:24:03.994Z",
+  "baseUrl": "http://127.0.0.1:3003",
+  "catalogSize": 96556,
+  "routePoints": 30,
+  "checks": [
+    {
+      "origin": "Rynek Główny — punkt na ciągu pieszym",
+      "destination": "Floriańska — punkt na ciągu pieszym",
+      "http": 200,
+      "distanceM": 1173.3413143684852,
+      "crossings": 2,
+      "calculation": "budget_limited",
+      "graphVersion": "osm-walk-v1-4196644a76e0dfaae55e59dc",
+      "durationMs": 173
+    },
+    {
+      "origin": "Mały Rynek — punkt na ciągu pieszym",
+      "destination": "Plac Mariacki — punkt na ciągu pieszym",
+      "http": 200,
+      "distanceM": 491.1170442208755,
+      "crossings": 2,
+      "calculation": "budget_limited",
+      "graphVersion": "osm-walk-v1-4196644a76e0dfaae55e59dc",
+      "durationMs": 78
+    },
+    {
+      "origin": "Galeria Krakowska — wejście od Pawiej",
+      "destination": "High5ive, budynek 1 — wejście zachodnie",
+      "http": 200,
+      "distanceM": 420.21745920736305,
+      "crossings": 1,
+      "calculation": "finished",
+      "graphVersion": "osm-walk-v1-4196644a76e0dfaae55e59dc",
+      "durationMs": 21
+    },
+    {
+      "expected": "NO_PATH",
+      "actual": "NO_PATH",
+      "http": 422
+    },
+    {
+      "expected": "NO_MATCHING_ROUTE",
+      "actual": "NO_MATCHING_ROUTE",
+      "http": 422
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "mobile-web-pilot",
+      "runtimeExecutable": "npm.cmd",
+      "runtimeArgs": ["exec", "--yes", "--package=node@24.21.0", "--package=pnpm@10.34.6", "--call", "pnpm --filter @krok/mobile exec expo start --web --localhost --port 8085 --max-workers 2"],
+      "env": { "EXPO_NO_TELEMETRY": "1", "EXPO_PUBLIC_API_URL": "http://127.0.0.1:3003" },
+      "port": 8085
+    }
+  ]
+}

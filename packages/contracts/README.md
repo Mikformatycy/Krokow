@@ -1,7 +1,22 @@
 # Kontrakt F-02
 
-Wersja `1.0.0-draft.2`, do przeglądu A+B. Otwarte decyzje:
-[docs/f02-review.md](../../docs/f02-review.md). Nie jest to działające API.
+## Addytywna wyszukiwarka miasta — 2026-10-03
+
+Nowe `PlaceSearchQuerySchema` / `PlaceSearchResponseSchema` oraz
+`placeSearchResponse` z fixtures opisują `/v1/place-search`. Osobna wersja
+funkcji **place-search-1**; istniejące DTO i envelope draft.2 bez zmiany.
+Regeneracja tworzy także `place-search.json` i `place-search-empty.json`.
+`routing.available` ma jawne cityId/placeId; obiekt z punktem orientacyjnym
+nie może udawać punktu grafu. Pełna instrukcja i zakres odbioru UI:
+[place-search](../../docs/place-search.md). Implementacja i testy backendu
+gotowe; mobile jest podłączony. Aktualna regresja i zakres telefonu: [testing](../../docs/testing.md).
+
+## Dotychczasowy kontrakt routingu
+
+Wersja wykonawcza `1.0.0-draft.2`; endpoint wyszukiwania dodatkowo ma
+`searchVersion=place-search-1`. Pakiet jest wspólnym źródłem schematów API i
+mobile. HTTP działa w apps/api; nazwa draft nie oznacza braku implementacji.
+[Przegląd F-02](../../docs/f02-review.md) jest historycznym zapisem decyzji.
 
 Import w mobile/API:
 
@@ -44,7 +59,8 @@ pnpm test
 odrzuca brakujące lub nieaktualne pliki i niezarejestrowane przykłady JSON.
 OpenAPI dokumentuje kształt danych; pełne kontrole relacji są w eksportowanych
 walidatorach Zod. HTTP nadal musi sprawdzić powiązanie wyniku z konkretnym
-requestem, twarde wymagania, limity objazdu i zgodność wersji. To zadania B-01/B-02.
+requestem, twarde wymagania, limity objazdu i zgodność wersji. Implementacja
+API i klienta wykonuje te kontrole; potwierdzają je testy obu pakietów.
 
 Brak automatycznych defaults, koercji, transformacji i typów Node w wire.
 SameEndpoint jest prawidłowym kształtem requestu, ale błędem domenowym API.

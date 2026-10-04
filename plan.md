@@ -1,8 +1,44 @@
-# Plan realizacji - dwie osoby, Codex + Claude Code
+# Plan realizacji — bieżący backlog
 
-**Cel:** działające porównanie tras uwzględniających infrastrukturę dla osoby niewidomej, z opisem przebiegu i uczciwą prezentacją wiedzy. **Nie cel:** ogólnomiejska, produkcyjna nawigacja "od drzwi do drzwi" w dwa dni.
+Stan: 2026-10-04. Jeden Codex odpowiada za wszystkie moduły; nie czeka na dawnych wykonawców A/B. Podstawa: [requirements.md](requirements.md), wyniki: [status](docs/status.md).
 
-Załącznik dopuszcza wybór jednej grupy odbiorców i wymaga konkretnych informacji, pochodzenia danych, demonstracji, dostępności oraz modelu utrzymania [B01]. Skupienie na osobach niewidomych to nasza decyzja realizująca ten zakres, nie cytat z briefu. W briefie nie podano kompletnej bazy akustycznych przejść ani gwarancji dostępności miejskiego API.
+## Bieżące zadania
+
+| Etap | Stan | Następny warunek |
+| --- | --- | --- |
+| P-01 Audyt archiwum | Wykonany | Nie powtarzać bez zmiany danych; raport w docs/data-audit-report.md |
+| P-02 Rzeczywiste przykłady | Wykonany | Główna para Galeria Pawia → High5ive zachodnie; dwa dodatkowe przykłady |
+| P-03 Fakty przy trasach | Zintegrowane | Katalog dowodów wspólny dla wariantów; pozycja rekordu na wybranej trasie wymaga przyszłego kontraktu |
+| P-04 Wyszukiwanie i UI | Zintegrowane | 96 556 wpisów wyszukiwania, 30 końców tras, kreator i odsłuch |
+| P-05 Odbiór | 620 testów PASS w ostatnim audycie; pięć prób iPhone/VoiceOver potwierdzone | Nowe podsumowanie i pozostałe próby urządzenia z docs/testing.md; brak audytu terenu/WCAG |
+| Dokumentacja | Ujednolicona po audycie wymagań | Aktualny start, opis utrzymania/przenoszenia/skalowania, licencje i polskie odpowiedzi do formularza |
+| P-06 Materiały | Do wykonania | PDF do 10 slajdów, film do 3 minut i otwarty link po poleceniu publikacji |
+
+Priorytet po dokumentacji: P-06 zgodnie z ostatnim poleceniem użytkownika.
+Testy urządzenia pozostają jawnie otwarte; nie przedstawiać ich jako wykonanych
+ani odtwarzać całej aplikacji przed nagraniem. [Scenariusz](docs/demo-script.md).
+
+## Dalszy rozwój
+
+[Model utrzymania](docs/operations.md) opisuje proponowane odpowiedzialności,
+role, budżet, aktualizacje, zgłoszenia, kopie i migrację. Nie jest uruchomioną
+usługą. Dodanie miasta wymaga loadera/konfiguracji API, usunięcia stałych
+cityId w mobile, audytu i testów. Nie wystarczy zmiana nazwy.
+
+Przed publicznym pilotem: wskazany operator i kontakt, decyzja o licencji
+własnego kodu, hosting HTTPS, ograniczenia nadużyć i logów proxy, odtworzenie
+danych oraz odbiór dostępności. Konta, zgłoszenia i PostGIS wymagają osobnej
+implementacji. GPS/teren, nowe źródła i ORS są oddzielnymi zakresami; nie
+stanowią automatycznego następnego kroku ani wymogu demonstracji briefu.
+
+Bez nowych worktrees, zmiany gałęzi i subagentów. Commit/push/publikacja
+wymagają nowego polecenia użytkownika.
+
+## Historyczny plan P0/P1
+
+Poniżej zachowano pierwotne budżety i kryteria, w tym dawny podział A/B.
+To historia projektu, nie aktualne przydziały ani lista niezrobionych modułów.
+Dla stanów wykonania obowiązuje tabela powyżej i docs/status.md.
 
 ## 1. Co ma zobaczyć użytkownik
 
@@ -62,7 +98,7 @@ Zadania A+B podają łączne osobogodziny, nie czas każdej osoby. Właściciel 
 | F-02 / A+B / 8 h | F-01 | Zod i API draft na podstawie `docs/contracts.md`, przykłady sukces/błąd, eksport OpenAPI. Każdy przykład przechodzi walidację; `unknown`/`conflicting` mają osobne testy; obie osoby zatwierdzają. |
 | F-03 / A / 4 h | F-01, uzgodniony SDK | Expo Router, adaptery platformowe, ekran startowy mobile/web, runner testów UI. Uruchomienie na co najmniej jednym telefonie i w przeglądarce; drugi OS jawnie w statusie. |
 
-### Backend / Claude Code
+### Backend / rola B
 
 | ID / czas | Zależność | Zakres i mierzalny odbiór |
 | --- | --- | --- |
@@ -73,7 +109,7 @@ Zadania A+B podają łączne osobogodziny, nie czas każdej osoby. Właściciel 
 | B-05 / 8 h | B-02, B-04 | Graf realnego obszaru i katalog wejść, QA topologii. Każde przejście ma prawidłowe strony/etapy; brak teleportacji; przerwa w danych daje brak trasy. |
 | B-06 / 4 h | B-03, B-05 | Wyjaśnienia i metryki tras, wersje, błędy, wydajność. API wyjaśnia każdą rekomendację danymi; pomiar p95; budget limit nie jest `NO_PATH`. |
 
-### Frontend / Codex
+### Frontend / rola A
 
 | ID / czas | Zależność | Zakres i mierzalny odbiór |
 | --- | --- | --- |
@@ -121,7 +157,7 @@ B-03 może powstawać równolegle z B-02 w osobnych modułach, ale dla jednej os
 
 To **osobny zakres redukowany**, nie zobowiązanie wykonania 128 godzin w weekend. Przy łącznym budżecie ok. 32-40 osobogodzin priorytetem są: uzgodniony kontrakt, dwie lub trzy trasy na małym grafie, tekstowy przebieg, etykiety danych, jeden odsłuch i scenariusz awarii. Rezygnujemy z mapy, swobodnego geocodingu, zgłoszeń, zapisu offline, GPS live i rozbudowanego deploymentu.
 
-| Okno | Osoba A / Codex | Osoba B / Claude |
+| Okno | Osoba A | Osoba B |
 | --- | --- | --- |
 | 0-3 h | Ekrany i rozmowa o kontrakcie, test telefonu | Szkielet monorepo, schematy i fixtures |
 | 3-10 h | UI tekstowe na mockach, stany, czytnik | Routing małego grafu, API, źródła |
@@ -138,7 +174,7 @@ Rekrutacja, zgoda na ewentualne nagranie i wynagrodzenie za konsultację wymagaj
 
 ## 9. Model wdrożenia i finansowania
 
-Właściciel produktu poza UMK odpowiada za hosting, zgłoszenia, dane i aktualizacje. Przykładowy klient biznesowy to hotel lub organizator wydarzenia kupujący dostępny opis dojścia i jego aktualizację. Kierunki te odpowiadają briefowi [B01, s. 6]; zainteresowanie klientów i przychód są dopiero hipotezą do rozmów.
+Właściciel produktu poza UMK odpowiada za hosting, zgłoszenia, dane i aktualizacje. Przykładowy klient biznesowy to hotel lub organizator wydarzenia kupujący dostępny opis dojścia i jego aktualizację. Kierunki te odpowiadają briefowi; zainteresowanie klientów i przychód są dopiero hipotezą do rozmów.
 
 Przed publicznym pilotażem: operator nazwany, koszty rzeczywistych dostawców przeliczone, licencje sprawdzone, zasady danych opisane, moderator i procedura reakcji wyznaczone. Nie obiecujemy utrzymania przez Miasto ani darmowych zasobów bez limitu. Płatność partnera nie może zmieniać rankingu tras.
 
@@ -156,4 +192,4 @@ Przed publicznym pilotażem: operator nazwany, koszty rzeczywistych dostawców p
 
 ## 11. Gotowe materiały a przyszłe zadania
 
-Ten pakiet dostarcza dokumentację, syntetyczne przykłady i instrukcje agentów. Prezentacja PDF i film nie zostały tu utworzone; są zadaniem D-01, bo wymagają rzeczywiście działającego prototypu. Dostarczony `references/brief.pdf` jest oryginalnym opisem wyzwania, nie prezentacją naszego rozwiązania.
+Ten pakiet dostarcza dokumentację, syntetyczne przykłady i instrukcje agentów. Prezentacja PDF i film nie zostały tu utworzone; są zadaniem D-01, bo wymagają rzeczywiście działającego prototypu. Aktualnie dostarczony brief to `requirements.md`; `references/brief.pdf` nie występuje w workspace.

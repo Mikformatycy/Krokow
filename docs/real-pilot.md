@@ -1,5 +1,13 @@
 # Prawdziwe dane w aplikacji — bieżący priorytet
 
+> **Dokument historyczny — odczytuj w kontekście opisanej iteracji.**
+> Aktualny stan: [README](../README.md), [odbiór](testing.md) i [status](status.md).
+> Integracja wyszukiwania/API jest zakończona; ostatnia pełna kontrola miała
+> 620 testów PASS, a pięć prób iPhone/VoiceOver potwierdził użytkownik.
+> Nowe podsumowanie i pozostałe próby urządzenia są otwarte. Dawne A/B,
+> NOT TESTED, „do integracji” i listy przyszłych modułów niżej nie opisują
+> automatycznie stanu obecnego. Aktualne materiały PDF/film są do wykonania.
+
 Polecenie użytkownika, 2026-10-03: dowieźć przepływ na realnych danych
 zamiast rozwijać demonstrator. Zakres B: mały snapshot Krakowa, graf tylko
 z jawnych połączeń pieszych, katalog rzeczywistych punktów na grafie,

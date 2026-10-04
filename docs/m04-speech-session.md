@@ -1,5 +1,13 @@
 # M-04 — sesja symulacji i wspólny odsłuch
 
+> **Dokument historyczny — odczytuj w kontekście opisanej iteracji.**
+> Aktualny stan: [README](../README.md), [odbiór](testing.md) i [status](status.md).
+> Integracja wyszukiwania/API jest zakończona; ostatnia pełna kontrola miała
+> 620 testów PASS, a pięć prób iPhone/VoiceOver potwierdził użytkownik.
+> Nowe podsumowanie i pozostałe próby urządzenia są otwarte. Dawne A/B,
+> NOT TESTED, „do integracji” i listy przyszłych modułów niżej nie opisują
+> automatycznie stanu obecnego. Aktualne materiały PDF/film są do wykonania.
+
 Zakres A, 2026-10-03: połączenie rdzenia symulacji z istniejącym SpeechCoordinator, nadal wyłącznie w worktree `slepa-genia-simulation`. B prowadzi próbę telefonu w głównym checkoutcie. Nie zmieniamy jego ekranów, środowiska, manifestów ani serwerów.
 
 Kryteria przed implementacją: jedna kolejka mowy przy napływających zdarzeniach; istniejące play nadal zastępuje plan; enqueue dopisuje do tej samej kolejki także podczas wyszukiwania głosu. Stop, pauza, zmiana wariantu, tło i włączenie czytnika usuwają zaległe wypowiedzi. Zdarzenia pozostają tekstowe i uporządkowane; głos wymaga jawnego włączenia i potwierdzenia nieaktywnego czytnika. Brak automatycznego nadrabiania wypowiedzi po powrocie. Testy korzystają z rzeczywistego koordynatora i atrap tylko portu urządzenia/zegara.

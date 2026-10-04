@@ -57,7 +57,10 @@ export function present(snapshot: Snapshot, policy: Policy, result: SearchResult
   const degraded = snapshot.sources.filter((s) => s.status !== 'ok').map((s) => s.id);
   if (degraded.length) warnings.push({ code: 'SOURCE_DEGRADED', severity: 'warning', messageKey: 'warning.source_degraded', params: { sourceIds: degraded }, evidenceIds: [] });
   const referenced = new Set(routes.flatMap(r => r.events.flatMap(e => [...e.facts.audible_signal.evidenceIds, ...e.facts.tactile_paving.evidenceIds])));
-  const evidenceCatalog = mode === 'pilot' ? snapshot.evidence.filter(e => referenced.has(e.id)) : snapshot.evidence;
+  // Object-level observations on the returned variants, not facts inferred for a whole route.
+  // Exact graph ownership only: never transfer nearby node tags to a way/crossing.
+  const routeObjects = new Set(result.selected.flatMap(path => path.edges.map(edge => edge.objectId)));
+  const evidenceCatalog = mode === 'pilot' ? snapshot.evidence.filter(e => referenced.has(e.id) || routeObjects.has(e.objectId)) : snapshot.evidence;
   return RouteResponseSchema.parse({ schemaVersion: SCHEMA_VERSION, requestId: context.requestId, generatedAt: context.asOf, asOf: context.asOf,
     mode, navigationEligibility: 'preview_only',
     dataContext: { cityId: snapshot.cityId, graphVersion: snapshot.graphVersion, evidenceVersion: snapshot.evidenceVersion,

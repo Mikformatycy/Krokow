@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useFocusEffect } from 'expo-router';
 import type { RouteResponse } from '@krok/contracts';
+import { announce } from '../../adapters/accessibility/announce';
 import { SpeechCoordinator } from '../../adapters/speech/coordinator';
 import type { SpeechStatus } from '../../adapters/speech/coordinator';
 import { createSpeechPort, watchSpeechEnvironment } from '../../adapters/speech/platform';
@@ -91,7 +92,8 @@ export function useRoutePlayback(response: RouteResponse) {
   }
   function start() {
     if (response.mode !== 'synthetic' || response.navigationEligibility !== 'preview_only' || !active || session.current || !owner.current) return;
-    const current = new SimulationSession(response, route.id, () => performance.now(), owner.current, 16);
+    const current = new SimulationSession(response, route.id, () => performance.now(), owner.current, 16,
+      { announce: (message, interrupt) => announce(message, { interrupt }) });
     session.current = current; setEnded(false); setEvents([]);
     current.setReader(environment.current.manual ? true : environment.current.reader);
     current.setSpeechEnabled(voice);

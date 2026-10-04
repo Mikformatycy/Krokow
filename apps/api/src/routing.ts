@@ -24,7 +24,9 @@ export function createSnapshotServices(input: Snapshot, policy: Policy, now?: ()
       mode, navigationEligibility: 'preview_only', capabilities: ['catalog_routes'], polygon: snapshot.coverage?.polygon ?? null,
       policy: { policyVersion: policy.id, fieldVerificationMaxAgeDays: policy.fieldVerificationMaxAgeDays } },
     places: { ...envelope, cityId: snapshot.cityId, mode, navigationEligibility: 'preview_only',
-      places: snapshot.places.map((p) => ({ id: p.id, cityId: snapshot.cityId, name: p.name, description: p.description ?? 'Fikcyjny punkt grafu demonstracyjnego.', coordinate: p.coordinate ?? null })) },
+      places: snapshot.places.map((p) => ({ id: p.id, cityId: snapshot.cityId, name: p.name,
+        description: [p.address, p.description ?? (mode === 'synthetic' ? 'Fikcyjny punkt grafu demonstracyjnego.' : 'Punkt na grafie pieszym OSM.')].filter(Boolean).join('. '),
+        coordinate: p.coordinate ?? null })) },
     sources: { ...envelope, mode, sources: snapshot.sources }, versions, evidence: snapshot.evidence,
   });
   const planner: RoutePlanner = {

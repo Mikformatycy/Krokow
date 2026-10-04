@@ -9,7 +9,7 @@ type Tags = Record<string, string>;
 const unknown = (): BooleanFact => ({ state: 'unknown', reason: 'missing', evidenceIds: [] });
 const walkingTypes = new Set(['footway', 'path', 'pedestrian']);
 const motorTypes = new Set(['motorway', 'trunk', 'primary', 'secondary', 'tertiary', 'residential', 'service', 'living_street', 'unclassified', 'primary_link', 'secondary_link', 'tertiary_link']);
-export interface PilotPlace { nodeId: number; name: string; description: string }
+export interface PilotPlace { nodeId: number; name: string; description: string; address?: string; kind?: 'entrance' | 'poi' }
 export interface GraphAudit { rejected: { wayId: number; reason: string }[]; nodes: number; directedEdges: number; crossings: number; components: number[] }
 const graphId = (id: number) => `osm:node/${id}`;
 function blocked(tags: Tags): boolean {
@@ -29,9 +29,14 @@ export function distanceM(a: [number, number], b: [number, number]): number {
 }
 
 /** Only shared OSM node IDs join paths; no nearest-neighbour or road-centreline edges. */
-export function buildPilotGraph(input: { elements: OsmElement[]; fetchedAt: string; bbox: Bbox; places: PilotPlace[]; restrictedWays?: ReadonlySet<number>; barrierNodes?: ReadonlySet<number>; railNodes?: ReadonlySet<number> }) {
+export function buildPilotGraph(input: { elements: OsmElement[]; fetchedAt: string; bbox: Bbox; places: PilotPlace[]; coverageName?: string; restrictedWays?: ReadonlySet<number>; barrierNodes?: ReadonlySet<number>; railNodes?: ReadonlySet<number> }) {
   validateBbox(input.bbox);
   const normalized = normalize(input.elements, input.fetchedAt);
+  const evidenceByObject = new Map<string, typeof normalized.evidence>();
+  for (const evidence of normalized.evidence) {
+    const list = evidenceByObject.get(evidence.objectId) ?? [];
+    list.push(evidence); evidenceByObject.set(evidence.objectId, list);
+  }
   const nodes = new Map(input.elements.filter((e): e is Node => e.type === 'node').map(e => [e.id, e]));
   const ways = input.elements.filter((e): e is Way => e.type === 'way');
   const roads = new Set(ways.filter(w => motorTypes.has(w.tags.highway ?? '') && !nonGround(w.tags)).flatMap(w => w.nodes));
@@ -66,7 +71,7 @@ export function buildPilotGraph(input: { elements: OsmElement[]; fetchedAt: stri
     const name = way.tags.name?.slice(0, 450) ?? (crossing ? 'Przejście przez jezdnię' : 'Ciąg pieszy');
     for (const id of [first, last]) graphNodes.set(graphId(id), { id: graphId(id), level: 0, coordinate: coordinate(id) });
     const lengthM = endM - startM;
-    const candidates = normalized.evidence.filter(e => e.objectId === objectId).map(e => ({ evidence: e, publication: 'published' as const }));
+    const candidates = (evidenceByObject.get(objectId) ?? []).map(e => ({ evidence: e, publication: 'published' as const }));
     const resolve = <K extends 'audible_signal' | 'tactile_paving'>(featureKey: K) => resolveEvidence({ objectId, featureKey,
       scope: { side: null, direction: null, level: way.tags.level === '0' ? 0 : null }, candidates, sources: [normalized.source],
       policy: { id: 'osm-pilot-1', infrastructureMaxAgeDays: 365, temporaryObservationMaxAgeHours: 24 } }, () => input.fetchedAt).fact;
@@ -111,7 +116,8 @@ export function buildPilotGraph(input: { elements: OsmElement[]; fetchedAt: stri
   const places: Place[] = input.places.map(p => {
     const node = graphNodes.get(graphId(p.nodeId));
     if (!node?.coordinate) throw new Error(`Catalog point has no proven walking connection: ${p.nodeId}`);
-    return { id: `osm-place-${p.nodeId}`, nodeId: node.id, name: p.name, description: p.description, coordinate: node.coordinate };
+    return { id: `osm-place-${p.nodeId}`, nodeId: node.id, name: p.name, description: p.description, coordinate: node.coordinate,
+      ...(p.address ? { address: p.address } : {}), ...(p.kind ? { kind: p.kind } : {}) };
   });
   const adjacency = new Map<string, string[]>();
   for (const edge of edges) { adjacency.set(edge.from, [...adjacency.get(edge.from) ?? [], edge.to]); adjacency.set(edge.to, [...adjacency.get(edge.to) ?? [], edge.from]); }
@@ -127,7 +133,7 @@ export function buildPilotGraph(input: { elements: OsmElement[]; fetchedAt: stri
   const graphVersion = sha256(JSON.stringify({ nodes: [...graphNodes.values()], edges, places, bbox: input.bbox })).slice(0, 24);
   const snapshot: Snapshot = { mode: 'pilot', cityId: 'krakow-stare-miasto-pilot',
     graphVersion: `osm-walk-v1-${graphVersion}`, evidenceVersion: `osm-evidence-v1-${version}`, snapshotFetchedAt: input.fetchedAt,
-    coverage: { name: 'Kraków — okolice Galerii Krakowskiej',
+    coverage: { name: input.coverageName ?? 'Kraków — okolice Galerii Krakowskiej',
       description: 'Prawdziwe dane OpenStreetMap. Wybrane połączenia piesze i punkty katalogu; niepełne dane o udogodnieniach. Podgląd planu, bez prowadzenia terenowego.',
       polygon: { type: 'Polygon', coordinates: [[[west, south], [east, south], [east, north], [west, north], [west, south]]] } },
     graph: { nodes: [...graphNodes.values()], edges }, places, sources: [normalized.source], evidence: normalized.evidence };

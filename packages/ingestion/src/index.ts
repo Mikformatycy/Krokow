@@ -5,3 +5,6 @@ export * from './store';
 export * from './pilot-graph';
 export * from './map-extract';
 export * from './krakow';
+export * from './city-catalog';
+export * from './load-city-catalog';
+export * from './krakow-prototype';

@@ -13,7 +13,17 @@ export interface CatalogDataset {
 
 export function validateDataset(input: CatalogDataset): CatalogDataset {
   const coverage = CoverageResponseSchema.parse(input.coverage);
-  const places = PlacesResponseSchema.parse(input.places);
+  // The HTTP response is capped at ten, not the server-side routing catalog.
+  // Validate every page using the shared wire schema and enforce global uniqueness.
+  const allPlaces = input.places.places;
+  if (allPlaces.length > 10_000 || new Set(allPlaces.map(place => place.id)).size !== allPlaces.length) {
+    throw new Error('Invalid route catalog size or duplicate places');
+  }
+  const first = PlacesResponseSchema.parse({ ...input.places, places: allPlaces.slice(0, 10) });
+  const places = { ...first, places: [...first.places] };
+  for (let offset = 10; offset < allPlaces.length; offset += 10) {
+    places.places.push(...PlacesResponseSchema.parse({ ...input.places, places: allPlaces.slice(offset, offset + 10) }).places);
+  }
   const sources = SourcesResponseSchema.parse(input.sources);
   const versions = VersionSetSchema.parse(input.versions);
   if (places.cityId !== coverage.cityId || places.mode !== coverage.mode || sources.mode !== coverage.mode

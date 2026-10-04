@@ -1,5 +1,13 @@
 # Decyzje techniczne
 
+> **Dokument historyczny — odczytuj w kontekście opisanej iteracji.**
+> Aktualny stan: [README](../README.md), [odbiór](testing.md) i [status](status.md).
+> Integracja wyszukiwania/API jest zakończona; ostatnia pełna kontrola miała
+> 620 testów PASS, a pięć prób iPhone/VoiceOver potwierdził użytkownik.
+> Nowe podsumowanie i pozostałe próby urządzenia są otwarte. Dawne A/B,
+> NOT TESTED, „do integracji” i listy przyszłych modułów niżej nie opisują
+> automatycznie stanu obecnego. Aktualne materiały PDF/film są do wykonania.
+
 ## F-03 — Expo, 2026-10-03, osoba A / Codex
 
 Użytkownik potwierdził iPhone'a z Expo Go client 57.0.9 i obsługą SDK 57.0.0 oraz równoległą pracę drugiej instancji Codexa nad backendem. A realizuje szkielet F-03, B zachowuje F-02 i integrację wspólnych manifestów/lockfile. Nie kopiujemy schematów ani zależności kontraktu z nieodebranego draftu do mobile.

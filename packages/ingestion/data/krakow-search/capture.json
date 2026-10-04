@@ -1,0 +1,20 @@
+{
+  "fetchedAt": "2026-10-03T20:40:40.212Z",
+  "endpoint": "https://overpass-api.de/api/interpreter",
+  "query": "[out:json][timeout:60][maxsize:134217728];area[\"name\"=\"Kraków\"][\"boundary\"=\"administrative\"][\"admin_level\"=\"8\"]->.city; (nwr(area.city)[\"name\"];nwr(area.city)[\"addr:housenumber\"];);out meta center;",
+  "boundaryQuery": "[out:json][timeout:25];rel(2768922);out geom;",
+  "rawSha256": "b86f4c287fa1e83bbc7366a00c2e8b345451765ca638daca499d133595f2d76c",
+  "boundarySha256": "2a2244a8599a8b3ed1ea6df0dd3347496e86765766c0e0dd8e5d69ae53345c3e",
+  "catalogSha256": "ecc6befd29dd1145c9bef199b69da6f5e28fede3c286f3f8aa47e3af96f18960",
+  "rawBytes": 94152406,
+  "catalogBytes": 36767692,
+  "version": "krakow-search-1-9ed73bba57a4e06a82614a1e",
+  "audit": {
+    "input": 114283,
+    "accepted": 96526,
+    "excluded": 4726,
+    "duplicates": 13031
+  },
+  "license": "ODbL 1.0",
+  "attribution": "© OpenStreetMap contributors"
+}

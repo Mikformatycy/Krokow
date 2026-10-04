@@ -6,6 +6,7 @@ import {
   CoverageResponseSchema, FeatureEvidenceResponseSchema, HealthResponseSchema, IdSchema,
   PlacesQuerySchema, PlacesResponseSchema, ReadyResponseSchema, RouteRequestSchema,
   SCHEMA_VERSION, SourcesResponseSchema,
+  PlaceSearchQuerySchema, PlaceSearchResponseSchema,
 } from '@krok/contracts';
 import { createOpenApiDocument } from '@krok/contracts/openapi';
 import type { CatalogDataset } from './dataset';
@@ -13,8 +14,11 @@ import { validateDataset } from './dataset';
 import { PublicError, publicError, readInput, sendError } from './errors';
 import type { RoutePlanner } from './planner';
 import { validatePlan } from './planner';
+import type { PlaceSearch } from './place-search';
+import { createPlaceIndex } from './place-index';
 
 export interface ApiDependencies {
+  placeSearch?: PlaceSearch;
   dataset?: CatalogDataset;
   planner?: RoutePlanner;
   databaseReady: () => Promise<boolean>;
@@ -37,6 +41,8 @@ async function databaseCheck(probe: () => Promise<boolean>, timeoutMs: number): 
 
 export function buildApi(dependencies: ApiDependencies) {
   const dataset = dependencies.dataset ? validateDataset(dependencies.dataset) : undefined;
+  const placesIndex = dataset ? createPlaceIndex(dataset.places.places.map(place => ({ id: place.id, name: place.name,
+    fields: [place.description], priority: 0, value: place }))) : undefined;
   const clock = dependencies.clock ?? (() => new Date());
   const openapi = createOpenApiDocument();
   const app = Fastify({
@@ -97,9 +103,13 @@ export function buildApi(dependencies: ApiDependencies) {
   app.get('/v1/places', (request) => {
     const query = readInput(PlacesQuerySchema, request.query, 'query');
     const catalog = requireDataset(query.cityId);
-    const search = query.query.toLocaleLowerCase('pl-PL');
-    const places = catalog.places.places.filter((p) => search === '' || p.name.toLocaleLowerCase('pl-PL').includes(search)).slice(0, 10);
+    const places = query.query.trim() === '' ? catalog.places.places.slice(0, 10) : placesIndex!.search(query.query).items;
     return PlacesResponseSchema.parse({ ...catalog.places, requestId: request.id, places });
+  });
+  app.get('/v1/place-search', (request) => {
+    const query = readInput(PlaceSearchQuerySchema, request.query, 'query');
+    if (!dependencies.placeSearch) throw publicError('SOURCE_UNAVAILABLE', { cityId: query.cityId });
+    return PlaceSearchResponseSchema.parse(dependencies.placeSearch.search(query.cityId, query.query, request.id));
   });
   app.get('/v1/sources', (request) => SourcesResponseSchema.parse({ ...requireDataset().sources, requestId: request.id }));
   app.get<{ Params: { id: string } }>('/v1/features/:id/evidence', (request) => {

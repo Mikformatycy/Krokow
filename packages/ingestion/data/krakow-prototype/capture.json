@@ -1,0 +1,16 @@
+{
+  "fetchedAt": "2026-10-03T20:39:21.626Z",
+  "url": "https://download.bbbike.org/osm/bbbike/Cracow/Cracow.osm.gz",
+  "upstreamCompressedSha256": "7c5a6fb32c7f54d38f8a990daec6c63cf52787c90024c088d9b00c8238c37ff4",
+  "rawSha256": "c0a1618bba5a436f0292606a60850a4b3d11a4942a9fa2f0358842b2a970f2d2",
+  "rawBytes": 24722184,
+  "bbox": [
+    50.052,
+    19.925,
+    50.075,
+    19.955
+  ],
+  "license": "ODbL 1.0",
+  "attribution": "© OpenStreetMap contributors",
+  "extraction": "All highway, building, barrier and railway ways with a node inside bbox; complete way nodes and pedestrian restrictions. Node identities and source timestamps preserved."
+}

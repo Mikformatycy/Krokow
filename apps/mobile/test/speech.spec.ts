@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import type { Page } from '@playwright/test';
-import { details, formSettings } from './ui-helpers';
+import { back, calculate, details, example, heading } from './ui-helpers';
 
 async function prepare(page: Page, polish = true) {
   await page.addInitScript((hasPolish) => {
@@ -18,53 +18,58 @@ async function prepare(page: Page, polish = true) {
     Object.defineProperty(window, 'speechSynthesis', { configurable: true, value: engine });
   }, polish);
   await page.goto('/plan');
-  await page.getByRole('button', { name: 'Użyj przykładu A/B/C' }).click();
-  await page.getByRole('button', { name: 'Oblicz trasy', exact: true }).click();
-  await expect(page.getByRole('heading', { name: 'Odsłuch planu' })).toBeVisible();
+  await example(page);
+  await calculate(page);
+  await expect(heading(page, 'Twój plan')).toBeVisible();
 }
 const state = (page: Page) => page.evaluate(() => {
   const value: unknown = Reflect.get(window, '__speechTest');
   return value as { spoken: string[]; cancelled: number };
 });
-test('speech starts explicitly, stops on variant changes and cancels on form edit', async ({ page }) => {
+const listen = (page: Page) => page.getByRole('button', { name: 'Odsłuchaj plan', exact: true });
+
+test('speech starts explicitly, stops on variant change and is cancelled when leaving the result', async ({ page }) => {
   await prepare(page); expect((await state(page)).spoken).toHaveLength(0);
-  await page.getByRole('button', { name: 'Odsłuchaj wybrany plan' }).click();
-  await expect(page.getByText('Trwa odsłuch planu.')).toBeVisible();
+  await listen(page).click();
+  await expect(page.getByTestId('speech-status')).toHaveText('Trwa odsłuch.');
+  await expect(page.getByRole('button', { name: 'Zatrzymaj odsłuch', exact: true })).toBeVisible();
   expect((await state(page)).spoken).toHaveLength(1);
-  await details(page, 'Zmień wariant');
-  await page.getByRole('button', { name: 'Wybierz wariant 1, 740 m' }).click();
-  await expect(page.getByText(/Odsłuch zatrzymany/)).toBeVisible();
-  await details(page, 'Tekst i opcje odsłuchu');
-  await page.getByRole('button', { name: 'Powtórz plan od początku' }).click();
+  await details(page, 'Inne warianty (2)');
+  await page.getByRole('radio', { name: 'Wariant 1, 740 m' }).click();
+  await expect(page.getByTestId('speech-status')).toHaveText('Odsłuch zatrzymany.');
+  await listen(page).click();
   expect((await state(page)).spoken).toHaveLength(2);
   const count = (await state(page)).cancelled;
-  await formSettings(page);
-  await page.getByRole('checkbox', { name: 'Preferuj opisaną sygnalizację dźwiękową' }).click();
+  await back(page);
+  await expect(heading(page, 'Twoja trasa')).toBeVisible();
   await expect.poll(async () => (await state(page)).cancelled).toBeGreaterThan(count);
-  await expect(page.getByRole('heading', { name: 'Odsłuch planu' })).toHaveCount(0);
 });
-test('reader switch stops own voice and exposes the identical text', async ({ page }) => {
+
+test('reader switch removes own voice and keeps the identical plan text', async ({ page }) => {
   await prepare(page);
-  await page.getByRole('button', { name: 'Odsłuchaj wybrany plan' }).click();
-  await page.getByRole('checkbox', { name: 'Korzystam z czytnika — wyłącz głos aplikacji' }).click();
-  await expect(page.getByRole('button', { name: 'Odsłuchaj wybrany plan' })).toBeDisabled();
-  await expect(page.getByText(/Własny głos aplikacji wyłączony/)).toBeVisible();
-  await page.getByRole('button', { name: 'Tekst i opcje odsłuchu' }).click();
+  await listen(page).click();
+  await details(page, 'Ustawienia głosu');
+  await page.getByRole('switch', { name: 'Korzystam z czytnika — wyłącz głos aplikacji' }).click();
+  await expect(listen(page)).toHaveCount(0);
+  await expect(page.getByTestId('speech-status')).toHaveText('Głos aplikacji jest wyłączony, bo korzystasz z czytnika ekranu.');
+  await details(page, 'Przebieg trasy');
   await expect(page.getByText('To fikcyjne dane demonstracyjne. Odsłuch planu, bez prowadzenia w terenie.')).toBeVisible();
   expect((await state(page)).spoken).toHaveLength(1);
 });
+
 test('missing Polish voice has a visible fallback to text', async ({ page }) => {
   await prepare(page, false);
-  await page.getByRole('button', { name: 'Odsłuchaj wybrany plan' }).click();
-  await expect(page.getByText(/Brak dostępnego polskiego głosu/)).toBeVisible();
+  await listen(page).click();
+  await expect(page.getByTestId('speech-status')).toContainText('Brak polskiego głosu na urządzeniu');
   expect((await state(page)).spoken).toHaveLength(0);
-  await page.getByRole('button', { name: 'Tekst i opcje odsłuchu' }).click();
-  await expect(page.getByText('Tekst wybranego odsłuchu')).toBeVisible();
+  await details(page, 'Przebieg trasy');
+  await expect(page.getByText(/^Długość wariantu: 980 metrów/)).toBeVisible();
 });
+
 test('hiding the page stops speech without continuing in background', async ({ page }) => {
   await prepare(page);
-  await page.getByRole('button', { name: 'Odsłuchaj wybrany plan' }).click();
+  await listen(page).click();
   await page.evaluate(() => { Object.defineProperty(document, 'visibilityState', { configurable: true, value: 'hidden' }); document.dispatchEvent(new Event('visibilitychange')); });
-  await expect(page.getByText(/Odsłuch zatrzymany/)).toBeVisible();
+  await expect(page.getByTestId('speech-status')).toHaveText('Odsłuch zatrzymany.');
   expect((await state(page)).spoken).toHaveLength(1);
 });

@@ -1,5 +1,551 @@
 # Status prac
 
+## Commit całości i wyłączenie nagrań MP4, 2026-10-04
+
+- Użytkownik jawnie zlecił commit i push wszystkich bieżących zmian jako
+  `mrtakethatrrsk`. To upoważnienie do tej publikacji znosi wcześniejszy
+  zakaz commitów/pushów w tym zakresie. Pozostaje bieżąca gałąź `main`.
+- `.gitignore` obejmuje `*.mp4` oraz `*.MP4`; nagrania lokalne nie trafiają
+  do nowego commitu. Wcześniej usunięte materiały zachowują swój stan.
+- Zakres: istniejące zmiany prototypu, dane OSM, testy, dokumentacja i nowa
+  prezentacja PDF. Autor i committer korzystają z istniejącej tożsamości
+  Git `mrtakethatrrsk`. Przygotowano 171 plików do commitu i zwykłego push
+  do `origin/main`, bez force push ani zmiany gałęzi.
+- `git fetch origin`: lokalny HEAD zgodny z origin/main przed commitem.
+  `git check-ignore`: trzy nagrania w `vid_source/` pomijane; indeks nie
+  zawiera plików MP4. Kontrola wzorców sekretów w 153 zmienionych plikach
+  tekstowych nie znalazła trafień; żaden nowy plik nie przekracza 100 MiB.
+- `pnpm check:generated` przez Node 24.21.0/pnpm 10.34.6: **31 plików PASS**.
+  `git diff --cached --check`: PASS po zachowaniu dwóch twardych podziałów
+  wiersza Markdown bez końcowych spacji. Nie powtarzano testów aplikacji:
+  wcześniejsze wyniki właściwych pakietów i UI są w raportach poniżej.
+- Publikacja nie stanowi odbioru na urządzeniu ani wdrożenia aplikacji.
+  Wynik commitu i push jest raportowany po wykonaniu poleceń Git.
+
+## Wyszarzone wyniki po wpisaniu lub dyktowaniu, 2026-10-04
+
+- Zakres P-04/P-05: odtworzyć i naprawić blokadę wszystkich wyników po
+  „pawia pięć”, zgłoszoną przez użytkownika. API 3001 po jego restarcie
+  zwraca identyczne wyniki dla obu zapisów, w tym trzy punkty tras.
+- Odtworzono w nowym teście: ponowne zdarzenie tego samego tekstu ustawia
+  `loading`, ale nie zmienia zapytania, więc efekt nie rozpoczyna żądania.
+  Test przed poprawką kończył się błędem `Expected: enabled / Received: disabled`.
+- Kryteria: powtórzenie tekstu po odpowiedzi nie blokuje wyboru, stare
+  wyniki przy nowym zapytaniu pozostają nieaktywne, opóźnienia/ponowienie
+  i fokus zachowują dotychczasowe zachowanie. Bez zmiany przypisań grafu.
+- `PlaceStep.tsx`: normalizacja końcowej interpunkcji przed efektem,
+  ustawienie loading wyłącznie przy zaplanowaniu wyszukiwania. Powtórzenie
+  tekstu nie zmienia statusu; nieaktualne wyniki są blokowane także przez
+  porównanie zapytania odpowiedzi z bieżącym tekstem po normalizacji.
+- Dodano regresję w `test/pilot/pilot.e2e.ts` i notatkę w `docs/testing.md`.
+  Test symuluje zdarzenie identycznego tekstu, potwierdza odblokowanie
+  rzeczywistego wejścia i wybór celu. Pierwszy przebieg po poprawce:
+  **18 testów pilota PASS**, z API użytkownika na 3001, desktop i 390 px.
+- Zmiana dotyczy klienta. Do próby na telefonie wystarczy odświeżenie aplikacji
+  w Expo Go; w tej iteracji nie restartowano API, Metro ani tunelu użytkownika.
+- Końcowe kontrole przez Node 24.21.0/pnpm 10.34.6: `pnpm lint`,
+  `pnpm typecheck`, `pnpm test:contracts` **132 PASS**, `pnpm test:mobile`
+  **170 PASS** i `git diff --check` PASS. Lint wskazał sposób pobrania
+  natywnego settera w teście; poprawiono wywołanie z zachowaniem kontekstu.
+  Pilot uruchomiono poleceniem `pnpm --filter @krok/mobile exec playwright test
+  --config test/pilot.config.ts` z `PILOT_TEST_API_URL=http://127.0.0.1:3001`.
+- Nieprzetestowane na urządzeniu: końcowe zdarzenia systemowego dyktowania
+  iPhone/VoiceOver. Następny krok: po odświeżeniu Expo Go ponowić dyktowanie
+  i wybór wejścia. Bez zmian API, kontraktu, danych, zależności i publikacji.
+
+## Claude — prezentacja biznesowa P-06, 2026-10-04
+
+- Zakres na polecenie użytkownika: estetyczna, ściśle biznesowa prezentacja
+  zgodna z `requirements.md` §4/§6/§8, maks. 10 slajdów (pod PDF). Bez zmian
+  aplikacji, danych, kontraktów, commitów i pushów.
+- Wykonano 10 slajdów jako prywatny Artifact typu Slides (eksport PDF/PPTX
+  z menu Artifactu): problem, rozwiązanie i grupa, prototyp na prawdziwych
+  danych (zrzuty web 390 px z działającego lokalnego API 3001/8081),
+  wiarygodność danych, model biznesowy, utrzymanie („pętla danych”),
+  przenoszenie („paczka miasta”, „3 × 0 dla Miasta”), skalowanie i plan
+  0–3/3–9/9–18 mies. z prośbą do Miasta, partnerów i środowiska.
+- Liczby z repo: 96 556, 30 punktów, 420 m, 479/479, 8 344, 620 PASS,
+  5 prób iPhone/VoiceOver, 200–500 zł/mies. i 8–16 h. Zewnętrzne: WHO 2,2 mld;
+  ruch turystyczny Krakowa 2024 (UMK/MOT, komunikat 2025-05-28): 14,72 mln,
+  7,95 mln z noclegiem, 2,33 mln z zagranicy.
+- Założenia do decyzji człowieka, oznaczone w treści jako propozycje:
+  ceny startowe (199 zł/mies., 990 zł/wydarzenie, 1 500 zł/audyt, API wg skali),
+  operator poza UMK bez nazwania podmiotu, zwrot poprawek do OSM zgodnie
+  z zasadami społeczności, harmonogram etapów. Brak walidacji popytu.
+- Nie wykonano: eksportu PDF do `deliverables/`, kontroli wizualnej slajdów,
+  filmu. Zrzuty to podgląd web, nie test telefonu.
+
+## Wyszukiwanie dyktowanych numerów adresowych, 2026-10-04
+
+- Zakres P-04/P-05: wspólny indeks API rozpoznaje polskie liczebniki główne
+  1–999 na końcu zapytania i opcjonalną literę budynku. Oryginalne zapytanie
+  pozostaje zachowane; wariant z cyframi rozszerza wyszukiwanie.
+- Kryteria: „pawia pięć” znajduje te same adresy co „Pawia 5”; obsługa
+  liczb wielowyrazowych i „pięć a”; brak zmiany nazw typu „Plac Trzech Krzyży”,
+  deduplikacja przed limitem 10 i dokładne dopasowanie numerów (5 ≠ 55/5a).
+  Bez nowych zależności, zmiany DTO, danych OSM i systemowego dyktowania.
+- Zmieniono wspólny `apps/api/src/place-index.ts`; słownik i ograniczenia
+  końcówki adresowej są w `spoken-address.ts`. Dodano przypadki indeksu,
+  rzeczywistych obu endpointów, prywatności logów i wyboru wyniku w UI.
+  Zaktualizowano README, API README, `docs/place-search.md` i `docs/testing.md`.
+- Wyniki z Node 24.21.0/pnpm 10.34.6: lint i typecheck całego workspace PASS;
+  `pnpm test:api` **148 PASS**, `pnpm test:contracts` **132 PASS**. Wcześniejsza
+  kontrola 42 testów indeksu/prototypu także PASS. Lint wykrył formatowanie
+  `it.each`, które poprawiono przed pełnym przebiegiem.
+- Runner pilot dopuszcza teraz `PILOT_TEST_API_URL` (domyślnie nadal 3003),
+  wspólny dla klienta web i prób HTTP. Kontrola typu konfiguracji wykryta
+  przez lint została poprawiona; końcowy lint tych plików i typecheck mobile PASS.
+- `PILOT_TEST_API_URL=http://127.0.0.1:3004` oraz
+  `pnpm --filter @krok/mobile exec playwright test --config test/pilot.config.ts`:
+  **16 PASS** (desktop i 390 px). „pawia pięć” pozostaje w polu, wejście
+  Galerii przy Pawiej 5 jest widoczne, wybór przechodzi do celu. Ręczny odczyt
+  HTTP obu zapisów: `total=20`, te same ID pierwszych 10 wyników, trzy routowalne.
+- Automatyczna kontrola odrzuciła restart istniejących API 3001/3003 jako
+  „blocked by policy”, bez dodatkowego uzasadnienia. Procesy pozostały bez
+  zmian i nadal mają poprzednią implementację. Sprawdzono poprawkę na osobnym
+  API 3004. Aktualny podgląd telefonu wymaga restartu swojego API przez użytkownika;
+  odświeżenie samego Metro nie wystarczy. Nie restartowano Metro ani tunelu.
+- `git diff --check`: PASS. Bez zmian DTO, fixtures, archiwów i zależności;
+  nie powtarzano testów niezwiązanych pakietów ani pełnych 170 testów synthetic UI.
+  Nieprzetestowane na urządzeniu: rzeczywiste dyktowanie iPhone/VoiceOver.
+  Następna próba: po restarcie API podyktować „pawia pięć” i wybrać wejście.
+  Bez commitów i pushów.
+
+## Ekran główny — logo i hasło, 2026-10-04
+
+- Zakres P-04/P-05 na polecenie użytkownika: zastąpić etykietę „Podgląd
+  aplikacji” na ekranie głównym istniejącym `logo.png` i zmienić hasło na
+  „To mały krok dla człowieka, ale wielki krok dla Krakowa”.
+- Kryteria: logo pod przyciskami, czytelny tekst i etykieta dla czytnika,
+  poprawne ładowanie obrazu na web, zachowana nawigacja klawiaturą oraz
+  brak poziomego przewijania na wąskim ekranie.
+- Zmieniono `WelcomeScreen.tsx`, dodano typ importu PNG w `src/assets.d.ts`,
+  zaktualizowano istniejące testy `welcome.spec.ts` i `planning.spec.ts`
+  oraz listę pozostałych prób w `docs/testing.md`. Oryginalny `logo.png`
+  jest importowany bez zmian obrazu. Komponent wspólny `Screen` bez zmian.
+- Przez wrapper Node 24.21.0/pnpm 10.34.6: `pnpm lint`, `pnpm typecheck`
+  i `pnpm test:contracts` (132 testy) PASS. Pierwszy lint wykrył składnię
+  importu typu niezgodną z regułą repozytorium; poprawiono ją przed tym wynikiem.
+- `pnpm test:mobile`: 168 PASS, dwa błędy odtworzyły podwójną rolę obrazu
+  na web. Usunięto nadmiarowe `accessibilityRole` z Image, zachowując opis.
+  Po poprawce lint czterech zmienionych plików i typecheck mobile PASS;
+  `pnpm --filter @krok/mobile exec playwright test welcome.spec.ts planning.spec.ts`:
+  **26 PASS**, w tym scenariusze HTTP planowania. Nie powtarzano pozostałych
+  testów po tej lokalnej poprawce. Nie jest to nowy pełny przebieg 620 testów.
+- Zweryfikowano ładowanie PNG, pojedynczą etykietę obrazu, fokus, powrót,
+  brak poziomego przewijania oraz zrzuty ekranu web (desktop i 390 px).
+  `git diff --check`: PASS. Nieprzetestowane na urządzeniu; następna próba:
+  odczyt nowego hasła/logo i układ przy dużym tekście na iPhonie/VoiceOver.
+  Bez commitów, pushów ani restartów podglądu użytkownika.
+
+## Ujednolicenie dokumentacji i opis utrzymania, 2026-10-04
+
+- Zlecenie: dostosować pliki opisowe do aktualnego projektu, doprecyzować
+  utrzymanie/przenoszenie/skalowanie i przygotować polskie odpowiedzi
+  do formularza wydarzenia. Zakres: dokumentacja i komentarze opisowe,
+  bez zmian zachowania aplikacji, kontraktów, danych i publikacji.
+- Kryteria: spójne liczby i granice produktu, aktualne komendy startu,
+  działające lokalne odnośniki dokumentacji bieżącej, odróżnienie historii
+  od stanu aktualnego oraz planu operacyjnego od wdrożonej usługi.
+- Historia testów i decyzji pozostaje zachowana. Użytkownik potwierdził:
+  przed wydarzeniem nie prowadzono prac, całość powstała podczas wydarzenia.
+  Bieżące opisy są neutralne, bez podpisów i wskazania zespołu jako operatora.
+- Wykonano: aktualny README z kompletnym startem web i przykładem 420 m;
+  osobną instrukcję telefonu; bieżący stan architektury/planu/kontraktu;
+  rejestr archiwów i poprawione README pakietów; aktualne przekazanie;
+  scenariusz filmu 120 s i osiem slajdów jako plan, bez gotowych binariów.
+- Dodano `docs/operations.md`: neutralny zakres odpowiedzialności bez
+  przypisania konkretnemu podmiotowi, role, budżet infrastruktury
+  i pracy, aktualizacje/korekty, kopie, przeniesienie oraz konkretne zmiany
+  kodu potrzebne do dodania miasta, źródła i kategorii. Nie wdrożono usług
+  opisanych jako przyszłe. `docs/dependencies.md` zawiera wersje i licencje
+  31 bezpośrednich pakietów odczytane z lokalnych package.json, nie pełny
+  audyt zależności przechodnich ani decyzję o licencji własnego kodu.
+- `docs/submission.md`: cztery polskie odpowiedzi, statystyka WHO
+  ze wskazaniem źródła i granicy populacji oraz odrębny lokalny audyt.
+  Trzecia odpowiedź potwierdza brak prac przed wydarzeniem, przedstawia
+  wykonany podczas niego zakres i pozostałe materiały demonstracyjne.
+- Osiemnaście dawnych raportów otrzymało oznaczenie historyczne; nie
+  zmieniano ich wyników testów ani dawnych decyzji. `docs/testing.md`
+  ma aktualizację po uzupełnieniu dokumentacji. Archiwum draft.1 pozostaje
+  jawnie historyczne; schematy/fixtures/OpenAPI nie zostały zmienione.
+- Poza Markdown zmieniono tylko komentarze: `.env.example`,
+  `apps/mobile/scripts/start-tunnel.mjs`, `apps/mobile/test/pilot.config.ts`.
+  Bez zmian zachowania aplikacji, danych, manifestów, lockfile i wymagań.
+- Kontrole dokumentów: skan `rg --files -g '*.md'` i walidacja lokalnych
+  linków w Pythonie: **58 plików, zero błędnych odnośników poza historią
+  docs/status.md**. Osiem dawnych linków statusu do usuniętych worktrees
+  i deliverables zachowano jako historię; bieżące dokumenty nie odsyłają
+  do nich jako dostępnych materiałów. Kontrola UTF-8 bez błędów.
+- Parser PowerShell: **12 bloków startowych bez błędów składni**.
+  `expo start --help` z przypiętego wrappera potwierdził użyte flagi;
+  `node --check apps/mobile/scripts/start-tunnel.mjs`: PASS.
+  Przegląd komend względem manifestów oraz `git diff --check`: PASS.
+- Odczyt istniejącego API 3001: health=ok, coverage=pilot,
+  cityId=krakow-stare-miasto-pilot; Pawia 5 zwraca 10 wyników, w tym 3
+  powiązane z grafem; catalogSize=96556. To read-only próba istniejącej
+  usługi, nie nowy test czystego startu. Nie restartowano podglądu.
+- Nie powtarzano lint/typecheck/620 testów aplikacji, eksportów, instalacji,
+  telefonu ani terenu, bo zmiany są opisowe/komentarzowe. Nie wykonano
+  wdrożenia, zakupu, wyboru licencji, commitów ani pushów. Pozostałe
+  ryzyka: wskazanie podmiotu utrzymującego usługę, licencja i nieodebrane
+  próby urządzenia. Następny zakres: P-06 — film i PDF według scenariusza.
+
+## Codex — sprawdzenie zgodności z requirements.md, 2026-10-04
+
+- Zakres P-05/T-01 na polecenie użytkownika: przegląd całego briefu,
+  implementacji, danych, dokumentacji i materiałów oddania. Oceniam bieżący
+  workspace, także pliki niezatwierdzone; nie utożsamiam go z wersją na GitHubie.
+- Kryterium odbioru audytu: macierz wymagań z dowodami i brakami, nowe wyniki
+  dostępnych kontroli oraz osobne oznaczenie historycznego odbioru telefonu.
+  Nie realizuję w tej iteracji brakujących funkcji ani materiałów konkursowych.
+- Przed edycją sprawdzono Git, manifesty, instrukcje i dokumenty wejściowe.
+  Zachowano kod, dane, usunięcia materiałów oraz wszystkie wcześniejsze zmiany.
+- Wynik: **nie wszystkie wymagania są spełnione**. Pełna macierz §1–10
+  i dowody: [audyt briefu](testing.md#audyt-wszystkich-wymagań-briefu--2026-10-04).
+  Brakuje aktualnego PDF i filmu w workspace. Operator i odpowiedzialności,
+  zestawienie licencji komponentów, instrukcja rozszerzenia/przeniesienia
+  oraz sprzeczne fragmenty dokumentacji wymagają domknięcia. Model biznesowy
+  istnieje jako propozycja; nie oznaczono go błędnie jako brakującej funkcji.
+- Zmiany tej iteracji: wyłącznie `docs/testing.md` (macierz i ograniczenia)
+  oraz ten wpis `docs/status.md`. Bez zmian aplikacji, kontraktu, źródeł danych,
+  zależności, gałęzi, commitów/pushów i restartu podglądu użytkownika.
+- Nowe komendy przez wrapper Node 24.21.0 / pnpm 10.34.6:
+  `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm check:generated`:
+  **PASS**. Workspace: **606 testów PASS** — infra 14, contracts 132,
+  routing 87, ingestion 88, API 115, mobile/web 170; generowane pliki: 31.
+  Testy web bez retries, desktop Chromium oraz viewport 390 px.
+- `pnpm --filter @krok/mobile exec playwright test --config test/pilot.config.ts`:
+  **14/14 PASS** bez ponowień (56,4 s), na istniejącym API 3003. Łącznie
+  w tej iteracji **620 testów PASS**. Realna trasa, daty/źródła, unknown,
+  wyszukiwanie, awaria/ponowienie, NO_PATH i twarde wymaganie sprawdzone
+  na desktop i 390 px. Podgląd użytkownika zachował PID-y API 3001/3212,
+  API 3003/28596, Metro 8081/25536 i gateway 8082/20088.
+- Ponowny pomiar sRGB palety `theme.ts` przez Python: tekst/tło 13,36:1,
+  tekst pomocniczy/tło 6,81:1, przycisk 8,19:1, ostrzeżenie 9,88:1,
+  obramowanie/tło 3,53:1, fokus/tło 5,70:1. To kontrola wskazanych par
+  kolorów, nie pełny audyt WCAG. `git diff --check`: PASS; oba zmienione
+  dokumenty także bez trailing whitespace (sprawdzone osobno, gdyż
+  `docs/testing.md` jest nadal untracked). Siedem lokalnych odnośników
+  w raporcie prowadzi do istniejących plików.
+- Nie wykonano ponownie: telefonu/VoiceOver/TalkBack, terenu, zdalnego CI,
+  czystej instalacji, PostGIS, eksportu web/iOS, zdalnej publikacji i kontroli
+  aktualnych zewnętrznych warunków licencyjnych. Historyczne potwierdzenie
+  użytkownika dla pięciu prób iPhone/VoiceOver pozostaje ważnym dowodem
+  swojego zakresu. Nowe podsumowanie trasy: **nieprzetestowane na urządzeniu**.
+- Ryzyko produktu: 96 556 wpisów wyszukiwania to nie ogólnomiejski routing;
+  graf obsługuje 30 końców w pięciu grupach. 479/479 etapów ma unknown
+  akustyki; wszystkie 8344 rekordy bez potwierdzenia terenowego. Te ograniczenia
+  nie są równoznaczne z brakiem infrastruktury. Synthetic jest dopuszczalne
+  w briefie przy jawnym oznaczeniu; mapa/GPS/ORS nie są wymogami oddania.
+- Następne konkretne zadanie: P-06 — aktualny film do 3 minut i PDF do
+  10 slajdów z demonstracją, źródłami, ograniczeniami, modelem biznesowym
+  i planem utrzymania. Ustalenie operatora pozostaje decyzją człowieka.
+
+## Codex — podsumowanie trasy do filmu, 2026-10-04
+
+- Zakres zaakceptowany przez użytkownika: nazwy startu/celu i wejść nad
+  wynikiem, jeden zapis dystansu/czasu, prostszy komunikat akustyki dla
+  jednego etapu, brak etykiety wariantu przy jednej trasie. Zachować wybór
+  i rekomendację przy wielu trasach, źródło OSM, niewiadome i odsłuch.
+- Nazwy pochodzą z istniejących instrukcji start/koniec zwróconej trasy;
+  bez zmian kontraktu, danych, routingu i zależności. Odbiór: regresja web
+  i pilota, kontrola kadru 390 px, lint/typecheck, kontrakty, eksport web.
+- Nowy układ jest osobną zmianą po wcześniejszym potwierdzeniu telefonu;
+  nieprzetestowane na urządzeniu, zgodnie z priorytetem filmu nie blokuje
+  dalszego przygotowania materiałów. Wyniki zostaną dopisane po testach.
+- Implementacja: `apps/mobile/src/features/planning/RouteResults.tsx`,
+  `routeText.ts`, `styles.ts`. Kontekst zachowuje pełne nazwy obiektów
+  i wejść, a natywny czytnik dostaje etykiety Start/Cel. Czas nadal oznacza
+  sam marsz; brak danych nie staje się brakiem infrastruktury.
+- Zaktualizowano `apps/mobile/test/http-planning.spec.ts` i
+  `test/pilot/pilot.e2e.ts`; nowe `test/route-summary.spec.ts` sprawdza
+  rozdzielenie czterech stanów akustyki, liczby przejść i etapów oraz zera.
+- `pnpm --filter @krok/mobile exec playwright test --config test/pilot.config.ts`:
+  **14/14 PASS**, także powiększenie 200%. Obejrzano nowy zrzut 390 px;
+  nazwy, metryki i główne akcje mieszczą się czytelnie w kadrze.
+- `pnpm lint`, `pnpm typecheck`: **PASS**; `pnpm test:contracts`:
+  **132 PASS**. Komendy przez wrapper Node 24.21.0 / pnpm 10.34.6
+  opisany w przekazaniu. Trwają końcowa regresja mobile i eksport.
+
+## Codex — priorytet filmu promocyjnego, 2026-10-04
+
+- Użytkownik uznał dalsze próby urządzenia za poboczne i nadał priorytet
+  przygotowaniu prototypu do dobrego filmu promocyjnego około 2 minut.
+  Otwarte próby pozostają zapisane, ale nie blokują przygotowania filmu.
+- Przegląd: wymagania formalne, bieżący zrzut planu 420 m, ekran startowy,
+  prezentacja szczegółów oraz istniejące `docs/demo-script.md`,
+  `docs/demo-delivery.md` i `apps/mobile/scripts/capture-demo.mjs`.
+  Stary scenariusz 2:40 i automatyzacja odnoszą się do synthetic i dawnego
+  UI; wymagają aktualizacji przed nagraniem obecnego kreatora i pilota.
+- Proponowany najbliższy zakres: czytelny kontekst start/cel i krótsze
+  podsumowanie wyniku, wybór ujęć prawdziwej trasy, scenariusz 120 sekund,
+  nagranie z krótkim odsłuchem, lektor/napisy oraz plansza kierunku rozwoju.
+  Nie dopisywać udogodnień do realnej trasy dla potrzeb filmu.
+- Ta iteracja to przegląd i zapis priorytetu. Bez zmian aplikacji,
+  odtwarzania usuniętych materiałów, nowych testów aplikacji i publikacji.
+  Wcześniejszy wpis o następnej próbie awarii nie określa już priorytetu.
+
+## Codex — potwierdzenie próby iPhone/VoiceOver, 2026-10-04
+
+- Użytkownik po pięciu przesłanych krokach testowania zgłosił
+  „wszystko dziala”. Główny scenariusz urządzenia: **PASS według użytkownika**.
+  Zakres: Nowa Huta i powrót z fokusem, Pawia 5/Szukaj/gest Z, główna para
+  Galeria–High5ive i odczyt szczegółów, zachowane twarde wymaganie po odmowie,
+  odsłuch/zatrzymanie i brak równoległej mowy z VoiceOver.
+- Zaktualizowano `docs/testing.md`, `docs/handoff-codex.md` i ten status.
+  Zachowano wcześniejsze wyniki jako historię; model telefonu oraz aktualne
+  wersje iOS/Expo Go nie zostały podane w tej próbie.
+- Nadal bez odbioru urządzenia: opóźnione wyszukiwanie podczas pisania,
+  awaria/ponowienie, NO_PATH, symulacja synthetic, duży tekst i TalkBack.
+  Szczegóły: [raport odbioru](testing.md). Nie deklarujemy pełnego WCAG
+  ani weryfikacji terenowej. Następna konkretna próba: awaria wyszukiwarki
+  i odzyskanie fokusu po ponowieniu na iPhonie.
+- Wyłącznie zapis wyniku odbioru; bez zmian aplikacji, restartów,
+  commitów/pushów i ponownego uruchamiania testów aplikacji.
+  `git diff --check` dla dokumentów tej iteracji: **PASS**.
+
+## Codex — P-05, lokalny odbiór po przejęciu, 2026-10-04
+
+- Zakres przed edycją: odbiór klawiatury w wyszukiwaniu, powrót do punktów
+  z trasami, ponowienie po awarii i zachowanie fokusu po wznowieniu pisania.
+  Zachowuję istniejący kreator, API, archiwa i lokalne zmiany poprzedników.
+- Kryteria: odtworzyć usterki testami web; po poprawce powrót/ponowienie
+  mają dawać aktywny wynik z fokusem, a nowy wpis nie może tracić fokusu
+  przez wcześniejsze zatwierdzenie. Sprawdzić główne scenariusze pilota,
+  lint, typecheck, mobile, kontrakty i eksport web.
+- Użytkownik potwierdził pracę bez telefonu. iPhone/VoiceOver i TalkBack:
+  **nieprzetestowane na urządzeniu**. P-05 nie jest w pełni odebrane.
+- Odtworzono przed poprawką cztery usterki: powrót do propozycji i ponowienie
+  nie wskazywały wyniku fokusem; ponowny powrót po awarii pustego zapytania
+  blokował ekran we wczytywaniu; wznowienie pisania po „Szukaj” traciło fokus
+  po odpowiedzi. Pilot desktop: 3 oczekiwane FAIL / 3 PASS; osobna regresja
+  opóźnionego zapytania: 1 oczekiwany FAIL.
+- `PlaceStep.tsx`: wspólna obsługa jawnego wyszukiwania/powrotu/ponowienia
+  uruchamia żądanie także dla niezmienionej frazy i wskazuje pierwszy wynik.
+  Powrót do pola lub wpisanie tekstu anuluje oczekujące przeniesienie fokusu.
+- Testy zmienione: `apps/mobile/test/reader-a11y.spec.ts` i
+  `apps/mobile/test/pilot/pilot.e2e.ts`; dodano regresje usterek oraz UI
+  rzeczywistego NO_PATH, a główna para jest wybierana przez adres Pawia 5.
+- Nowy [raport odbioru](testing.md) uzupełnia brakujący dokument wskazany
+  w T-01: macierz kryteriów, wyniki pomiaru kontrastu palety, kroki telefonu
+  i pozostałe braki względem briefu. Sprawdzono 6 lokalnych odnośników.
+- Kontrole przez `npm.cmd exec --yes --package=node@24.21.0
+  --package=pnpm@10.34.6 --call "<komenda>"`:
+  - `pnpm test:mobile`: **164/164 PASS** (desktop i web 390 px).
+  - `pnpm test:contracts`: **132 PASS**.
+  - `pnpm lint`, `pnpm typecheck`: **PASS**.
+  - `pnpm check:generated`: **PASS**, 31 plików zgodnych.
+  - `pnpm --filter @krok/mobile exec playwright test --config test/pilot.config.ts`:
+    **14/14 PASS**, w tym rzeczywisty NO_PATH i regresje powrotu/ponowienia.
+  - `pnpm build:web`: **PASS**, 5 stron statycznych.
+  - `git diff --check`: **PASS**.
+- Bez zmian DTO, danych, manifestów, lockfile i algorytmu tras. Nie
+  powtarzano audytu ingestion ani pełnych testów backendu, routingu i bazy;
+  regresja pilota korzysta z istniejącego rzeczywistego API 3003.
+- Pozostałe ryzyka: natywny fokus/gest Z, odczyt nowych informacji i mowa
+  wymagają telefonu; lokalna kontrola nie potwierdza aktualności w terenie
+  ani gotowości nawigacji. Następny odbiór: próby urządzenia według
+  `docs/testing.md`; materiały P-06 pozostają otwarte.
+- Zachowano lokalną pracę i bieżącą gałąź main. Bez commitów/pushów,
+  nowych worktrees i restartów podglądu. Końcowe nasłuchy nadal mają
+  pierwotne PID-y: API 3001/3212, API 3003/28596, Metro 8081/25536,
+  gateway 8082/20088. Procesy testowe zakończyły własne usługi 3002/8085.
+
+## Codex — przekazanie całości jednemu następcy, 2026-10-04
+
+- Na polecenie użytkownika „teraz wszystko będzie robił drugi Codex”
+  przygotowano [handoff-codex.md](handoff-codex.md) i nowy codex-start.md.
+  Następca odpowiada za cały projekt; nie czeka na A/Claude ani dawną rolę B.
+- Ujednolicono główne i katalogowe AGENTS, agent.md, CLAUDE.md, oba starty,
+  workflow, two-codex-plan i aktualne noty README/plan/architecture/UI.
+  Historyczne raporty wykonanych prac i testów zachowano.
+- Handoff opisuje main/HEAD dc580b0 i niezatwierdzoną pracę, gotowe funkcje,
+  ograniczenia, wyniki poprzedniej iteracji, komendy, porty i następny odbiór
+  telefonu. Nadal bez nowych worktrees, zmiany gałęzi, commitów i pushów.
+- Ta iteracja dotyczy wyłącznie dokumentacji. Sprawdzono status Git,
+  manifesty i nasłuchy; nie zmieniano kodu/danych ani nie restartowano usług.
+  Nie uruchamiano ponownie testów aplikacji; dawne PASS pozostają historyczne.
+- Uwaga do archiwalnych wpisów poniżej: pięć dawnych odnośników prowadzi
+  do usuniętych worktrees. Aktualne kopie to [M-04 mowa](m04-speech-session.md),
+  [M-04 symulacja](m04-simulation.md), [przegląd F-02](f02-review.md) i
+  [instrukcja kontraktów](../packages/contracts/README.md); status B jest
+  zachowany w historii tego pliku. Nie odtwarzaj worktrees. Historycznych
+  raportów A/B nie przepisano tylko po to, by usunąć ich stare ścieżki.
+- Kontrola przekazania **PASS**: 137 lokalnych odnośników w 18 dokumentach
+  istnieje; pięć opisanych wyżej odnośników historycznych pozostawiono
+  jako zapis dawnych worktrees. `git diff --check` PASS.
+- Następca zaczyna od odbioru istniejącego prototypu i napraw konkretnych
+  usterek, zachowując kreator oraz jawne ograniczenia danych i zasięgu tras.
+
+## Osoba B / Codex — funkcjonalna integracja po zakończeniu UI, 2026-10-04
+
+- **GOTOWE DO INTEGRACJI, odbiór telefonu pozostaje otwarty.** Nowe polecenie
+  użytkownika zastąpiło poprzednie „sam plan”. Zakres zapisany przed edycją:
+  [prototype-completion.md](prototype-completion.md). Zachowano pracę A,
+  gałąź, archiwa, kontrakty, zależności i lockfile. Bez commitów/pushów.
+- P-01/P-02: audyt bieżącego archiwum i trzy rzeczywiste pary demonstracyjne:
+  [data-audit-report.md](data-audit-report.md). 479 unikalnych etapów,
+  akustyka unknown 479; tactile yes 6 / no 2 / unknown 471. 8344 rekordy
+  bez weryfikacji terenowej. Raport JSON przed/po i deterministyczny CLI;
+  dwa uruchomienia po poprawce mają identyczny SHA-256
+  `9d0cc35e9b2f8ec2f867176906e2de333c019fe24b511debc5c856ab18731bba`.
+- P-03: presenter zachowuje istniejące rekordy dokładnych obiektów krawędzi
+  zwracanych wariantów w `evidenceCatalog`. Galeria–High5ive: 5 rekordów
+  nawierzchni zamiast 0. Bez przenoszenia tagów punktu na przejście,
+  zmian rankingu, topologii lub twardych wymagań. Wspólny katalog wariantów
+  nie jest opisem całej długości wybranego wariantu.
+- P-04: gotowy kreator korzysta z `/v1/place-search` w trybie pilot,
+  waliduje kontrakt i wiązanie `routing.placeId/cityId`, pokazuje adres,
+  liczbę wyników i ograniczenie pierwszych 10. Wynik unavailable wyjaśnia
+  przyczynę i nie trafia do żądania trasy. Powrót do punktów z trasami,
+  ponowienie po awarii, blokada wyboru nieaktualnych wyników. Dane obiektów
+  są rozwijane przyciskiem „Informacje o odcinkach”; źródła, status, zakres,
+  pobranie, zmiana rekordu, obserwacja i potwierdzenie są oddzielne.
+- P-05 automatyczne: contracts **132 PASS**, routing **87 PASS**, ingestion
+  **88 PASS**, API **115 PASS**; mobile **162/162 PASS**, pilot **10 scenariuszy
+  PASS** (8 w pierwszym przebiegu, 2 po naprawie selektora i ponowieniu).
+  Pierwszy test audytu przekroczył 5 s podczas ładowania dużego fixture;
+  przeniesiono ładowanie poza ciało testu, pełny ingestion/API PASS.
+  `pnpm lint`, `pnpm typecheck`, `pnpm build:web` **PASS**. Szczegółowe
+  komendy i zakres plików: [handoff-backend.md](handoff-backend.md).
+- HTTP przez działający ngrok: 96 556 wpisów, 30 punktów tras, 3 realne
+  pary HTTP 200; NO_PATH i NO_MATCHING_ROUTE HTTP 422. Osobno potwierdzono
+  5 niezweryfikowanych rekordów nawierzchni na trasie 420,217 m. Zrestartowano
+  własne API 3001/3003; Metro 8081 i gateway 8082 pozostawiono działające.
+- **Nieprzetestowane na urządzeniu:** nowe wyszukiwanie, komunikaty unavailable,
+  odczyt nowych szczegółów VoiceOver/TalkBack. To nie audyt WCAG ani terenowy.
+  Routing nadal obejmuje wybrane punkty centrum i rozłączne grupy; miasto
+  jest zasięgiem wyszukiwania. ORS i materiały P-06 nie były realizowane.
+- **Przekazanie A/użytkownikowi:** na iPhonie sprawdzić „Nowa Huta” → komunikat
+  braku trasy → „Pokaż punkty z trasami”, następnie Galeria Pawia → High5ive
+  zachodnie → „Informacje o odcinkach”, odczyt dat i działanie gestu Z.
+
+## Osoba B / Codex — instrukcje i plan audytu, 2026-10-04
+
+- Na wyraźne polecenie użytkownika przygotowano **wyłącznie plan**, bez
+  rozpoczęcia audytu lub nowych zmian implementacyjnych. Źródło kolejności:
+  [data-audit-plan.md](data-audit-plan.md), oparte na requirements.md.
+- P-01 audyt istniejących raw/faktów/grafu/API → P-02 wybór demonstracji
+  i kontraktu → P-03 informacje przy trasie → P-04 wyszukiwanie i odsłuch
+  → P-05 odbiór → P-06 późniejsze materiały. Wszystkie te etapy są planowane,
+  nie oznaczono ich jako wykonanych. ORS pozostaje osobną opcją do oceny.
+- Ujednolicono AGENTS root/mobile/API, CLAUDE.md, agent.md, codex-start.md
+  (B), claude-start.md (A), workflow.md, docs/two-codex-plan.md oraz aktywną
+  kolejność w docs/claude-ui-instructions.md. W plan.md, architecture.md,
+  README.md i obu handoffach dodano aktualny kierunek. Zachowano raporty A
+  oraz istniejące niezatwierdzone zmiany. Nie zmieniono requirements.md.
+- Usunięto aktywne polecenia powtarzania M-04/B-03 i sprzeczne zalecenie
+  worktrees. Audyt programowy odróżniono od weryfikacji terenowej. Nie
+  zakładamy ewidencji wewnętrznej UMK/MJO ani ręcznej obsługi przez Miasto.
+- Nie zmieniano kodu, danych, DTO, fixtures, manifestów i lockfile;
+  nie uruchamiano importów, testów aplikacji, restartów, commitów i pushów.
+  Kontrola tej iteracji dotyczy wyłącznie dokumentów; dawne PASS nie są
+  wynikami planowanych etapów. Kontrola dokumentów **PASS**: 23 lokalne
+  odnośniki planu/punktów wejścia istnieją, 16 plików instrukcji/raportów
+  odsyła do nowego planu, `git diff --check` zakresu dokumentacyjnego PASS.
+- **Przekazanie A:** przeczytać data-audit-plan i claude-start; po przyszłym
+  poleceniu realizacji kontynuować istniejący kreator w P-04/P-05.
+  B zacznie od P-01. Obecne zadanie kończy się na planie.
+
+## Osoba A / Claude Code — przebudowa UI dla osób niewidomych, 2026-10-04
+
+- Na polecenie użytkownika (schludnie, duże przyciski, mało tekstu, mówienie, bez długiej listy) planowanie jest kreatorem: „Skąd idziesz?” → „Dokąd idziesz?” → „Twoja trasa” (+ „Ustawienia trasy”) → „Twój plan”. Wyszukiwarka z maks. 5 propozycjami zamiast 2×10 punktów (krok 1: 8 kontrolek zamiast 27), dyktowanie z klawiatury systemowej, przełączniki i wybory jednokrotne zamiast pola z mnożnikiem, jedna karta wybranej trasy. Nowe tokeny: tekst ≥ 6,4:1, obramowania ≥ 3,5:1, przyciski 64–72.
+- Uwagi z iPhone'a: jedna funkcja `dismissInput()` i `onAccessibilityEscape` na polu — użytkownik potwierdził, że gest „Z” chowa klawiaturę; „Szukaj” też ją chowa i przenosi fokus na pierwszy wynik; „Podyktuj” i tymczasowy „Schowaj klawiaturę” usunięte na prośbę użytkownika; etykieta danych czytana jako ostatni element ekranu; przyciski chowają klawiaturę; rozwijane „Opcje demonstracji” zastąpiono jednym przyciskiem przełączającym źródło. Szczegóły i lista plików: [raport](ui-a11y-report.md), [handoff](handoff-mobile.md).
+- Wyniki: typecheck/lint **PASS**, rdzeń **33 PASS**, `test:mobile` **156/156 PASS** (pierwszy przebieg 152/156 — dwa błędy samych testów, poprawione), pilot na API 3003 **6/6 PASS**, `build:web` **PASS**. Bez zmian API, kontraktów, rankingu i zależności.
+- **NOT TESTED:** ponowna próba VoiceOver po poprawkach („Szukaj” i fokus wyników, przycisk źródła danych), TalkBack, duży tekst systemowy, dyktowanie na urządzeniu.
+- **Przekazanie B:** przejrzeć i zatwierdzić zmiany A. Rozpoznawanie mowy jednym przyciskiem wymaga decyzji użytkownika o development buildzie; integracja `/v1/place-search` (cały Kraków) pozostaje następnym zakresem A.
+
+## Osoba B / Codex — domknięcie funkcjonalnego prototypu, 2026-10-03
+
+- Na polecenie użytkownika priorytetem są funkcjonalności; druga sesja
+  prowadzi UI. B rozszerzyła rzeczywisty graf z 5 do **30 punktów**: Rynek,
+  Floriańska, Mały Rynek, plac Mariacki, bulwary i wybrane wejścia. Punkt
+  na ciągu pieszym pozostaje nazwanym punktem, nie udawanym wejściem.
+- Graf OSM: 6043 węzły / 12554 skierowane krawędzie / 479 prostych przejść.
+  Każdy punkt ma dokładne przypisanie do węzła/rodzica; bez proximity,
+  rozszerzenia wag, GPS i udogodnień bez danych. Pięć grup punktów jest
+  rozłącznych; między nimi API zwraca NO_PATH. Wyszukiwarka: **96 556 wpisów**.
+- Usunięto wewnętrzny limit 10 punktów przy zachowaniu limitu odpowiedzi
+  HTTP 10. Pełny katalog jest walidowany wspólnym schematem i przeszukiwany.
+  Domyślne 10 propozycji należą do jednej połączonej grupy centrum. DTO i
+  cityId bez zmian; `kind=poi` może być rzeczywistym końcem trasy.
+- Archiwum, pochodzenie i skrypt ekstrakcji standard library Python:
+  [dane prototypu](../packages/ingestion/data/krakow-prototype/README.md).
+  Skrypt uruchomiono ponownie: identyczny gzip i metadata. Runtime działa
+  całkowicie offline na plikach, bez zależności od Pythona lub dostawcy.
+- Testy **115 API + 87 ingestion + 87 routing + 132 contracts = 421 PASS**.
+  Strict typecheck i lint czterech pakietów PASS; diff check PASS;
+  31 generated zgodnych. Audyt
+  50 tras i 4 przypadków NO_PATH: p95 66 ms; indeks 100 zapytań: p95 9,56 ms.
+  16 obliczeń jawnie ograniczyło szukanie alternatyw, zachowując poprawną
+  trasę i wszystkie wymagania. Nie obiecuje się najkrótszej trasy w mieście.
+- Nowy runtime `API_DATA_MODE=pilot` jest uruchomiony na 3001 i 3003.
+  Rzeczywisty HTTP i publiczny HTTPS przez istniejący ngrok **PASS**:
+  wyszukanie trzech par → plan z geometrią/źródłami, NO_PATH i twarde wymaganie
+  → 422. Dotychczasowa trasa nadal ma 420,217 m. Raporty, komendy, pliki:
+  [handoff](handoff-backend.md), [instrukcja funkcjonalna](prototype-backend.md).
+- Nie zmieniano mobile, zależności, manifestów, lockfile, wag ani DTO.
+  Bez commitów/pushów. Telefon/VoiceOver, PostGIS i zdalne CI nie były
+  testowane przez B. Metro/gateway i dodatkowy proces API drugiej sesji
+  pozostawiono nietknięte; szczegóły procesów w handoffie.
+- **Przekazanie A:** podłączyć pełny przepływ wyszukanie → wybranie available
+  (także poi) → plan → odsłuch, odebrać kontrakt i wykonać próbę iPhone.
+  Pary oraz zachowanie błędów podano w prototype-backend.md. Odbiór UI
+  i gotowość terenowa nie są deklarowane przez backend.
+  Backend **GOTOWY DO INTEGRACJI**, publiczna próba HTTP zakończona.
+
+## Osoba A / Claude Code — przejęcie UI, blokery czytnika ekranu, 2026-10-03
+
+- Na polecenie użytkownika Claude Code prowadzi rolę A (UI/UX, dostępność). Zaktualizowano podział ról w `AGENTS.md`, `agent.md`, `README.md`, `architecture.md`, `plan.md`, `apps/mobile/AGENTS.md` i notach `codex-start.md`/`claude-start.md`; usunięto zapisy przypisujące frontend Codexowi. Obsady B nie przydzielano w tych plikach — odsyłają do `CLAUDE.md`/statusu. Wymagania: [claude-ui-instructions.md](claude-ui-instructions.md).
+- Audyt i pierwszy zakres: [ui-a11y-report.md](ui-a11y-report.md). Usunięto blokery scenariusza bez patrzenia: symulacja i „Powtórz komunikat” były ciche z VoiceOver/TalkBack (teraz jeden kanał na zdarzenie: czytnik albo głos aplikacji), błędy obliczenia nie były ogłaszane, wybór wyszukanego punktu gubił fokus i nie podawał nazwy. Dodano ogłoszenie liczby wyników po ustabilizowaniu zapytania, jawne ponowienie katalogu, fokus przez `sendAccessibilityEvent` (RN 0.86), słowne wartości dowodów i stan zajętości. Bez zmian API, kontraktów, rankingu, zależności i lockfile. Lista plików: [handoff mobile](handoff-mobile.md).
+- Node 24.21.0 / pnpm 10.34.6: mobile typecheck i `eslint apps/mobile` **PASS**; rdzeń symulacji/mowy **33 PASS** (2 nowe); `pnpm test:mobile` końcowo **150/150 PASS** (pierwszy przebieg 146/150 — 4 asercje testów trafiały też w ukryty region ogłoszeń; zawężono selektory, ponowienie 12/12, potem pełny zestaw); `pnpm build:web` **PASS** (5 stron, region `aria-live` w HTML); `git diff --check` PASS. Testy wykonano na drzewie z równoległymi, niezatwierdzonymi zmianami B.
+- **NOT TESTED:** iPhone/VoiceOver, Android/TalkBack, duży tekst systemowy, tryb ciemny, runner pilot (API 3003). Ogłoszenia iOS w kolejce nie dają się anulować; tempo 16× może je wyprzedzać. Tryb ciemny wymaga decyzji o `app.json`.
+- **Przekazanie B:** przejrzeć diff plików A z handoffu i wykonać commit; rozstrzygnąć, kto zmienia `apps/mobile/app.json` (tryb ciemny). Integrację `/v1/place-search` z [place-search.md](place-search.md) A podejmie jako osobny zakres.
+
+## Osoba B / Codex — wyszukiwarka całego Krakowa, 2026-10-03
+
+- Użytkownik przypisał tej rozmowie backend, a Claude'owi UI, i wybrał cały
+  Kraków. Zrealizowano katalog miejski obok istniejącego grafu, bez zmian
+  mobile. Zakres i przekazanie: [handoff backendu](handoff-backend.md),
+  [kontrakt i obsługa UI](place-search.md).
+- Pozyskano jednorazowy eksport Overpass oraz geometrię administracyjnej
+  granicy relation/2768922. 114 283 rekordy wejściowe → 96 526 wpisów po
+  filtracji/deduplikacji; API dodaje 5 dokładnie przypisanych wejść pilota:
+  **96 531 wyników w indeksie**. Raw gzip, checksumy, licencja, data pobrania,
+  importer i raport: [archiwum katalogu](../packages/ingestion/data/krakow-search/README.md).
+- Nowy `/v1/place-search?cityId=krakow&query=...`: polskie znaki/Unicode,
+  tokeny w różnej kolejności, nazwy/adresy/aliasy/kategorie, prefiksy,
+  ograniczona literówka, dokładne numery adresów, stabilny ranking, maks.
+  10 wyników i total/hasMore/catalogSize. Indeks w RAM; brak sieci i historii
+  zapytań w pętli wyszukiwania. Publiczne metadata źródeł bez kontaktów/autorów.
+- Nowy kontrakt addytywny `place-search-1` ma wspólne Zod, fixture i OpenAPI;
+  istniejące endpointy draft.2 bez zmiany DTO. Wynik rozróżnia punkt routingu,
+  brak pokrycia i brak przypisania do grafu. Środki obiektów nie są wejściami.
+  Adresy istniejących wejść dziedziczone wyłącznie przez dokładne członkostwo
+  w budynku OSM. Nie zmieniono wag, preferencji, GPS ani semantyki faktów.
+- Testy: **132 contracts, 107 API, 77 ingestion, 87 routing PASS**.
+  Lint i typecheck backendu/kontraktów PASS; 31 artefaktów generated zgodnych.
+  Pierwsza równoległa seria API miała 2 timeouty inicjalizacji pod obciążeniem;
+  ponowiono sekwencyjnie z maxWorkers=1 i otrzymano 107/107 PASS. Testów UI,
+  telefonu i całego workspace nie uruchamiano w trakcie pracy Claude'a.
+- Pomiar 100 stałych publicznych zapytań: p50 **0,64 ms**, p95 **16,42 ms**,
+  max **19,71 ms**; budowa/wczytanie **18,4 s** na obciążonym hoście.
+  To pomiar lokalnego indeksu, nie sieci/telefonu i nie test obciążeniowy.
+- Uruchomiono testowe API 3003 i zaktualizowano API 3001. Publiczny ngrok:
+  nowy endpoint HTTP 200, catalogSize=96 531, Pawia 7 daje 2 wejścia routingu
+  wśród 4 dopasowań. Regresja publicznego POST Galeria → High5ive:
+  **420,217 m, pilot/preview_only PASS**. Metro i gateway niezmienione przez B.
+- Ograniczenia: miejski katalog nie rozszerza grafu poza pilot; jakość i
+  kompletność OSM nie są urzędową gwarancją adresów/dostępności. Obiekty na
+  granicy z reprezentatywnym punktem poza miastem mogą być pominięte. Nie
+  testowano UI/VoiceOver, PostGIS ani wdrożenia produkcyjnego. Bez nowych
+  zależności, commitów, pushów, przełączania gałęzi i worktrees.
+- **Przekazanie Claude'owi:** podłączyć nowy endpoint według place-search.md,
+  odróżnić znalezione miejsce od dostępnego końca trasy, walidować wspólnym
+  schematem i odnotować przegląd kontraktu. Backend **GOTOWY DO INTEGRACJI**;
+  odbiór UI i dostępności nie jest deklarowany za Claude'a.
+
 ## Osoba B / Codex — prawdziwy pilot Krakowa, 2026-10-03
 
 - Na nowe polecenie użytkownika priorytetem jest realny przepływ w aplikacji. Pozyskano kompletny eksport OSM, zachowano raw gzip/checksum/licencję i datę. Zbudowano graf tylko z jawnej topologii pieszej oraz katalog pięciu rzeczywistych wejść Galerii Krakowskiej/High5ive. Zakres, reguły, źródła i ograniczenia: [real-pilot](real-pilot.md), [archiwum](../packages/ingestion/data/krakow/README.md).

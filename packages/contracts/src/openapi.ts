@@ -3,6 +3,7 @@ import { SCHEMA_VERSION, IdSchema, RouteRequestSchema } from './common';
 import { ApiErrorSchema, ERROR_HTTP_STATUS } from './errors';
 import { BooleanFactSchema, EvidenceSchema, PublicSourceSchema, TactileFactSchema } from './evidence';
 import { RouteResponseSchema } from './routes';
+import { PlaceSearchQuerySchema, PlaceSearchResponseSchema } from './place-search';
 import { CoverageResponseSchema, FeatureEvidenceResponseSchema, HealthResponseSchema, PlacesQuerySchema, PlacesResponseSchema, ReadyResponseSchema, SourcesResponseSchema } from './catalog';
 
 export const publicSchemas = {
@@ -10,6 +11,7 @@ export const publicSchemas = {
   CoverageResponse: CoverageResponseSchema, PlacesQuery: PlacesQuerySchema, PlacesResponse: PlacesResponseSchema,
   SourcesResponse: SourcesResponseSchema, FeatureEvidenceResponse: FeatureEvidenceResponseSchema,
   HealthResponse: HealthResponseSchema, ReadyResponse: ReadyResponseSchema,
+  PlaceSearchQuery: PlaceSearchQuerySchema, PlaceSearchResponse: PlaceSearchResponseSchema,
   BooleanFact: BooleanFactSchema, TactileFact: TactileFactSchema, Evidence: EvidenceSchema, PublicSource: PublicSourceSchema,
 };
 type SchemaName = keyof typeof publicSchemas;
@@ -36,6 +38,9 @@ export function createOpenApiDocument() {
       '/v1/places': { get: { operationId: 'places', parameters: Object.entries(PlacesQuerySchema.shape).map(([name, schema]) => ({
         name, in: 'query', required: true, schema: z.toJSONSchema(schema, { target: 'draft-2020-12' }),
       })), responses: { '200': response('PlacesResponse', 'Up to ten catalog places'), ...errors } } },
+      '/v1/place-search': { get: { operationId: 'placeSearch', parameters: Object.entries(PlaceSearchQuerySchema.shape).map(([name, schema]) => ({
+        name, in: 'query', required: true, schema: z.toJSONSchema(schema, { target: 'draft-2020-12' }),
+      })), responses: { '200': response('PlaceSearchResponse', 'City-wide search; routing availability is explicit for each result'), ...errors } } },
       '/v1/routes': { post: { operationId: 'routes', requestBody: { required: true, content: json('RouteRequest') },
         responses: { '200': { ...response('RouteResponse', 'One to three routes'), headers: { 'Cache-Control': { schema: { type: 'string', const: 'no-store' } } } }, ...errors } } },
       '/v1/sources': { get: { operationId: 'sources', responses: { '200': response('SourcesResponse', 'Public sources'), ...errors } } },

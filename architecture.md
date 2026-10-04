@@ -1,8 +1,35 @@
-# Architektura - Kroków
+# Architektura — Kroków
 
-**Wersja specyfikacji:** 1.0, 2026-10-03. **Status:** projekt do implementacji. **Zespół:** dwie osoby; Codex wspiera frontend, Claude Code backend. **Pierwszy obszar:** mały, jawnie ograniczony fragment Krakowa, wybrany po audycie danych.
+## Stan wykonany, 2026-10-04
 
-Wymagania organizatora pochodzą z załączonego briefu [B01]. Szczegółowe decyzje techniczne, współczynniki, limity i harmonogram poniżej są propozycją projektową, nie wymaganiami Miasta ani wynikiem walidacji terenowej. Źródła S01-S17 rozwinięto w `docs/sources.md`.
+Obecny prototyp ma aplikację Expo/React Native/web, API Fastify, wspólne schematy Zod, importer/normalizator OSM, resolver faktów oraz deterministyczny silnik tras. API czyta wersjonowane archiwa i utrzymuje graf/indeks w pamięci. PostGIS jest opcjonalnym modułem developerskim, nie magazynem runtime obecnych tras.
+
+Przepływ wykonany: archiwum OSM → kontrola checksum → normalizacja/resolver → graf i katalog w RAM → API z walidacją → kreator, tekst, dowody i odsłuch. Import jest poza obsługą żądania użytkownika. Nie ma LLM w routingu.
+
+| Moduł | Aktualna odpowiedzialność |
+| --- | --- |
+| packages/ingestion | loadKrakowPrototype, loadKrakowCityCatalog, normalizacja, budowa grafu, archiwa i audyty; osobny staging import:osm |
+| packages/routing | Graf, Dijkstra/ograniczone alternatywy, polityka kosztów, twarde wymagania, resolver i presenter |
+| packages/contracts | Schematy/typy DTO draft.2, place-search-1, fixtures i generowane OpenAPI |
+| apps/api | Konfiguracja, ładowanie danych, lokalny indeks, endpointy i walidacja obu stron HTTP |
+| apps/mobile | Kreator, tekstowy plan i źródła, semantyka dostępności, koordynacja mowy; symulacja tylko synthetic |
+| infra | Lokalny PostGIS i osobne testy konfiguracji/połączenia |
+
+Wyszukiwanie: 96 556 wpisów; routing: 30 końców w pięciu grupach.
+Graf: 6043 węzły, 12554 skierowane krawędzie, 479 etapów.
+Akustyka 479/479 etapów unknown; 8344 rekordy bez potwierdzenia terenowego.
+evidenceCatalog opisuje obiekty wszystkich zwróconych wariantów, nie całą długość wybranego.
+[Audyt](docs/data-audit-report.md), [kontrakt](docs/contracts.md), [odbiór](docs/testing.md).
+
+Nie wdrożono zgłoszeń, kont, regularnego harmonogramu importu, transakcyjnej publikacji do PostGIS, trwałego zapisu offline, GPS, mapy, ORS ani produkcyjnego hostingu.
+Telefon: pięć prób iPhone/VoiceOver potwierdził użytkownik; późniejsze podsumowanie i pozostałe próby są otwarte.
+
+[Utrzymanie, przenoszenie i dodawanie miasta](docs/operations.md) zawiera konkretny plan operacyjny i wskazuje zmiany kodu potrzebne do usunięcia stałych Krakowa.
+[Źródła](docs/data-sources.md), [zależności/licencje](docs/dependencies.md), [uruchomienie](README.md).
+
+## Projekt docelowy i niezmienione zasady
+
+Poniższe sekcje zachowują projekt architektury z 2026-10-03: reguły faktów/topologii/kosztów pozostają wymaganiami; opisy bazy, moderacji, mapy, GPS, cache i operacji są planem rozwoju, jeżeli nie wymieniono ich wyżej jako wykonanych. Nie odczytuj czasu teraźniejszego w projekcie docelowym jako raportu wdrożenia. Szczegółowy stan zadań: docs/status.md. W razie różnicy schemat wykonawczy packages/contracts/src ma pierwszeństwo przed ilustracją typu.
 
 ## 1. Produkt i granica odpowiedzialności
 
@@ -49,13 +76,13 @@ OSM snapshot       obserwacje terenowe       zgłoszenia użytkowników
       P1: lokalny kontroler pozycji i komunikatów
 ```
 
-Pozyskiwanie danych jest oddzielone od prezentacji, zgodnie z briefem [B01, s. 3]. Import uruchamia operator lub harmonogram. Zapytanie o trasę **nigdy** nie czeka na Overpass, nie scrapuje portalu i nie odpytuje systemów wewnętrznych Miasta.
+Pozyskiwanie danych jest oddzielone od prezentacji, zgodnie z briefem. Import uruchamia operator lub harmonogram. Zapytanie o trasę **nigdy** nie czeka na Overpass, nie scrapuje portalu i nie odpytuje systemów wewnętrznych Miasta.
 
 ## 3. Stack i granice modułów
 
 ### 3.1. Frontend
 
-React Native + Expo Router + TypeScript. `expo-location` dla pozycji na pierwszym planie; `expo-speech` dla odsłuchu; `expo-haptics` opcjonalnie jako uzupełnienie. `react-native-maps` wyłącznie jako natywna, dodatkowa wizualizacja, nie jako interfejs obowiązkowy. Biblioteka jest dostępna w Expo Go, ale wydanie własnego binarium wymaga osobnego sprawdzenia konfiguracji dostawcy map [S06].
+React Native + Expo Router + TypeScript. `expo-location` dla pozycji na pierwszym planie; `expo-speech` dla odsłuchu; `expo-haptics` opcjonalnie jako uzupełnienie. `react-native-maps` wyłącznie jako natywna, dodatkowa wizualizacja, nie jako interfejs obowiązkowy. Biblioteka jest dostępna w Expo Go, ale wydanie własnego binarium wymaga osobnego sprawdzenia konfiguracji dostawcy map.
 
 Stan zapytań: TanStack Query lub prosty, wspólnie wybrany adapter; stan sesji nawigacyjnej: lokalny reducer ze skończonymi stanami. Nie wprowadzamy kilku globalnych store'ów. Preferencje i jeden ostatni plan mogą być zapisane lokalnie; zapisywanie planu jest jawne i odwoływalne. Pozycje GPS nie są zapisywane w historii.
 
@@ -63,9 +90,9 @@ Stan zapytań: TanStack Query lub prosty, wspólnie wybrany adapter; stan sesji 
 
 ### 3.2. Backend
 
-Jeden proces HTTP Fastify oraz komendy importu/moderacji z tego samego codebase'u. PostgreSQL/PostGIS przechowuje dane przestrzenne, ich pochodzenie i wersje. Zwykłe SQL z parametrami przez `pg`, numerowane migracje; nie dodajemy ORM wymagającego obchodzenia typów geometrii. Zod jest kanonicznym schematem API. Integrację Fastify-Zod trzeba przypiąć do zgodnych wersji i przetestować; aktualna dokumentacja pokazuje `@fastify/type-provider-zod` wraz z kompilatorami walidacji i serializacji [S15].
+Jeden proces HTTP Fastify oraz komendy importu/moderacji z tego samego codebase'u. PostgreSQL/PostGIS przechowuje dane przestrzenne, ich pochodzenie i wersje. Zwykłe SQL z parametrami przez `pg`, numerowane migracje; nie dodajemy ORM wymagającego obchodzenia typów geometrii. Zod jest kanonicznym schematem API. Integrację Fastify-Zod trzeba przypiąć do zgodnych wersji i przetestować; aktualna dokumentacja pokazuje `@fastify/type-provider-zod` wraz z kompilatorami walidacji i serializacji.
 
-Zod może eksportować JSON Schema, ale nie każdy typ/transformacja ma odpowiednik JSON [S16]. Kontrakty wire nie używają transformacji, dat jako obiektów ani typów zależnych od platformy. OpenAPI i klient typowany są pochodnymi schematów, a nie drugim ręcznie pisanym kontraktem.
+Zod może eksportować JSON Schema, ale nie każdy typ/transformacja ma odpowiednik JSON. Kontrakty wire nie używają transformacji, dat jako obiektów ani typów zależnych od platformy. OpenAPI i klient typowany są pochodnymi schematów, a nie drugim ręcznie pisanym kontraktem.
 
 ### 3.3. Routing
 
@@ -98,7 +125,7 @@ infra/
   deployment/                # Docker, TLS, kopie, health checks
 examples/                    # przykłady kontraktu, nie prawdziwe dane miasta
 prompts/                     # prompty startowe
-references/brief.pdf         # oryginalny załącznik
+requirements.md             # aktualny brief organizatora
 ```
 
 Reguły zależności: `mobile -> contracts`; `api -> contracts, routing, ingestion`; `routing -> contracts` tylko dla neutralnych DTO lub przez mapowanie. `contracts` nie importuje aplikacji ani modułów Node-only. Backend nie importuje mobilnych szablonów UI. Testy importu nie wymagają startu Expo.
@@ -183,7 +210,7 @@ P1 może przyjąć bieżącą pozycję, ale dopasowanie odbywa się do krawędzi
 
 P0 celuje w graf do około 2 000 skierowanych krawędzi, z 5-10 punktami start/cel i kilkoma sensownymi alternatywami. To budżet implementacyjny, nie potwierdzona liczba danych Krakowa. Obszar publikacji mieści się wewnątrz bbox pobierania z buforem, aby granica importu nie ucinała oczywistych obejść. UI pokazuje granice pilotażu.
 
-Brak ciągłej topologii oznacza brak znanej trasy. Nie naprawiamy go automatyczną kreską przez jezdnię. Przegląd topologii wykonuje zespół/operator, nie Miasto.
+Brak ciągłej topologii oznacza brak znanej trasy. Nie naprawiamy go automatyczną kreską przez jezdnię. Przegląd topologii należy do roli opiekuna danych; nie wymaga ręcznego utrzymywania bazy przez Miasto.
 
 ## 8. Algorytm tras i alternatyw
 
@@ -255,13 +282,13 @@ Cel wydajności P0: p95 odpowiedzi poniżej 1 s na ustalonym grafie testowym po 
 
 ## 9. Import i publikacja danych
 
-Podstawą P0 jest publiczny, ograniczony przestrzennie snapshot OSM, nie niezweryfikowana obietnica miejskiego API. OSM ma tagi dotyczące akustyki i oznaczeń dotykowych, ale ich istnienie w modelu nie dowodzi kompletności w Krakowie [S11, S12]. Rejestr źródeł i wzór pobrania: `docs/data-sources.md`.
+Podstawą P0 jest publiczny, ograniczony przestrzennie snapshot OSM, nie niezweryfikowana obietnica miejskiego API. OSM ma tagi dotyczące akustyki i oznaczeń dotykowych, ale ich istnienie w modelu nie dowodzi kompletności w Krakowie. Rejestr źródeł i wzór pobrania: `docs/data-sources.md`.
 
 Pipeline: pobierz -> zapisz raw/checksum/licencję -> znormalizuj -> zbuduj graf -> rozwiąż fakty -> testy integralności i pokrycia -> publikacja transakcyjna. Klient dostaje jeden spójny zestaw wersji; bieżąca sesja nie miesza nowych faktów ze starymi offsetami geometrii.
 
 Importy są idempotentne po źródle, identyfikatorze i wersji. Błąd/429/timeout uruchamia ograniczone ponowienia z backoffem, nie serię żądań do kolejnych serwerów. Zachowujemy ostatni dobry snapshot. Bez niego `SOURCE_UNAVAILABLE`, bez automatycznego przełączenia na demo. Zmiana znacznej liczby krawędzi lub gwałtowny spadek pokrycia blokuje publikację do przeglądu.
 
-P0: import na żądanie przed prezentacją. P1: proponowany harmonogram dobowy małego obszaru, po sprawdzeniu zasad wybranego endpointu i obciążenia [S13]. Status dostawcy, wiek snapshotu i wiek obserwacji to trzy osobne informacje.
+P0: import na żądanie przed prezentacją. P1: proponowany harmonogram dobowy małego obszaru, po sprawdzeniu zasad wybranego endpointu i obciążenia. Status dostawcy, wiek snapshotu i wiek obserwacji to trzy osobne informacje.
 
 ## 10. UX i komunikaty
 
@@ -275,13 +302,13 @@ Wskazanie odległości podczas prowadzenia jest przybliżeniem. Kierunek począt
 
 ### Jeden koordynator mowy
 
-Wykrywamy czytnik przez `AccessibilityInfo` i reagujemy na zmianę stanu [S09]. Przy aktywnym czytniku własny TTS domyślnie nie mówi równolegle; komunikaty idą przez uzgodniony adapter dostępności. Bez czytnika używamy `expo-speech`. Platformy mają różne zachowania kolejkowania, dlatego potrzebne są testy urządzeń. Na fizycznym iPhonie `expo-speech` nie emituje dźwięku w trybie cichym [S05].
+Wykrywamy czytnik przez `AccessibilityInfo` i reagujemy na zmianę stanu. Przy aktywnym czytniku własny TTS domyślnie nie mówi równolegle; komunikaty idą przez uzgodniony adapter dostępności. Bez czytnika używamy `expo-speech`. Platformy mają różne zachowania kolejkowania, dlatego potrzebne są testy urządzeń. Na fizycznym iPhonie `expo-speech` nie emituje dźwięku w trybie cichym.
 
 Kolejka ma priorytety, deduplikację przez `eventId` i akcje "Powtórz", "Pauza", "Wycisz", "Pokaż szczegóły". Nie zapychamy jej powtarzanymi pozycjami GPS. Haptics oznaczają zdarzenie interfejsu, nie pozwolenie na wejście na przejście. Brak głosu pl-PL skutkuje jawną informacją i pełnym tekstem, nie cichą awarią.
 
 ### Dostępność od pierwszego ekranu
 
-Cel rozwoju: WCAG 2.2 AA zgodnie z briefem. Podstawowe wymagania to czytnik, klawiatura, kontrast i alternatywa tekstowa [B01, s. 3-5]. W3C definiuje m.in. kontrast zwykłego tekstu 4,5:1 i powiększanie tekstu do 200% [S10]. Dla aplikacji przyjmujemy dodatkowo wygodne cele dotyku co najmniej 48 jednostek interfejsu; to decyzja UX, nie twierdzenie, że WCAG AA wymaga dokładnie 48.
+Cel rozwoju: WCAG 2.2 AA zgodnie z briefem. Podstawowe wymagania to czytnik, klawiatura, kontrast i alternatywa tekstowa. W3C definiuje m.in. kontrast zwykłego tekstu 4,5:1 i powiększanie tekstu do 200%. Dla aplikacji przyjmujemy dodatkowo wygodne cele dotyku co najmniej 48 jednostek interfejsu; to decyzja UX, nie twierdzenie, że WCAG AA wymaga dokładnie 48.
 
 Expo Web obsługuje ten sam główny scenariusz tekstowy i pozwala wykonać test klawiatury. `Map.web.tsx` nie importuje natywnego modułu. Przejście testu web nie zastępuje VoiceOver/TalkBack na telefonie. Nie deklarujemy zgodności WCAG bez audytu.
 
@@ -302,7 +329,7 @@ Parametry do kalibracji, nie gwarancje: pozycja starsza niż 10 s lub deklarowan
 
 Przy przecięciu jezdni nie wyzwalamy automatycznego "przechodź". W okolicy przejścia odczytujemy informacje, nie zgodę na ruch. Wątpliwość zatrzymuje instrukcje zależne od pozycji. Wyjście z trasy daje ofertę ponownego obliczenia, a nie automatyczny zwrot w potencjalnie niewłaściwym miejscu. Powrót do aplikacji wymaga ponownego ustalenia pozycji.
 
-Zmiana `AppState` na nieaktywny zatrzymuje sesję w prototypie. Nie obiecujemy, że komunikat ostrzegający zdąży zostać odtworzony przy blokowaniu telefonu: ograniczenie musi być wyjaśnione **przed** startem. `watchPositionAsync` służy aktualizacjom foreground; konfiguracja tła jest innym zakresem [S04]. Ostatni plan można przeglądać bez sieci, ale nie jest to offline rerouting.
+Zmiana `AppState` na nieaktywny zatrzymuje sesję w prototypie. Nie obiecujemy, że komunikat ostrzegający zdąży zostać odtworzony przy blokowaniu telefonu: ograniczenie musi być wyjaśnione **przed** startem. `watchPositionAsync` służy aktualizacjom foreground; konfiguracja tła jest innym zakresem. Ostatni plan można przeglądać bez sieci, ale nie jest to offline rerouting.
 
 ## 12. Awaria, cache i wersje
 
@@ -324,7 +351,7 @@ Proponowana retencja do uzgodnienia przed publicznym pilotażem: 7 dni zredagowa
 
 ## 14. Hosting i operacje
 
-P0 może działać na laptopie i telefonach. Pokaz zdalny: jeden backend HTTPS i Postgres/PostGIS poza infrastrukturą UMK. P1: kontener API, osobny proces zadania importu, baza z backupem, harmonogram i proste metryki. Właścicielem hostingu/aktualizacji/moderacji jest zespół/operator produktu; nazwane role w `docs/workflow.md`.
+P0 może działać na laptopie i telefonach. Pokaz zdalny: jeden backend HTTPS i Postgres/PostGIS poza infrastrukturą UMK. P1: kontener API, osobny proces zadania importu, baza z backupem, harmonogram i proste metryki. Proponowane role operatora, budżet i warunki uruchomienia opisuje `docs/operations.md`; nie zostały jeszcze przyjęte jako zobowiązanie nazwanego podmiotu.
 
 Migracje są wersjonowane i testowane na pustej oraz poprzedniej bazie. Przed migracją produkcyjną backup i jawna zgoda człowieka; rollback aplikacji nie zakłada automatycznego rollbacku danych. Codzienna kopia bazy, test odtworzenia przed publicznym pilotażem. Surowe snapshoty zachowują checksum i warunki wykorzystania.
 
@@ -334,9 +361,9 @@ Budżet nie jest ofertą cenową: na wczesny pilot przyjmujemy do weryfikacji ko
 
 ## 15. Skalowanie i model produktu
 
-Nowe miasto to konfiguracja obszaru i źródeł, audyt praw/atrybucji, pomiar pokrycia, test grafu, lokalna walidacja i publikacja nowej wersji. Nie wystarczy zmienić nazwy w UI. Silnik routingu można wymienić za interfejsem, a pozyskiwanie danych przenieść do wydajniejszego procesu bez zmiany aplikacji.
+Docelowo nowe miasto będzie konfiguracją obszaru i źródeł, audytem praw/atrybucji, pomiarem pokrycia, testem grafu, lokalną walidacją i publikacją nowej wersji. Dziś wymaga też zmian loaderów i stałych cityId w API/mobile, opisanych w docs/operations.md. Nie wystarczy zmienić nazwy w UI. Silnik routingu można wymienić za interfejsem, a pozyskiwanie danych przenieść do wydajniejszego procesu bez zmiany aplikacji.
 
-Propozycja biznesowa zgodna z kierunkami briefu: bezpłatny podstawowy użytek indywidualny, odpłatne plany dojścia/widget dla hoteli, wydarzeń i obiektów oraz usługa audytu/aktualizacji danych. Partner płaci za narzędzie lub pracę, nie za wyższe miejsce na liście tras. Danych pochodnych OSM nie traktujemy jako własności wolnej od warunków ODbL; model komercyjny i licencje podlegają przeglądowi [S14, B01].
+Propozycja biznesowa zgodna z kierunkami briefu: bezpłatny podstawowy użytek indywidualny, odpłatne plany dojścia/widget dla hoteli, wydarzeń i obiektów oraz usługa audytu/aktualizacji danych. Partner płaci za narzędzie lub pracę, nie za wyższe miejsce na liście tras. Danych pochodnych OSM nie traktujemy jako własności wolnej od warunków ODbL; model komercyjny i licencje podlegają przeglądowi.
 
 ## 16. Decyzje do zamknięcia przed P1
 

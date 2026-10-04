@@ -1,5 +1,13 @@
 # M-01 — formularz demonstracji
 
+> **Dokument historyczny — odczytuj w kontekście opisanej iteracji.**
+> Aktualny stan: [README](../README.md), [odbiór](testing.md) i [status](status.md).
+> Integracja wyszukiwania/API jest zakończona; ostatnia pełna kontrola miała
+> 620 testów PASS, a pięć prób iPhone/VoiceOver potwierdził użytkownik.
+> Nowe podsumowanie i pozostałe próby urządzenia są otwarte. Dawne A/B,
+> NOT TESTED, „do integracji” i listy przyszłych modułów niżej nie opisują
+> automatycznie stanu obecnego. Aktualne materiały PDF/film są do wykonania.
+
 Osoba A, 2026-10-03. Zakres: wybór startu/celu z katalogu synthetic, wyszukiwanie, zamiana punktów, preferencje, walidacja i MockRouteApi oparty na zintegrowanych fixtures. Wynik M-01 jest krótkim potwierdzeniem otrzymania wariantów; porównanie, źródła i pełny przebieg należą do M-02.
 
 Przegląd C-01–C-08: draft.2 dostarcza potrzebne schematy katalogu, kroków, uzasadnień, błędów, faktów i polityki oraz importowalne fixtures. Strict walidacja i expectedVersions nadają się do roboczej integracji mobile. A przyjmuje tę granicę do implementacji M-01; nie oznacza to formalnego odbioru produktu ani zatwierdzenia progów świeżości. Nie zmieniamy kontraktu, rankingu i komunikatów o przejściach. Ustawienia początkowe są jawnie profilem przykładu A/B/C, nie nowymi domyślnymi preferencjami produktu. Offline i teksty szczegółów pozostają do dalszego przeglądu.

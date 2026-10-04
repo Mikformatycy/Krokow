@@ -8,6 +8,8 @@ import { ApiErrorSchema } from './errors';
 import type { ApiError } from './errors';
 import { CoverageResponseSchema, FeatureEvidenceResponseSchema, HealthResponseSchema, PlacesResponseSchema, ReadyResponseSchema, SourcesResponseSchema } from './catalog';
 import type { Warning } from './messages';
+import { PLACE_SEARCH_VERSION, PlaceSearchResponseSchema } from './place-search';
+import type { PlaceSearchResponse } from './place-search';
 
 // These are authored DTO examples, not outputs of an implemented route planner.
 const now = '2026-10-03T10:00:00Z';
@@ -169,6 +171,22 @@ export const placesResponse = {
     { id: 'demo-end', cityId: 'synthetic-city', name: 'Fikcyjny cel', description: 'Punkt B demonstracji', coordinate: null }],
 } satisfies z.infer<typeof PlacesResponseSchema>;
 export const emptyPlacesResponse = { ...placesResponse, places: [] };
+export const placeSearchResponse: PlaceSearchResponse = {
+  ...envelope, searchVersion: PLACE_SEARCH_VERSION, mode: 'synthetic', navigationEligibility: 'preview_only',
+  cityId: 'synthetic-city', areaName: 'Fikcyjny obszar', catalogVersion: 'synthetic-search-1', fetchedAt: now,
+  catalogSize: 3, total: 3, hasMore: false, sources: [source],
+  places: [
+    { id: 'search-demo-start', name: 'Fikcyjna biblioteka — wejście', address: 'Ulica Przykładowa 7', kind: 'entrance', coordinate: null,
+      positionKind: 'mapped_point', sourceId: source.id, sourceRecordId: 'demo-entrance', sourceModifiedAt: null,
+      routing: { status: 'available', cityId: 'synthetic-city', placeId: 'demo-start' } },
+    { id: 'search-demo-outside', name: 'Fikcyjna biblioteka poza grafem', address: null, kind: 'poi', coordinate: null,
+      positionKind: 'representative_point', sourceId: source.id, sourceRecordId: 'demo-outside', sourceModifiedAt: null,
+      routing: { status: 'unavailable', reason: 'outside_coverage' } },
+    { id: 'search-demo-unresolved', name: 'Fikcyjny adres bez połączenia', address: 'Ulica Przykładowa 9', kind: 'address', coordinate: null,
+      positionKind: 'representative_point', sourceId: source.id, sourceRecordId: 'demo-unresolved', sourceModifiedAt: null,
+      routing: { status: 'unavailable', reason: 'unresolved' } },
+  ],
+};
 export const sourcesResponse = { ...envelope, mode: 'synthetic' as const, sources: [source] };
 export const featureEvidenceResponse = { ...envelope, mode: 'synthetic' as const, objectId: 'A-object-0', evidenceVersion: versions.evidenceVersion, evidence: response.evidenceCatalog.filter((e) => e.objectId === 'A-object-0'), sources: [source] };
 
@@ -180,6 +198,8 @@ export const fixtureDocuments: { file: string; schema: z.ZodType; value: unknown
   { file: 'coverage.json', schema: CoverageResponseSchema, value: coverageResponse },
   { file: 'places.json', schema: PlacesResponseSchema, value: placesResponse },
   { file: 'places-empty.json', schema: PlacesResponseSchema, value: emptyPlacesResponse },
+  { file: 'place-search.json', schema: PlaceSearchResponseSchema, value: placeSearchResponse },
+  { file: 'place-search-empty.json', schema: PlaceSearchResponseSchema, value: { ...placeSearchResponse, total: 0, hasMore: false, places: [] } },
   { file: 'sources.json', schema: SourcesResponseSchema, value: sourcesResponse },
   { file: 'feature-evidence.json', schema: FeatureEvidenceResponseSchema, value: featureEvidenceResponse },
   { file: 'health.json', schema: HealthResponseSchema, value: { status: 'ok' } },

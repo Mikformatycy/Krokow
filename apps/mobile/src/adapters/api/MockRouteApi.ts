@@ -1,10 +1,11 @@
 import { ApiErrorSchema, CoverageResponseSchema, PlacesQuerySchema, PlacesResponseSchema, RouteRequestSchema, RouteResponseSchema } from '@krok/contracts';
-import type { ApiError, CoverageResponse, PlacesResponse, RouteRequest, RouteResponse } from '@krok/contracts';
+import type { ApiError, CoverageResponse, PlaceSearchResponse, PlacesResponse, RouteRequest, RouteResponse } from '@krok/contracts';
 import { coverageResponse, errorScenarios, placesResponse, routeRequest, routeScenarios } from '@krok/contracts/fixtures';
 
 export interface RouteApi {
   coverage(): Promise<CoverageResponse>;
   places(cityId: string, query: string): Promise<PlacesResponse>;
+  searchPlaces?(cityId: string, query: string): Promise<PlaceSearchResponse>;
   plan(request: RouteRequest): Promise<RouteResponse>;
 }
 

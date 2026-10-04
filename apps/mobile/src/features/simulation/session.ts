@@ -1,9 +1,15 @@
 import type { SpeechCoordinator } from '../../adapters/speech/coordinator';
 import { SimulationController } from './controller';
 import type { InvalidationReason, SimulationTransition } from './controller';
+import { simulationItemSummary } from './summary';
 import { simulationItemText } from './text';
 
-/** An exclusive session using the screen's single speech coordinator; no native I/O here. */
+export interface ReaderAnnouncer { announce(text: string, interrupt: boolean): void }
+
+/**
+ * An exclusive session using the screen's single speech coordinator; no native I/O here.
+ * Exactly one channel per event: own voice only when the reader is confirmed off, otherwise the reader.
+ */
 export class SimulationSession {
   private readonly controller: SimulationController;
   private voiceEnabled = false;
@@ -11,7 +17,8 @@ export class SimulationSession {
   private closed = false;
   private lastText: string | null = null;
 
-  constructor(source: unknown, routeId: string, now: () => number, private readonly speech: SpeechCoordinator, rate = 1) {
+  constructor(source: unknown, routeId: string, now: () => number, private readonly speech: SpeechCoordinator, rate = 1,
+    private readonly announcer: ReaderAnnouncer | null = null) {
     this.controller = new SimulationController(source, routeId, now, rate);
     speech.stop(); speech.setBlocked(true);
   }
@@ -38,8 +45,14 @@ export class SimulationSession {
     if (transition.cancelSpeech) this.speech.stop();
     const parts = transition.emissions.map(({ item }) => simulationItemText(item));
     if (parts.length) this.lastText = parts.at(-1)!;
-    if (parts.length && this.voiceEnabled && this.reader === false && this.controller.isCurrent(transition.token)) {
-      void this.speech.enqueue(parts);
+    if (!parts.length || !this.controller.isCurrent(transition.token)) return transition;
+    if (this.reader === false) {
+      if (this.voiceEnabled) void this.speech.enqueue(parts);
+    } else if (this.announcer) {
+      // Progress is queued in short form so it does not cut off what the reader is saying;
+      // an explicit repeat interrupts and gives the complete text of the last event.
+      const repeat = transition.emissions.some(({ reason }) => reason === 'repeat');
+      this.announcer.announce(repeat ? parts.at(-1)! : transition.emissions.map(({ item }) => simulationItemSummary(item)).join(' '), repeat);
     }
     return transition;
   }

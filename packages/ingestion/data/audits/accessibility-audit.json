@@ -1,0 +1,1499 @@
+{
+  "auditVersion": 1,
+  "input": "krakow-prototype/raw-map.json.gz",
+  "rawSha256": "c0a1618bba5a436f0292606a60850a4b3d11a4942a9fa2f0358842b2a970f2d2",
+  "limitations": [
+    "Archive audit, not field verification",
+    "City search POIs are not route infrastructure",
+    "Older pilot archive is not merged with current snapshot"
+  ],
+  "graphVersion": "osm-walk-v1-4196644a76e0dfaae55e59dc",
+  "evidenceVersion": "osm-evidence-v1-f3b1e2512cd779c3f94384cc",
+  "fetchedAt": "2026-10-03T20:39:21.626Z",
+  "populations": {
+    "crossingNodes": {
+      "denominator": 894,
+      "tags": {
+        "traffic_signals:sound": {
+          "(missing)": 825,
+          "yes": 65,
+          "no": 4
+        },
+        "crossing:signals": {
+          "(missing)": 866,
+          "no": 28
+        },
+        "tactile_paving": {
+          "no": 454,
+          "yes": 233,
+          "(missing)": 191,
+          "incorrect": 8,
+          "partial": 5,
+          "mixed": 3
+        },
+        "handrail": {
+          "(missing)": 894
+        },
+        "surface": {
+          "(missing)": 894
+        },
+        "kerb": {
+          "(missing)": 870,
+          "lowered": 16,
+          "no": 2,
+          "flush": 5,
+          "raised": 1
+        },
+        "incline": {
+          "(missing)": 894
+        },
+        "smoothness": {
+          "(missing)": 894
+        },
+        "lit": {
+          "(missing)": 894
+        }
+      }
+    },
+    "crossingWays": {
+      "denominator": 732,
+      "tags": {
+        "traffic_signals:sound": {
+          "(missing)": 731,
+          "yes": 1
+        },
+        "crossing:signals": {
+          "(missing)": 731,
+          "no": 1
+        },
+        "tactile_paving": {
+          "(missing)": 721,
+          "no": 2,
+          "yes": 9
+        },
+        "handrail": {
+          "(missing)": 732
+        },
+        "surface": {
+          "paving_stones": 156,
+          "asphalt": 428,
+          "sett": 105,
+          "paved": 8,
+          "concrete:plates": 2,
+          "(missing)": 24,
+          "compacted": 1,
+          "concrete": 7,
+          "plastic": 1
+        },
+        "kerb": {
+          "(missing)": 732
+        },
+        "incline": {
+          "(missing)": 732
+        },
+        "smoothness": {
+          "(missing)": 551,
+          "good": 83,
+          "excellent": 84,
+          "intermediate": 14
+        },
+        "lit": {
+          "yes": 545,
+          "no": 9,
+          "(missing)": 178
+        }
+      }
+    },
+    "pedestrianWays": {
+      "denominator": 5689,
+      "tags": {
+        "traffic_signals:sound": {
+          "(missing)": 5688,
+          "yes": 1
+        },
+        "crossing:signals": {
+          "(missing)": 5688,
+          "no": 1
+        },
+        "tactile_paving": {
+          "(missing)": 5462,
+          "no": 203,
+          "yes": 24
+        },
+        "handrail": {
+          "(missing)": 5424,
+          "yes": 139,
+          "no": 126
+        },
+        "surface": {
+          "paving_stones": 2896,
+          "asphalt": 921,
+          "(missing)": 1000,
+          "wood": 20,
+          "unhewn_cobblestone": 11,
+          "sett": 369,
+          "paved": 133,
+          "concrete": 125,
+          "dirt": 14,
+          "concrete:plates": 10,
+          "compacted": 18,
+          "fine_gravel": 26,
+          "gravel": 26,
+          "ground": 10,
+          "grass": 11,
+          "pebblestone": 30,
+          "unpaved": 1,
+          "metal": 55,
+          "tiles": 1,
+          "grass_paver": 2,
+          "stone": 1,
+          "rock": 4,
+          "concrete:lanes": 3,
+          "cobblestone": 1,
+          "plastic": 1
+        },
+        "kerb": {
+          "(missing)": 5689
+        },
+        "incline": {
+          "(missing)": 5260,
+          "up": 188,
+          "down": 241
+        },
+        "smoothness": {
+          "(missing)": 4749,
+          "intermediate": 103,
+          "excellent": 394,
+          "good": 436,
+          "bad": 7
+        },
+        "lit": {
+          "yes": 3232,
+          "no": 71,
+          "(missing)": 2360,
+          "24/7": 26
+        }
+      }
+    }
+  },
+  "normalized": {
+    "tactile_paving:no": 823,
+    "tactile_paving:yes": 404,
+    "audible_signal:true": 66,
+    "traffic_signals:false": 29,
+    "surface:paved": 4029,
+    "tactile_paving:incorrect": 8,
+    "audible_signal:false": 4,
+    "tactile_paving:partial": 5,
+    "surface:asphalt": 2251,
+    "handrail:true": 130,
+    "steps:true": 368,
+    "surface:unpaved": 101,
+    "handrail:false": 126
+  },
+  "verification": {
+    "unverified": 8344
+  },
+  "graph": {
+    "directedEdges": 12554,
+    "physicalSegments": 6277,
+    "objects": 3571,
+    "stages": 479,
+    "audible": {
+      "unknown": 479
+    },
+    "tactile": {
+      "unknown": 471,
+      "known:no": 2,
+      "known:yes": 6
+    },
+    "evidenceOnExactWay": {
+      "surface": 3147,
+      "tactile_paving": 15,
+      "traffic_signals": 1,
+      "handrail": 1
+    },
+    "evidenceOutsideGraphWayScope": {
+      "tactile_paving": 1225,
+      "audible_signal": 70,
+      "traffic_signals": 28,
+      "surface": 3234,
+      "handrail": 255,
+      "steps": 368
+    }
+  },
+  "responses": [
+    {
+      "requestId": "audit-3719851597-5213212813",
+      "asOf": "2026-10-03T20:39:21.626Z",
+      "exactObjectEvidence": 5,
+      "responseEvidence": 5,
+      "omittedExactObjectEvidence": {},
+      "routes": [
+        {
+          "id": "route-1",
+          "distanceM": 420.21745920736305,
+          "uniqueStages": 1,
+          "unknownSegmentLengthM": 420.21745920736305,
+          "audible": {
+            "present": 0,
+            "absent": 0,
+            "unknown": 1,
+            "conflicting": 0
+          }
+        }
+      ]
+    },
+    {
+      "requestId": "audit-14121238341-6128078603",
+      "asOf": "2026-10-03T20:39:21.626Z",
+      "exactObjectEvidence": 25,
+      "responseEvidence": 25,
+      "omittedExactObjectEvidence": {},
+      "routes": [
+        {
+          "id": "route-1",
+          "distanceM": 1173.3413143684852,
+          "uniqueStages": 2,
+          "unknownSegmentLengthM": 1173.3413143684852,
+          "audible": {
+            "present": 0,
+            "absent": 0,
+            "unknown": 2,
+            "conflicting": 0
+          }
+        }
+      ]
+    },
+    {
+      "requestId": "audit-278057644-279117089",
+      "asOf": "2026-10-03T20:39:21.626Z",
+      "exactObjectEvidence": 3,
+      "responseEvidence": 3,
+      "omittedExactObjectEvidence": {},
+      "routes": [
+        {
+          "id": "route-1",
+          "distanceM": 479.04806372699414,
+          "uniqueStages": 0,
+          "unknownSegmentLengthM": 479.04806372699414,
+          "audible": {
+            "present": 0,
+            "absent": 0,
+            "unknown": 0,
+            "conflicting": 0
+          }
+        }
+      ]
+    }
+  ],
+  "skippedNormalization": [
+    {
+      "objectId": "osm:node/2443708235",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:node/2443708237",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:node/3696160142",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:node/3816240327",
+      "tag": "tactile_paving",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:node/3816240332",
+      "tag": "tactile_paving",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:node/4059020587",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:node/4059020591",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:node/4059020601",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:node/4059020614",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:node/4059020643",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:node/601062459",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:node/6014708976",
+      "tag": "tactile_paving",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1008082700",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1012468216",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1097758226",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1097758414",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1111755125",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1111755127",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1185815052",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1196903418",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1243746982",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1284717302",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1290347124",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1290347197",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1290347198",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1290347199",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1290347200",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1290347201",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1290347202",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1290347203",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1290347225",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1290347226",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1290347227",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1290347228",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1290347229",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1290347230",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1290347243",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1290347244",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1290347245",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1290347246",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1290347253",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1290347254",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1290347255",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1290347256",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1290347257",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1290347258",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1290347265",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1290347266",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1290347267",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1290347268",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1290347284",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1290347332",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1290347333",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1290347334",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1292846423",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1308675657",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1364522590",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1364522591",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1390420912",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1418749440",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1432553826",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1432553827",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1432553828",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1432553830",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1432553832",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1432553833",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1432779931",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1432779932",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1432779946",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1432779947",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1432779948",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1432779957",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1433524720",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1500329464",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/151426458",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1527224205",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1529241195",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1529241196",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1529241197",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1529241198",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1530166023",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/1534250968",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534250969",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534250970",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534250971",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534250973",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534250977",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534250978",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534250998",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534250999",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251001",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251002",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251004",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251005",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251012",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251013",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251014",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251015",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251025",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251026",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251027",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251028",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251032",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251033",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251034",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251035",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251047",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251050",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251051",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251054",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251055",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251057",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251058",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251059",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251061",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251083",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251084",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251087",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251088",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251094",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251095",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251098",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251099",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251104",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251107",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251108",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251109",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251110",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251132",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251133",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251135",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251136",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251140",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251141",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251142",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251143",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251146",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251147",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251148",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251149",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251163",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251177",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251185",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251186",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251188",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251189",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251193",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251206",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251207",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/1534251208",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/201167124",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/201562953",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/224418416",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/237987917",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/249428681",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/25123243",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/25466409",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/25466712",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/25466713",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/25466717",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/25506179",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/25506181",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/25507008",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/25507009",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/282198897",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/28289231",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/28348215",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/297220646",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/298772600",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/298772603",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/298772604",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/298772605",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/304120805",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/304141330",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/330600905",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/330630260",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/342619539",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/365016931",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/365404294",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/365404300",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/367295759",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/403552105",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/403552114",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/403552119",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/403552133",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/403552136",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/403552180",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/403552197",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/403552199",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/403552204",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/403552276",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/403552277",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/404809507",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/408615674",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/409056954",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/414860808",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/591373488",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/591373491",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/601547577",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/627900337",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/675421840",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/675755676",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/675755678",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/684434735",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/684434736",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/684448219",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/693614256",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/702120320",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/702120321",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/702120322",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/725033365",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/725033366",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/735960050",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/766325839",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/766325840",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/766325845",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/766325847",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/766325863",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/766325866",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/766325867",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/766325870",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/766325885",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/766325886",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/766325900",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/766325901",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/766325902",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/766325903",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/766325908",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/766325911",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/766325912",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/766325919",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/766325920",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/766326178",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/766326179",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/766326253",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/766326254",
+      "tag": "level",
+      "reason": "ambiguous_level"
+    },
+    {
+      "objectId": "osm:way/849956941",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/849956942",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/969303355",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    },
+    {
+      "objectId": "osm:way/973303705",
+      "tag": "surface",
+      "reason": "unsupported_value"
+    }
+  ],
+  "topologyExclusions": {
+    "not_supported_pedestrian_way": 3314,
+    "vertical_or_indoor_topology_unreviewed": 455,
+    "restricted_access": 380,
+    "area_not_linear_path": 37,
+    "crossing_topology_requires_review": 249
+  }
+}

@@ -11,7 +11,7 @@ export interface Edge {
   geometry?: [number, number][];
 }
 export interface Graph { nodes: GraphNode[]; edges: Edge[] }
-export interface Place { id: string; nodeId: string; name: string; coordinate?: [number, number]; description?: string }
+export interface Place { id: string; nodeId: string; name: string; coordinate?: [number, number]; description?: string; address?: string; kind?: 'entrance' | 'poi' }
 export interface Snapshot {
   mode?: 'synthetic' | 'pilot';
   coverage?: { name: string; description: string; polygon: { type: 'Polygon'; coordinates: [number, number][][] } };

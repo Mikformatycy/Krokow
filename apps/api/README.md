@@ -1,5 +1,35 @@
 # API — katalog i routing synthetic/pilot
 
+## Wyszukiwarka całego Krakowa
+
+W trybie pilot działa także lokalny indeks **96 556 wpisów** (96 526
+adresów/miejsc/ulic z eksportu miasta uzupełnionych punktami aktualnego grafu):
+`GET /v1/place-search?cityId=krakow&query=Rynek%20Glowny`.
+Przykłady: `Pawia 7`, `Nowa Huta`, `Wolica`, `apteka`, `glaeria krakowska`.
+Numer na końcu można podać słownie: `pawia pięć`, `Pawia siedem a`.
+Indeks sprawdza oryginał i wariant z cyframi (liczebniki główne 1–999),
+zachowuje dokładność numerów i scala wyniki przed ograniczeniem do 10.
+Do 10 wyników, jawne `total`/`hasMore`, nazwa/adres, pochodzenie i status
+możliwości wyznaczenia trasy. Zapytania pozostają lokalne i nie są logowane.
+
+**Wyszukanie miejsca w mieście nie rozszerza zasięgu tras.** Tylko
+`routing.status=available` daje cityId/placeId do POST routes. Środek
+budynku/ulicy nie jest końcem nawigacji. Stary `/v1/places` i `/v1/coverage`
+nadal opisują wybrane ciągi piesze w centrum i są zgodne ze starszym klientem.
+
+Runtime waliduje checksum katalogu przy starcie, bez pobierania danych.
+Nieprawidłowy/brakujący indeks daje 503 dla wyszukiwarki, zachowując katalog
+tras; awaria nie staje się pustą listą ani danymi demo. Aktualizacja plików
+wymaga restartu API. Wczytanie obecnego indeksu trwa kilka–kilkanaście sekund
+na używanym hoście. Szczegóły wspólnego kontraktu, import i ograniczenia:
+[docs/place-search.md](../../docs/place-search.md).
+
+Próba funkcjonalna wyszukiwanie → trasa i dwa stany błędu, bez danych użytkownika:
+
+```sh
+pnpm --filter @krok/api exec tsx src/audit-prototype-http.ts http://127.0.0.1:3003
+```
+
 ## Prawdziwe dane Krakowa
 
 ```powershell
@@ -10,8 +40,12 @@ npm.cmd exec --yes --package=node@24.21.0 --package=pnpm@10.34.6 --call "pnpm st
 Loader sprawdza checksum archiwalnego OSM i buduje graf pieszy w pamięci.
 Uruchomienie nie pobiera nic z sieci i nie wymaga bazy do obliczenia trasy.
 Katalog: `GET /v1/places?cityId=krakow-stare-miasto-pilot&query=`.
-Pięć punktów to wejścia Galerii Krakowskiej i High5ive. Wyszukiwanie np.
-`High5ive` zwraca dwa wejścia, a nazwa spoza katalogu pustą listę.
+Katalog ma 30 punktów, a pojedyncza odpowiedź najwyżej 10. Punkty obejmują
+Rynek Główny, Floriańską, Mały Rynek, plac Mariacki, bulwary, wybrane wejścia
+oraz dotychczasowe pięć wejść Galerii Krakowskiej i High5ive. Wyszukiwanie
+`High5ive` zwraca dwa wejścia, a nazwa spoza katalogu pustą listę. Nazwane
+punkty na ciągach pieszych nie są wejściami do budynków. Rozdzielone części
+grafu dają `NO_PATH`. [Pary i ograniczenia prototypu](../../docs/prototype-backend.md).
 
 Odpowiedzi mają `mode=pilot`, `navigationEligibility=preview_only`,
 rzeczywiste współrzędne i geometrię. Przykładowa trasa z
@@ -20,8 +54,10 @@ przejście z nieznaną akustyką. Jawne wymaganie akustyki daje
 `NO_MATCHING_ROUTE`, a nie domyślne rozluźnienie preferencji.
 Prośba o punkt poza katalogiem nie tworzy łącznika przez bliskość.
 
-Ograniczenia i audyt: [real-pilot](../../docs/real-pilot.md).
-Do sprawdzenia danych służy `pnpm audit:pilot`. `/readyz` zachowuje osobne
+Ograniczenia i audyt: [aktualny prototyp](../../docs/prototype-backend.md)
+i [audyt danych](../../docs/data-audit-report.md). `pnpm audit:pilot` sprawdza
+starszy fixture pięciu wejść, nie aktualny graf. Aktualny audyt:
+`pnpm --filter @krok/ingestion exec tsx src/audit-accessibility-cli.ts data/audits/accessibility-audit.json`. `/readyz` zachowuje osobne
 kryterium bazy i bez niej zwraca 503, mimo że katalog i routing w RAM
 obsługują żądania. To nie migracja ani deklaracja gotowości produkcyjnej.
 
@@ -52,7 +88,7 @@ Nie ma automatycznego przełączania na demo po błędzie bazy lub źródła.
 | `GET /v1/places?cityId=synthetic-city&query=` | Dwa fikcyjne punkty. Puste zapytanie pokazuje oba; wyszukiwanie nazwy nie rozróżnia wielkości liter. Jeden znak, nadmiarowe pola i powtórzone parametry dają 400. |
 | `GET /v1/sources` | Publiczny rejestr źródeł synthetic. |
 | `GET /v1/features/A-crossing-object-0/evidence` | Zredagowane dowody obiektu. Poprawne nieznane ID zwraca pustą listę. |
-| `POST /v1/routes` | Rzeczywiste obliczenia grafu synthetic, walidacja wejścia/wyjścia, kontrola capabilities, punktów i wersji. Bez jawnego trybu synthetic: SOURCE_UNAVAILABLE (503). |
+| `POST /v1/routes` | Rzeczywiste obliczenia grafu synthetic, walidacja wejścia/wyjścia, kontrola capabilities, punktów i wersji. W trybie pilot używa rzeczywistego grafu; bez jawnego trybu danych: SOURCE_UNAVAILABLE (503). |
 | `GET /openapi.json` | OpenAPI generowane ze wspólnych schematów. |
 
 Przykładowy request: `examples/route-request.json`. Błędne współrzędne dają

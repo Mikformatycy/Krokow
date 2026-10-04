@@ -1,5 +1,15 @@
 # Plan UX i wymagania frontendu do F-02
 
+> **Dokument historyczny — odczytuj w kontekście opisanej iteracji.**
+> Aktualny stan: [README](../README.md), [odbiór](testing.md) i [status](status.md).
+> Integracja wyszukiwania/API jest zakończona; ostatnia pełna kontrola miała
+> 620 testów PASS, a pięć prób iPhone/VoiceOver potwierdził użytkownik.
+> Nowe podsumowanie i pozostałe próby urządzenia są otwarte. Dawne A/B,
+> NOT TESTED, „do integracji” i listy przyszłych modułów niżej nie opisują
+> automatycznie stanu obecnego. Aktualne materiały PDF/film są do wykonania.
+
+> **Aktualizacja A / Claude Code, 2026-10-04:** zaimplementowany przepływ to kreator „Skąd idziesz?” → „Dokąd idziesz?” → „Twoja trasa” (+ „Ustawienia trasy”) → „Twój plan”, z wyszukiwarką i maks. 5 propozycjami zamiast pełnych list. Opis, uzasadnienie i wyniki testów: [ui-a11y-report.md](ui-a11y-report.md). Tabele poniżej pozostają wymaganiami treści i stanów.
+
 Status: propozycja osoby A / Codexa, 2026-10-03. Zadanie: wkład frontendu do F-02 przed implementacją F-03. Dokument nie oznacza odbioru kontraktu ani działającej aplikacji.
 
 Podstawa: [prompt startowy](../codex-start.md), [plan](../plan.md), [architektura](../architecture.md) i [kontrakt 1.0.0-draft.1](../contracts.md). Kontrakt opisowy znajduje się obecnie w katalogu głównym. Niniejszy dokument opisuje potrzeby UI; nie tworzy drugiej definicji schematów API.

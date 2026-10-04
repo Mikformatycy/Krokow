@@ -1,4 +1,4 @@
-import { BooleanFactSchema, CoordinateSchema, CrossingEventSchema, EvidenceSchema, IdSchema, LineStringSchema, PolygonSchema, PublicSourceSchema, UtcSchema } from '@krok/contracts';
+import { BooleanFactSchema, CoordinateSchema, CrossingEventSchema, EvidenceSchema, IdSchema, LineStringSchema, PolygonSchema, PublicSourceSchema, TextSchema, UtcSchema } from '@krok/contracts';
 import type { BooleanFact, Evidence, TactileFact } from '@krok/contracts';
 import type { Edge, Snapshot } from './types';
 
@@ -56,6 +56,8 @@ export function validateSnapshot(snapshot: Snapshot): void {
   const places = new Set<string>();
   for (const place of snapshot.places) {
     IdSchema.parse(place.id);
+    if (place.kind !== undefined && place.kind !== 'entrance' && place.kind !== 'poi') throw new Error('Invalid route point kind');
+    if (place.address !== undefined) TextSchema.parse(place.address);
     if (places.has(place.id) || !nodes.has(place.nodeId)) throw new Error('Invalid place binding');
     if (mode === 'pilot' && JSON.stringify(CoordinateSchema.parse(place.coordinate)) !== JSON.stringify(nodes.get(place.nodeId)?.coordinate)) throw new Error('Place is not on its graph node');
     places.add(place.id);

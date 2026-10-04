@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { heading } from './ui-helpers';
 
 test('opens an honest preview without asking for location or offering field navigation', async ({ page }) => {
   const errors: string[] = [];
@@ -11,44 +12,46 @@ test('opens an honest preview without asking for location or offering field navi
   });
   await page.goto('/');
   await expect(page.locator('html')).toHaveAttribute('lang', 'pl');
-  await expect(page.getByRole('heading', { name: 'Poznaj trasę, zanim wyruszysz.' })).toBeVisible();
-  await expect(page.getByText('PODGLĄD APLIKACJI')).toBeVisible();
-  await expect(page.getByText('Poznaj plan trasy. Bez prowadzenia w terenie.')).toBeVisible();
+  await expect(heading(page, 'To mały krok dla człowieka, ale wielki krok dla Krakowa')).toBeVisible();
+  const logo = page.getByRole('img', { name: 'Logo Kroków — białe laski ułożone w literę K' });
+  await expect(logo).toBeVisible();
+  await expect.poll(() => logo.evaluate((image: HTMLImageElement) => image.naturalWidth)).toBeGreaterThan(0);
+  await expect(page.getByText('Podgląd aplikacji', { exact: true })).toHaveCount(0);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  await expect(page.getByText('Plan pieszej trasy z jasną informacją, czego nie wiemy. Bez prowadzenia w terenie.')).toBeVisible();
   await expect(page.getByRole('button', { name: /nawig|wyznacz|porównaj/i })).toHaveCount(0);
-  await expect(page.getByRole('link', { name: 'Jak czytać informacje o trasie' })).toBeVisible();
-  await expect(page.getByText(/Dostępny obszar i rodzaj danych/)).toHaveCount(0);
-  await page.getByRole('button', { name: 'Więcej o aplikacji' }).click();
-  await expect(page.getByText(/Dostępny obszar i rodzaj danych/)).toBeVisible();
+  await expect(page.getByRole('link')).toHaveCount(2);
   expect(errors).toEqual([]);
 });
 
 test('supports keyboard navigation between screens and focuses their headings', async ({ page }) => {
   await page.goto('/');
-  await expect(page.getByRole('heading', { name: 'Poznaj trasę, zanim wyruszysz.' })).toBeFocused();
+  await expect(heading(page, 'To mały krok dla człowieka, ale wielki krok dla Krakowa')).toBeFocused();
   await page.keyboard.press('Tab');
   await expect(page.getByRole('link', { name: 'Zaplanuj trasę' })).toBeFocused();
   await page.keyboard.press('Tab');
   const details = page.getByRole('link', { name: 'Jak czytać informacje o trasie' });
   await expect(details).toBeFocused();
-  await expect(details).toHaveCSS('border-top-color', 'rgb(7, 91, 206)');
+  await expect(details).toHaveCSS('border-top-color', 'rgb(10, 88, 202)');
   await page.keyboard.press('Enter');
   await expect(page).toHaveURL(/\/about-data$/);
-  await expect(page.getByRole('heading', { name: 'Co wiemy, a czego nie wiemy' })).toBeFocused();
+  await expect(heading(page, 'Co wiemy, a czego nie wiemy')).toBeFocused();
   for (const title of ['Obecność opisana', 'Brak opisany', 'Brak danych', 'Sprzeczne informacje']) {
-    await expect(page.getByRole('heading', { name: title, exact: true })).toBeVisible();
+    await expect(heading(page, title)).toBeVisible();
   }
-  await page.keyboard.press('Tab');
-  await expect(page.getByRole('link', { name: 'Wróć do początku' })).toBeFocused();
+  // Chrome makes a scroller without focusable children keyboard-focusable; the next stop is the back button.
+  await page.keyboard.press('Shift+Tab'); await page.keyboard.press('Shift+Tab');
+  await expect(page.getByRole('button', { name: 'Wstecz', exact: true })).toBeFocused();
   await page.keyboard.press('Enter');
-  await expect(page.getByRole('heading', { name: 'Poznaj trasę, zanim wyruszysz.' })).toBeFocused();
+  await expect(heading(page, 'To mały krok dla człowieka, ale wielki krok dla Krakowa')).toBeFocused();
 });
 
-test('loads the data screen directly and keeps its explanation at 200 percent zoom', async ({ page }) => {
+test('loads the data screen directly, keeps it readable at 200 percent and returns home without history', async ({ page }) => {
   await page.goto('/about-data');
-  await expect(page.getByRole('heading', { name: 'Co wiemy, a czego nie wiemy' })).toBeVisible();
+  await expect(heading(page, 'Co wiemy, a czego nie wiemy')).toBeVisible();
   await page.evaluate(() => { document.body.style.zoom = '2'; });
   await expect(page.getByText(/Nie opisują konkretnego miejsca/)).toBeVisible();
-  await page.getByRole('link', { name: 'Wróć do początku' }).scrollIntoViewIfNeeded();
-  await expect(page.getByRole('link', { name: 'Wróć do początku' })).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  await page.getByRole('button', { name: 'Wstecz', exact: true }).click();
+  await expect(heading(page, 'To mały krok dla człowieka, ale wielki krok dla Krakowa')).toBeVisible();
 });

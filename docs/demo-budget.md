@@ -1,5 +1,13 @@
 # Plan demonstracji — termin za około 18 godzin
 
+> **Dokument historyczny — odczytuj w kontekście opisanej iteracji.**
+> Aktualny stan: [README](../README.md), [odbiór](testing.md) i [status](status.md).
+> Integracja wyszukiwania/API jest zakończona; ostatnia pełna kontrola miała
+> 620 testów PASS, a pięć prób iPhone/VoiceOver potwierdził użytkownik.
+> Nowe podsumowanie i pozostałe próby urządzenia są otwarte. Dawne A/B,
+> NOT TESTED, „do integracji” i listy przyszłych modułów niżej nie opisują
+> automatycznie stanu obecnego. Aktualne materiały PDF/film są do wykonania.
+
 **Nowsza decyzja użytkownika:** pozostało siedem sesji po pięć godzin.
 Teraz uruchamiamy aplikację **Kroków** na iPhonie w Expo Go, potem kontynuujemy
 rozwój. Film i prezentacja są odłożone. Poniższy harmonogram i zalecenie
@@ -7,7 +15,7 @@ zamrożenia funkcji są historyczne; nie blokują dalszych zmian.
 
 Stan 2026-10-03 po realizacji: HTTP, porównanie i minimalny odsłuch mają
 testy lokalne; osiem slajdów PDF oraz film 143,52 s są w
-[pakiecie materiałów](../deliverables/README.md). Kolejny krok to przegląd
+historycznym pakiecie `deliverables/` (obecnie usuniętym; [aktualny stan materiałów](demo-delivery.md)). Kolejny krok to przegląd
 przez prezentującego, próba wystąpienia i test telefonu, jeżeli jest dostępny.
 Pełna symulacja, resolver B-03 i OSM pozostają poza zakresem oddania.
 Szczegółowe wyniki i brak testów urządzeń: [status](status.md).

@@ -1,4 +1,4 @@
-import { ApiErrorSchema, CoverageResponseSchema, ERROR_HTTP_STATUS, PlacesQuerySchema, PlacesResponseSchema, RouteRequestSchema, RouteResponseSchema } from '@krok/contracts';
+import { ApiErrorSchema, CoverageResponseSchema, ERROR_HTTP_STATUS, PlaceSearchQuerySchema, PlaceSearchResponseSchema, PlacesQuerySchema, PlacesResponseSchema, RouteRequestSchema, RouteResponseSchema } from '@krok/contracts';
 import type { CoverageResponse, PlacesResponse, RouteRequest, RouteResponse } from '@krok/contracts';
 import { InvalidResponse, RouteFailure } from './MockRouteApi';
 import type { RouteApi } from './MockRouteApi';
@@ -53,6 +53,12 @@ export class HttpRouteApi implements RouteApi {
     const input = PlacesQuerySchema.parse({ cityId, query });
     const result = PlacesResponseSchema.safeParse(await this.send(`/v1/places?cityId=${encodeURIComponent(input.cityId)}&query=${encodeURIComponent(input.query)}`));
     if (!result.success || result.data.cityId !== cityId || result.data.navigationEligibility !== 'preview_only') throw new InvalidResponse();
+    return result.data;
+  }
+  async searchPlaces(cityId: string, query: string) {
+    const input = PlaceSearchQuerySchema.parse({ cityId, query });
+    const result = PlaceSearchResponseSchema.safeParse(await this.send(`/v1/place-search?cityId=${encodeURIComponent(input.cityId)}&query=${encodeURIComponent(input.query)}`));
+    if (!result.success || result.data.cityId !== cityId) throw new InvalidResponse();
     return result.data;
   }
   async plan(input: RouteRequest): Promise<RouteResponse> {

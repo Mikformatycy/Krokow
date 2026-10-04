@@ -1,29 +1,32 @@
 # Rejestr źródeł danych
 
-## OpenStreetMap — adapter B-04
+Stan: 2026-10-04. Pochodzenie i warunki danych są oddzielne od ich wiarygodności. Wszystkie realne rekordy infrastruktury obecnego prototypu są niezweryfikowane w terenie. Edycja OSM ani ponowne pobranie nie są obserwacją stanu infrastruktury.
 
-- Identyfikator: `osm`; typ `osm`.
-- Pochodzenie: [OpenStreetMap](https://www.openstreetmap.org).
-- Atrybucja: © OpenStreetMap contributors; [licencja ODbL](https://www.openstreetmap.org/copyright).
-- Pobranie operatora: `https://overpass-api.de/api/interpreter`, mały bbox
-  `[south=50.065, west=19.939, north=50.071, east=19.950]`.
-- Wzór zapytania: `queryFor` w `packages/ingestion/src/osm.ts`;
-  rzeczywiste zapytanie jest zachowywane przy każdym uruchomieniu.
-- Format: Overpass JSON `out meta`, węzły i drogi z pełnymi referencjami.
-  Tożsamość `type/id` i wersja OSM; data edycji to `sourceModifiedAt`,
-  nigdy automatyczne `observedAt` lub `verifiedAt`.
-- Surowe rekordy/checksum i wyniki są lokalne. Raw może zawierać publiczne
-  metadane autorów OSM; znormalizowane elementy pomijają username/uid.
-- Stan Overpass 2026-10-03: timeout połączenia. Później operator pozyskał
-  kompletny jednorazowy eksport OSM map API. Raw, checksum, licencja i data:
-  [archiwum Krakowa](../packages/ingestion/data/krakow/README.md).
-  Nowy [raport realnego pilota](real-pilot.md) pochodzi z tego eksportu,
-  nie z fixtures. Aplikacja korzysta z archiwum, bez żądań do dostawcy.
-- Instrukcja i ograniczenia: [ingestion](../packages/ingestion/README.md).
+| Zbiór | Pozyskanie | Rola |
+| --- | --- | --- |
+| [krakow-prototype](../packages/ingestion/data/krakow-prototype/README.md) | Wyciąg BBBike Cracow/OSM, 2026-10-03T20:39:21.626Z; raw-map.json.gz, capture.json/checksum | Aktualny graf: loadKrakowPrototype, 30 punktów, 6043 węzły, 12554 krawędzie, 479 etapów. |
+| [krakow-search](../packages/ingestion/data/krakow-search/README.md) | Overpass, relation/2768922, 2026-10-03T20:40:40.212Z; raw katalogu/granicy, zapytania i checksumy | 96 526 wpisów bazowych + 30 punktów grafu = 96 556 w API. Nie potwierdza udogodnień. |
+| [krakow](../packages/ingestion/data/krakow/README.md) | Starszy eksport OSM map API; data/checksum w archiwum | Fixture regresji pięciu wejść, loadKrakowPilot; nie aktualny graf runtime. |
+| Synthetic | Własne fixtures kontraktów i packages/routing/src/synthetic.ts | Fikcyjne przykłady/testy, oznaczone, preview_only. |
 
-## Własne dane syntetyczne
+## Warunki i atrybucja
 
-Fixtures w `packages/contracts` i graf w `packages/routing/src/synthetic.ts`
-służą testom i demonstracji. Ich pochodzenie oraz synthetic/preview_only
-są jawne w kontrakcie. Nie są obserwacjami infrastruktury Krakowa i nie
-mogą wypełniać braków realnego snapshotu ani uruchamiać trybu terenowego.
+OSM: © OpenStreetMap contributors, [ODbL i atrybucja](https://www.openstreetmap.org/copyright). BBBike jest dystrybutorem OSM, nie niezależnym potwierdzeniem. [Eksport BBBike](https://download.bbbike.org/osm/bbbike/Cracow/), [zasady Overpass](https://dev.overpass-api.de/overpass-doc/en/preface/commons.html).
+
+Metadane opisują wykorzystane eksporty. Przed kolejnym importem/dystrybucją operator sprawdza warunki źródła i obowiązki dla danych pochodnych. Nie deklarujemy pełnego audytu licencyjnego. [Licencje komponentów](dependencies.md).
+
+Raw może zawierać publiczne metadane autorów OSM. Indeks/API pomijają autorów, kontakty i zbędne notatki. UI pokazuje atrybucję; dowód zachowuje obiekt, zakres i daty.
+
+## Aktualizacja i awarie
+
+Runtime czyta archiwa i kontroluje checksumy; nie odpytuje OSM/Overpass przy wpisywaniu fraz ani obliczeniu trasy. P0: import operatora na żądanie; harmonogram nie jest wdrożony.
+
+pnpm import:osm jest osobnym adapterem małego bbox i stagingu, nie aktualizacją wszystkich archiwów runtime. Ma ograniczone ponowienia, Retry-After, kontrolę integralności i zachowuje ostatni dobry snapshot. [Ingestion](../packages/ingestion/README.md).
+
+Nowy graf/katalog wymaga archiwum, audytu, testów i kontrolowanego restartu. Błąd źródła daje SOURCE_UNAVAILABLE, brak informacji o udogodnieniu — unknown; nie uruchamia synthetic. [Proces](operations.md).
+
+Nie używamy wewnętrznych systemów ani miejskich API UMK/MJO. Portale briefu są potencjalnymi źródłami, nie istniejącymi integracjami.
+
+## Weryfikacja
+
+[Audyt](data-audit-report.md) sprawdza raw → normalizację → graf → API. To kontrola programowa, nie terenowa. 479 etapów ma unknown akustyki; zapis nawierzchni obiektu nie ocenia całej trasy. Korekty i konflikty: [resolver](b03-evidence.md).

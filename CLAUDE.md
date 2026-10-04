@@ -1,29 +1,20 @@
-# Rola B — backend / Codex
+@AGENTS.md
+@docs/mobile-ux.md
 
-Historyczna nazwa pliku została zachowana jako punkt wejścia. Na polecenie
-użytkownika z 2026-10-03 rolę B przejmuje osobna instancja Codexa.
-Reguły wspólne: [AGENTS.md](AGENTS.md). Ten plik doprecyzowuje rolę,
-nie zmienia odpowiedzialności instancji A pracującej nad mobile.
+# Dawna rola Claude Code — UI przekazane
 
-- B: `apps/api`, `packages/routing`, `packages/ingestion`, `infra`.
-- B integruje `packages/contracts`, fixtures, manifesty i lockfile;
-  odbiór kontraktu, rankingu i komunikatów nadal wymaga obu stron.
-- Przed pracą czytaj `docs/status.md`, `plan.md`, `architecture.md`,
-  `contracts.md` i `docs/mobile-ux.md`. Schematy F-02 są w
-  `packages/contracts`, a decyzje robocze w `docs/f02-review.md`.
-- Użytkownik zezwolił na samodzielną kontynuację i integrację w głównym
-  katalogu `Kroków`. F-02 zostało skopiowane z historycznego worktree
-  backendu; bieżące źródła kontraktu i API są tutaj. Nie kopiuj
-  starszego lockfile z tamtego worktree na zintegrowany projekt.
-- Aktualny podział po konsolidacji: `docs/two-codex-plan.md`. Jeden folder
-  i wspólny main, rozdzielone ścieżki, Git/instalacje tylko B. Nie twórz
-  kolejnych worktrees, nie przełączaj brancha i nie nadpisuj zmian A.
-- F-01/F-03/M-01 przygotowała A. F-02 jest draftem; B-01 dodaje API,
-  B-02 routing synthetic. Następne osobne zadanie to B-03 — resolver.
-  Import OSM później. Aktualne wyniki zawsze sprawdzaj w `docs/status.md`.
-- Nie zamrażaj kontraktu ani nie deklaruj wspólnego odbioru samodzielnie.
-- Finalna nazwa **Kroków**. B wraca do B-03, nowa instancja A podłącza M-04
-  do UI. Film/prezentacja odłożone. Nie zakładaj, że historyczny budżet sesji
-  nadal jest aktualny. Plan bieżący: `docs/two-codex-plan.md`.
-- W `docs/status.md` zmieniaj tylko wpis B; podaj testy, ograniczenia
-  i konkretne przekazanie A. Nie uruchamiaj drugiego agenta do tych samych plików.
+Od 2026-10-04 cały projekt przejmuje jeden Codex. Nie obowiązuje rezerwacja
+mobile dla Claude'a ani oczekiwanie na zatwierdzenie dwóch agentów.
+Start: `codex-start.md`; stan: `docs/handoff-codex.md`.
+
+Zachowaj kreator i pracę Claude'a. Nie odtwarzaj F-01/F-03/M-04 i nie wykonuj
+kolejnego redesignu przy okazji poprawek. Raport: `docs/handoff-mobile.md`;
+instrukcje katalogu: `apps/mobile/AGENTS.md`. Wskazówki
+`docs/claude-ui-instructions.md` są referencją UX, nie przydziałem nowej roli.
+
+Podstawa: tekst, duże kontrolki, logiczny fokus, powiększanie tekstu,
+VoiceOver/TalkBack i wspólna koordynacja mowy. Nie obiecuj bezpieczeństwa
+ani bieżącego stanu sygnalizacji. Nie deklaruj testu telefonu na podstawie web.
+
+Wspólne reguły kontraktów, Git i testów określa AGENTS.md. Dopisuj własny
+status bez nadpisywania raportów A/B. Bez worktrees i równoległych agentów.

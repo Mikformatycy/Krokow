@@ -1,6 +1,11 @@
 # Kontrakt frontend-backend
 
-**Wersja opisowa:** `1.0.0-draft.1`. To specyfikacja wejściowa zadania F-02, nie już wdrożony schemat. Po wspólnym zatwierdzeniu jedynym źródłem definicji jest `packages/contracts/src`; OpenAPI jest generowane. Przykłady w `examples/` mają zostać objęte testem zgodności Zod.
+**Historyczna specyfikacja wejściowa:** `1.0.0-draft.1`, zachowana jako
+zapis projektu sprzed F-02. Nie jest aktualną definicją API. Wykonawcze
+schematy `packages/contracts/src` mają `1.0.0-draft.2` oraz `place-search-1`;
+API/mobile są zintegrowane, a przykłady walidowane. Aktualna instrukcja:
+[docs/contracts.md](docs/contracts.md). Poniższe przykładowe typy, planowane
+endpointy i dawne warunki akceptacji nie nadpisują schematów wykonawczych.
 
 ## 1. Zasady transportu
 
@@ -28,7 +33,7 @@ Nie dodajemy publicznego endpointu moderatora ani kont tylko po to, aby pokazać
 
 ## 3. Zapytanie o trasę
 
-Pełny przykład: [route-request.json](../examples/route-request.json).
+Pełny przykład: [route-request.json](examples/route-request.json).
 
 ```ts
 type Endpoint =
@@ -60,7 +65,7 @@ Wymóg `documented` przy akustyce oznacza `known(true)` bez konfliktu na każdym
 
 ## 4. Odpowiedź z trasami
 
-Pełny przykład synthetic: [route-response.json](../examples/route-response.json). Wszystkie odległości i udogodnienia w nim są fikcyjne. `geometry=null` jest dopuszczalne dla synthetic, ponieważ nie opisujemy prawdziwej przestrzeni. W `pilot` każda trasa wymaga ciągłej geometrii i poprawnych endpointów.
+Pełny przykład synthetic: [route-response.json](examples/route-response.json). Wszystkie odległości i udogodnienia w nim są fikcyjne. `geometry=null` jest dopuszczalne dla synthetic, ponieważ nie opisujemy prawdziwej przestrzeni. W `pilot` każda trasa wymaga ciągłej geometrii i poprawnych endpointów.
 
 ```ts
 type RouteResponse = {
@@ -171,7 +176,7 @@ type ApiError = {
 };
 ```
 
-`details` ma osobny, kontrolowany schemat dla każdego kodu, a nie dowolny obiekt wyjątku/SQL. Przykład: [route-unavailable.json](../examples/route-unavailable.json).
+`details` ma osobny, kontrolowany schemat dla każdego kodu, a nie dowolny obiekt wyjątku/SQL. Przykład: [route-unavailable.json](examples/route-unavailable.json).
 
 | HTTP / kod | Dokładne znaczenie | Reakcja UI |
 | --- | --- | --- |

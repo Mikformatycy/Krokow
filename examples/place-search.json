@@ -1,0 +1,74 @@
+{
+  "schemaVersion": "1.0.0-draft.2",
+  "requestId": "synthetic-example",
+  "searchVersion": "place-search-1",
+  "mode": "synthetic",
+  "navigationEligibility": "preview_only",
+  "cityId": "synthetic-city",
+  "areaName": "Fikcyjny obszar",
+  "catalogVersion": "synthetic-search-1",
+  "fetchedAt": "2026-10-03T10:00:00Z",
+  "catalogSize": 3,
+  "total": 3,
+  "hasMore": false,
+  "sources": [
+    {
+      "id": "synthetic-source",
+      "kind": "synthetic",
+      "name": "Fikcyjne dane demonstracyjne",
+      "sourceUrl": null,
+      "attribution": "Kroków — fikcyjne przykłady",
+      "license": "CC0-1.0",
+      "lastFetchedAt": "2026-10-03T10:00:00Z",
+      "status": "ok"
+    }
+  ],
+  "places": [
+    {
+      "id": "search-demo-start",
+      "name": "Fikcyjna biblioteka — wejście",
+      "address": "Ulica Przykładowa 7",
+      "kind": "entrance",
+      "coordinate": null,
+      "positionKind": "mapped_point",
+      "sourceId": "synthetic-source",
+      "sourceRecordId": "demo-entrance",
+      "sourceModifiedAt": null,
+      "routing": {
+        "status": "available",
+        "cityId": "synthetic-city",
+        "placeId": "demo-start"
+      }
+    },
+    {
+      "id": "search-demo-outside",
+      "name": "Fikcyjna biblioteka poza grafem",
+      "address": null,
+      "kind": "poi",
+      "coordinate": null,
+      "positionKind": "representative_point",
+      "sourceId": "synthetic-source",
+      "sourceRecordId": "demo-outside",
+      "sourceModifiedAt": null,
+      "routing": {
+        "status": "unavailable",
+        "reason": "outside_coverage"
+      }
+    },
+    {
+      "id": "search-demo-unresolved",
+      "name": "Fikcyjny adres bez połączenia",
+      "address": "Ulica Przykładowa 9",
+      "kind": "address",
+      "coordinate": null,
+      "positionKind": "representative_point",
+      "sourceId": "synthetic-source",
+      "sourceRecordId": "demo-unresolved",
+      "sourceModifiedAt": null,
+      "routing": {
+        "status": "unavailable",
+        "reason": "unresolved"
+      }
+    }
+  ]
+}

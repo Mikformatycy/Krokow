@@ -5,7 +5,7 @@ import { createRequire } from 'node:module';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { mkdir, writeFile } from 'node:fs/promises';
 
-// One temporary ngrok endpoint serves Metro and the synthetic API together.
+// One temporary ngrok endpoint serves Metro and the configured API together.
 // Use the ngrok integration shipped with our pinned Expo CLI, not a copied token.
 const projectRoot = fileURLToPath(new URL('../', import.meta.url));
 const require = createRequire(import.meta.url);

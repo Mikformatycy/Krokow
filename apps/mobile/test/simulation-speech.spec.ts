@@ -3,6 +3,7 @@ import { createRouteResponse } from '@krok/contracts/fixtures';
 import { SpeechCoordinator } from '../src/adapters/speech/coordinator';
 import type { SpeechPort, SpeechStatus, SpeechVoice } from '../src/adapters/speech/coordinator';
 import { SimulationSession } from '../src/features/simulation/session';
+import { simulationItemSummary } from '../src/features/simulation/summary';
 import { simulationItemText } from '../src/features/simulation/text';
 
 function fixture() {
@@ -15,14 +16,16 @@ function fixture() {
     speak: (text, _voice, callbacks) => { spoken.push({ text, ...callbacks }); },
   };
   const speech = new SpeechCoordinator(port, (status) => statuses.push(status));
-  const session = () => new SimulationSession(createRouteResponse(), 'A', () => time, speech);
+  const announced: { text: string; interrupt: boolean }[] = [];
+  const announcer = { announce: (text: string, interrupt: boolean) => { announced.push({ text, interrupt }); } };
+  const session = (withAnnouncer = false) => new SimulationSession(createRouteResponse(), 'A', () => time, speech, 1, withAnnouncer ? announcer : null);
   const drain = (from = 0) => {
     for (let i = from; i < spoken.length; i++) {
       if (i > 100) throw new Error('Queue did not finish');
       spoken[i]!.done();
     }
   };
-  return { port, speech, spoken, statuses, session, drain, stops: () => stops, setTime: (value: number) => { time = value; } };
+  return { port, speech, spoken, statuses, announced, session, drain, stops: () => stops, setTime: (value: number) => { time = value; } };
 }
 function enable(session: SimulationSession) { session.setReader(false); session.setSpeechEnabled(true); }
 
@@ -137,4 +140,35 @@ test('missing voice and device failures preserve text and discard backlog before
     session.repeat(); await expect.poll(() => f.spoken.length).toBe(1); f.drain();
     expect(f.spoken.map((part) => part.text).join(' ')).toBe(session.text); f.speech.dispose();
   }
+});
+
+test('active reader receives short progress and a full interrupting repeat, never the app voice', async () => {
+  const f = fixture(); const session = f.session(true);
+  session.setReader(true); session.setSpeechEnabled(true);
+  const start = session.start();
+  expect(f.announced).toEqual([{ text: start.emissions.map(({ item }) => simulationItemSummary(item)).join(' '), interrupt: false }]);
+  f.setTime(1_000_000); const finish = session.tick();
+  expect(finish.emissions.length).toBeGreaterThan(1);
+  expect(f.announced.at(-1)).toEqual({ text: finish.emissions.map(({ item }) => simulationItemSummary(item)).join(' '), interrupt: false });
+  session.repeat();
+  expect(f.announced.at(-1)).toEqual({ text: session.text, interrupt: true });
+  expect(session.text).toBe(simulationItemText(finish.emissions.at(-1)!.item));
+  await Promise.resolve(); expect(f.spoken).toHaveLength(0);
+  expect(f.announced.map(({ text }) => text).join(' ')).not.toMatch(/teraz możesz przejść|jest zielone|trasa bezpieczna|brak przeszkód/i);
+  f.speech.dispose();
+});
+
+test('unknown reader state announces once per event; confirmed absence switches to voice without duplicates', async () => {
+  const f = fixture(); const session = f.session(true);
+  session.setSpeechEnabled(true); session.start();
+  expect(session.readerState).toBeNull(); expect(f.announced).toHaveLength(1); expect(f.spoken).toHaveLength(0);
+  session.pause(); f.setTime(500_000); session.tick();
+  expect(f.announced).toHaveLength(1);
+  session.setReader(false); session.repeat();
+  await expect.poll(() => f.spoken.length).toBe(1);
+  expect(f.announced).toHaveLength(1);
+  session.setReader(true); session.repeat();
+  expect(f.announced).toHaveLength(2); expect(f.spoken).toHaveLength(1);
+  session.invalidate('route_changed'); session.repeat(); session.resume(); session.tick();
+  expect(f.announced).toHaveLength(2); f.speech.dispose();
 });

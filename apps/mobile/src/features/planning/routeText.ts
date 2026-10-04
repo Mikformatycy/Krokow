@@ -1,6 +1,41 @@
-import type { BooleanFact, RouteOption, RouteReason, TactileFact, Warning } from '@krok/contracts';
+import type { BooleanFact, Evidence, RouteOption, RouteReason, TactileFact, Warning } from '@krok/contracts';
 
 export const metres = (value: number) => `${Math.round(value)} m`;
+export const walkingTime = (seconds: number) => `około ${Math.ceil(seconds / 60)} min`;
+export const walkingText = (seconds: number) => `${walkingTime(seconds)} marszu`;
+/** Each state keeps its own word; a zero never turns into "all confirmed". */
+export function audibleSummary(signals: RouteOption['metrics']['audibleSignals']): string {
+  const stages = signals.present + signals.absent + signals.unknown + signals.conflicting;
+  if (stages === 0) return 'Sygnalizacja dźwiękowa: w danych trasy nie ma etapów przejść.';
+  if (stages === 1) {
+    if (signals.unknown === 1) return 'Brak danych o sygnalizacji dźwiękowej.';
+    if (signals.conflicting === 1) return 'Sprzeczne dane o sygnalizacji dźwiękowej.';
+    if (signals.absent === 1) return 'W danych zapisano brak sygnalizacji dźwiękowej.';
+    return 'W danych zapisano sygnalizację dźwiękową.';
+  }
+  const parts = [[signals.present, 'opisana obecność'], [signals.absent, 'zapisany brak'], [signals.unknown, 'brak danych'], [signals.conflicting, 'sprzeczne dane']] as const;
+  return `Sygnalizacja dźwiękowa — ${parts.filter(([count]) => count > 0).map(([count, text]) => `${text}: ${count}`).join(', ')} (etapy przejść: ${stages}).`;
+}
+export function crossingText(metrics: RouteOption['metrics']): string {
+  const count = metrics.crossingCount;
+  if (count === 0) return 'W danych trasy nie zapisano przejść.';
+  const noun = count === 1 ? 'przejście' : count % 10 >= 2 && count % 10 <= 4 && (count % 100 < 12 || count % 100 > 14) ? 'przejścia' : 'przejść';
+  return `${count} ${noun}.${metrics.crossingStageCount === count ? '' : ` Etapy przejść: ${metrics.crossingStageCount}.`}`;
+}
+export const variantName = (index: number, recommended: boolean) => `Wariant ${index + 1}${recommended ? ', polecany' : ''}`;
+export function placeCountText(count: number): string {
+  const tens = count % 100; const units = count % 10;
+  const noun = count === 1 ? 'punkt' : units >= 2 && units <= 4 && (tens < 12 || tens > 14) ? 'punkty' : 'punktów';
+  return `Znaleziono ${count} ${noun}`;
+}
+/** Raw record value in words; never reads booleans or enum codes aloud. */
+export function evidenceValueText(evidence: Evidence): string {
+  switch (evidence.featureKey) {
+    case 'tactile_paving': return { yes: 'zapisano obecność', no: 'zapisano brak', partial: 'zapisano częściowe oznaczenie', incorrect: 'zapisano nieprawidłowe oznaczenie' }[evidence.value];
+    case 'surface': return { asphalt: 'nawierzchnia asfaltowa', paved: 'nawierzchnia utwardzona', unpaved: 'nawierzchnia nieutwardzona', unknown: 'nawierzchnia nieokreślona' }[evidence.value];
+    default: return evidence.value ? 'zapisano obecność' : 'zapisano brak';
+  }
+}
 export const dateText = (value: string | null) => value === null ? 'nieznana' : value.replace('T', ' ').replace(/(\.\d+)?Z$/, ' UTC');
 export function reasonText(reason: RouteReason): string {
   switch (reason.code) {

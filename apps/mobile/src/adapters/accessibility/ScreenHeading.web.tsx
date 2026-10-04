@@ -11,8 +11,8 @@ export function ScreenHeading({ children }: { children: string }) {
 
   return (
     <h1 ref={heading} tabIndex={-1} style={{
-      margin: 0, fontFamily: 'system-ui, sans-serif', fontSize: 'clamp(2rem, 5vw, 3.5rem)',
-      lineHeight: 1.15, fontWeight: 700, color: colors.ink,
+      margin: 0, fontFamily: 'system-ui, -apple-system, sans-serif', fontSize: 'clamp(1.9rem, 6vw, 2.5rem)',
+      lineHeight: 1.2, fontWeight: 700, color: colors.ink, outline: 'none',
     }}>{children}</h1>
   );
 }

@@ -1,5 +1,13 @@
 # F-02 — propozycja kontraktu do przeglądu A+B
 
+> **Dokument historyczny — odczytuj w kontekście opisanej iteracji.**
+> Aktualny stan: [README](../README.md), [odbiór](testing.md) i [status](status.md).
+> Integracja wyszukiwania/API jest zakończona; ostatnia pełna kontrola miała
+> 620 testów PASS, a pięć prób iPhone/VoiceOver potwierdził użytkownik.
+> Nowe podsumowanie i pozostałe próby urządzenia są otwarte. Dawne A/B,
+> NOT TESTED, „do integracji” i listy przyszłych modułów niżej nie opisują
+> automatycznie stanu obecnego. Aktualne materiały PDF/film są do wykonania.
+
 Właściciel: B / Codex, 2026-10-03. Zakres: schematy Zod, typy, walidacja
 referencji i metryk, importowalne fixtures, przykłady JSON, generowane OpenAPI.
 Założenie: korzystamy z przygotowanego F-01; nie zmieniamy rankingu ani mobile.

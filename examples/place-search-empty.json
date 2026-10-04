@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "1.0.0-draft.2",
+  "requestId": "synthetic-example",
+  "searchVersion": "place-search-1",
+  "mode": "synthetic",
+  "navigationEligibility": "preview_only",
+  "cityId": "synthetic-city",
+  "areaName": "Fikcyjny obszar",
+  "catalogVersion": "synthetic-search-1",
+  "fetchedAt": "2026-10-03T10:00:00Z",
+  "catalogSize": 3,
+  "total": 0,
+  "hasMore": false,
+  "sources": [
+    {
+      "id": "synthetic-source",
+      "kind": "synthetic",
+      "name": "Fikcyjne dane demonstracyjne",
+      "sourceUrl": null,
+      "attribution": "Kroków — fikcyjne przykłady",
+      "license": "CC0-1.0",
+      "lastFetchedAt": "2026-10-03T10:00:00Z",
+      "status": "ok"
+    }
+  ],
+  "places": []
+}

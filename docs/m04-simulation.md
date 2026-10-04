@@ -1,5 +1,13 @@
 # M-04 — niezależny rdzeń symulacji
 
+> **Dokument historyczny — odczytuj w kontekście opisanej iteracji.**
+> Aktualny stan: [README](../README.md), [odbiór](testing.md) i [status](status.md).
+> Integracja wyszukiwania/API jest zakończona; ostatnia pełna kontrola miała
+> 620 testów PASS, a pięć prób iPhone/VoiceOver potwierdził użytkownik.
+> Nowe podsumowanie i pozostałe próby urządzenia są otwarte. Dawne A/B,
+> NOT TESTED, „do integracji” i listy przyszłych modułów niżej nie opisują
+> automatycznie stanu obecnego. Aktualne materiały PDF/film są do wykonania.
+
 Ten dokument zapisuje pierwszą iterację rdzenia. Kolejna iteracja dodaje [sesję i kolejkę mowy](m04-speech-session.md); tam znajduje się uzupełnienie zakresu integracji i aktualna lista zmian.
 
 Osoba A, 2026-10-03. B prowadzi próbę telefonu. Zakres tej iteracji: walidowany plan zdarzeń i deterministyczny kontroler, bez podłączania ekranów, GPS i dźwięku. Kod powstaje w `slepa-genia-simulation` / `feat/M-04-simulation`. Na bazę HEAD nałożono kopię 171 bieżących plików źródłowych (bez `.env`, node_modules i materiałów binarnych); dla każdego sprawdzono SHA-256 źródła przed/po kopiowaniu i kopii. To lokalny snapshot niezatwierdzonej pracy, nie wspólny commit integracyjny. Nie scalać całego worktree nad późniejszymi zmianami B.

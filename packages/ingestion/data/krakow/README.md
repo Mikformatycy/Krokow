@@ -1,5 +1,10 @@
 # Rzeczywisty snapshot Krakowa
 
+> Archiwum wcześniejszego pilota, zachowane jako fixture regresji pięciu
+> wejść. Aktualny runtime używa [krakow-prototype](../krakow-prototype/README.md)
+> i [krakow-search](../krakow-search/README.md). Opis poniżej dotyczy
+> tego konkretnego eksportu, nie bieżącego zasięgu aplikacji.
+
 `raw-map.json.gz` jest bezstratnie skompresowaną odpowiedzią JSON OSM API.
 To prawdziwe dane społecznościowe, nie fixture synthetic ani pomiar terenowy.
 Źródło: [OSM map API](https://api.openstreetmap.org/api/0.6/map.json?bbox=19.939,50.065,19.950,50.071).

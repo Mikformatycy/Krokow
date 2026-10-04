@@ -1,5 +1,77 @@
 # Handoff A — M-04, 2026-10-03
 
+> **Dokument historyczny — odczytuj w kontekście opisanej iteracji.**
+> Aktualny stan: [README](../README.md), [odbiór](testing.md) i [status](status.md).
+> Integracja wyszukiwania/API jest zakończona; ostatnia pełna kontrola miała
+> 620 testów PASS, a pięć prób iPhone/VoiceOver potwierdził użytkownik.
+> Nowe podsumowanie i pozostałe próby urządzenia są otwarte. Dawne A/B,
+> NOT TESTED, „do integracji” i listy przyszłych modułów niżej nie opisują
+> automatycznie stanu obecnego. Aktualne materiały PDF/film są do wykonania.
+
+> Cały projekt przejmuje jeden Codex, 2026-10-04. Aktualny punkt wejścia:
+> [handoff-codex.md](handoff-codex.md). Poniższe raporty A/B są historią;
+> nie oznaczają dalszej równoległej pracy Claude'a nad UI.
+
+> Aktualizacja integracyjna B na nowe polecenie użytkownika, 2026-10-04:
+> podłączono `/v1/place-search` do istniejącego kreatora oraz dane obiektów
+> tras do rozwijanych szczegółów. Zachowano projekt UI, symulację i mowę A.
+> Wyniki i dokładny zakres B: [handoff-backend.md](handoff-backend.md).
+> Raporty A poniżej pozostawiono bez zmian. Pozostaje test nowych wyników
+> wyszukiwania i informacji o odcinkach na iPhonie z VoiceOver.
+
+## Claude Code — przebudowa UI (kreator, duże kontrolki, mniej tekstu), 2026-10-04 — GOTOWE DO INTEGRACJI
+
+Polecenie użytkownika: UI schludne i przystępne dla osób niewidomych, duże
+przyciski, mało tekstu, możliwość mówienia, bez długiej listy przy wyborze trasy.
+Użytkownik zgłosił też z iPhone'a (VoiceOver): escape ma chować klawiaturę; z
+„Opcji demonstracji” nie dało się wyjść gestami. Opis zmian, uzasadnienie i wyniki:
+[ui-a11y-report.md — iteracja 2](ui-a11y-report.md).
+
+Pliki A: nowe `apps/mobile/src/components/{ToggleRow,ChoiceGroup}.tsx`,
+`apps/mobile/src/features/planning/{PlaceStep,OptionsStep}.tsx`; usunięte (zastąpione)
+`features/planning/{PlacePicker,SpeechPlayer}.tsx`; zmienione `components/{theme.ts,ActionButton,ActionLink,Screen,Details,SectionHeading,SectionHeading.web}.tsx`,
+`adapters/accessibility/ScreenHeading{,.web}.tsx`, `features/planning/{PlanningScreen,RouteResults}.tsx`,
+`features/planning/{routeText,styles}.ts`, `features/simulation/SimulationPanel.tsx`,
+`features/welcome/{WelcomeScreen,AboutDataScreen}.tsx`; testy `test/{ui-helpers,planning,progressive-ui,speech,welcome,http-planning,simulation-ui,reader-a11y}.spec.ts`
+oraz `test/pilot/pilot.e2e.ts`. Lokalna konfiguracja podglądu `.claude/launch.json`
+(port A 8085 → API 3003). Dokumenty: raport, notka w `docs/mobile-ux.md`, ten wpis, wpis A w statusie.
+Bez zmian API, kontraktów, rankingu, zależności, manifestów i lockfile.
+
+**Przekazanie B:** przejrzeć i zatwierdzić zmiany A (commit). Dla jednoprzyciskowego
+rozpoznawania mowy potrzebna byłaby decyzja użytkownika o development buildzie
+(moduł natywny poza Expo Go); obecnie działa dyktowanie z klawiatury systemowej, a „Szukaj” chowa klawiaturę.
+
+## Claude Code przejmuje A — blokery czytnika ekranu — GOTOWE DO INTEGRACJI
+
+Na polecenie użytkownika rolę A (UI/UX, dostępność) prowadzi Claude Code.
+Wymagania: [claude-ui-instructions.md](claude-ui-instructions.md); audyt, wyniki
+i instrukcja testów manualnych: [ui-a11y-report.md](ui-a11y-report.md).
+Zakres: blokery głównego scenariusza bez patrzenia — symulacja i „Powtórz
+komunikat” słyszalne przez VoiceOver/TalkBack (jeden kanał na zdarzenie),
+ogłaszane błędy, wybór punktu z nazwą i bez utraty fokusu, liczba wyników po
+ustabilizowaniu zapytania, jawne ponowienie katalogu, fokus przez
+`sendAccessibilityEvent`, słowne wartości dowodów, stan zajętości.
+Bez zmian API, kontraktów, rankingu, zależności, manifestów i lockfile.
+
+Pliki A: `apps/mobile/src/adapters/accessibility/{announce.ts,announce.web.ts,ScreenHeading.tsx,focusControl.ts}`,
+`apps/mobile/src/components/{LiveMessage.tsx,ActionButton.tsx}`, `apps/mobile/src/app/+html.tsx`,
+`apps/mobile/src/features/planning/{PlacePicker.tsx,PlanningScreen.tsx,RouteResults.tsx,routeText.ts,useRoutePlayback.ts}`,
+`apps/mobile/src/features/simulation/{session.ts,SimulationPanel.tsx}`,
+`apps/mobile/test/{reader-a11y.spec.ts,simulation-speech.spec.ts,simulation-ui.spec.ts,planning.spec.ts,ui-helpers.ts}`,
+`apps/mobile/AGENTS.md`. Instrukcje ról (na polecenie użytkownika): `AGENTS.md`,
+`agent.md`, `README.md`, `architecture.md`, `plan.md`, `codex-start.md`,
+`claude-start.md`. Dokumenty: `docs/ui-a11y-report.md`, ten wpis, wpis A w `docs/status.md`.
+`CLAUDE.md` i `docs/claude-ui-instructions.md` to niezatwierdzone zmiany użytkownika —
+A ich nie edytowała.
+
+Wyniki komend: [raport, sekcja Wyniki](ui-a11y-report.md#wyniki).
+iPhone/VoiceOver, Android/TalkBack, duży tekst systemowy: **NOT TESTED**.
+
+**Przekazanie B:** przejrzeć diff powyższych plików, wykonać wspólne kontrole
+i commit (A nie wykonuje operacji Git). Decyzja potrzebna przed iteracją 2:
+czy A może zmienić `apps/mobile/app.json` (`userInterfaceStyle: "automatic"`)
+dla trybu ciemnego, czy zmiana należy do B jako konfiguracja/manifest.
+
 ## Bieżąca integracja UX i pilot — GOTOWE DO INTEGRACJI
 
 A przeczytała pilne przekazanie B o API pilot na 3003. Zakres rozszerzenia:

@@ -2,16 +2,43 @@
 
 ## Misja i aktualny stan
 
-Budujemy "Kroków": planowanie pieszych tras dla osób niewidomych, uwzględniające konkretne udogodnienia i jawne braki danych. Na starcie to pakiet dokumentacji, bez aplikacji. Nie pisz, że coś działa, dopóki nie masz wyniku testu.
+Budujemy "Kroków": planowanie pieszych tras dla osób niewidomych, uwzględniające konkretne udogodnienia i jawne braki danych. Istnieją aplikacja, API, graf i archiwa OSM; stan odbioru określa `docs/status.md`. Nie odtwarzaj gotowych modułów. Nie pisz, że coś działa, dopóki nie masz wyniku testu.
 
-Na początku zadania przeczytaj `docs/status.md`, odpowiedni etap w `plan.md`, odpowiednie sekcje `architecture.md` i `docs/contracts.md`. W razie konfliktu zaakceptowany kontrakt i udokumentowana decyzja człowieka mają pierwszeństwo przed przykładem. Zgłoś rozbieżność; nie uzgadniaj jej samodzielnie zmianą drugiego modułu.
+Na początku zadania przeczytaj `requirements.md`, `docs/status.md`, `docs/data-audit-plan.md`, odpowiedni etap w `plan.md`, odpowiednie sekcje `architecture.md` i `docs/contracts.md`. W razie konfliktu zaakceptowany kontrakt i udokumentowana decyzja człowieka mają pierwszeństwo przed przykładem. Zgłoś rozbieżność; nie uzgadniaj jej samodzielnie zmianą drugiego modułu.
 
-## Podział pracy
+## Aktualne polecenie — jeden Codex przejmuje całość, 2026-10-04
 
-- Codex domyślnie: `apps/mobile/**`, testy interfejsu i lokalnej nawigacji, opisy UX.
-- Claude Code domyślnie: `apps/api/**`, `packages/routing/**`, `packages/ingestion/**`, `infra/**`, migracje, testy backendu i operacje.
-- Obie osoby zatwierdzają: `packages/contracts/**`, `examples/**`, zmiany semantyki rankingu, komunikatów o przejściach, zasad danych, główne manifesty i lockfile.
-- Właścicielem merge'a lockfile i kontraktu jest osoba B. Własność nie oznacza zakazu poprawek, lecz konieczność uzgodnienia zakresu. Nie zatrzymuj uzgodnionego bootstrapu z powodu domyślnego podziału.
+Użytkownik: „teraz wszystko będzie robił drugi Codex”. Następca odpowiada
+za mobile/UI/dostępność, backend, dane, routing, kontrakty, testy, operacje,
+dokumentację i koordynację Git. Nie czeka na zakończoną sesję ani Claude'a.
+Punkt startowy: `codex-start.md`; kompletne przekazanie: `docs/handoff-codex.md`.
+Audyt bieżącego archiwum i integrację wyszukiwarki/faktów już wykonano.
+Główny scenariusz iPhone/VoiceOver ma potwierdzenie użytkownika; pozostały
+odbiór i nowsze zmiany podsumowania opisuje `docs/testing.md`. Historyczne role A/B
+i polecenia „sam plan” nie są aktywnymi ograniczeniami następcy.
+Bez nowych worktrees, zmiany gałęzi i subagentów. Dotychczasowy zakaz
+commitów/pushów obowiązuje do nowego polecenia użytkownika; samo przejęcie
+odpowiedzialności za Git nie jest poleceniem publikacji.
+
+Rozwiązanie nie może wymagać wewnętrznych systemów UMK/MJO ani ręcznego
+utrzymywania bazy przez Miasto. Publiczne dane/usługi są dopuszczalne zgodnie
+z ich warunkami. ORS pozostaje opcją do oceny, nie przyjętą integracją.
+Audyt programowy nie jest sprawdzeniem w terenie. Wyszukany punkt, poprawna
+trasa i potwierdzona informacja o udogodnieniu to trzy odrębne wyniki.
+
+Pracuj w bieżącym folderze i na bieżącej gałęzi: bez nowych worktrees,
+kopii projektu i przełączania gałęzi. Dawny podział A/B ma charakter
+historyczny; `docs/two-codex-plan.md` odsyła do bieżącego przekazania.
+
+## Odpowiedzialność po przejęciu
+
+- Jeden Codex może zmieniać wszystkie moduły potrzebne do bieżącego zadania,
+  w tym mobile, API, routing, ingestion, infra, kontrakty, przykłady i dokumenty.
+- Zachowuje istniejącą pracę obu poprzedników. Nie przywraca całego repo do
+  HEAD; niezatwierdzone zmiany są częścią prototypu.
+- Sam sprawdza zgodność obu końców kontraktu, fixtures, manifestów i lockfile.
+  Nie jest potrzebna akceptacja nieaktywnych agentów A/B; nadal obowiązują
+  decyzje użytkownika oraz wymagania produktu, wersjonowania i testów.
 
 ## Nienaruszalne reguły produktu
 
@@ -30,7 +57,7 @@ Na początku zadania przeczytaj `docs/status.md`, odpowiedni etap w `plan.md`, o
 
 TypeScript w trybie strict, jawne typy na granicach. `packages/contracts` jest jedynym źródłem schematów Zod i typów API. OpenAPI jest generowane, nigdy utrzymywane ręcznie jako druga definicja. Wire format: JSON, liczby skończone, ISO 8601 UTC, metry/sekundy, GeoJSON `[longitude, latitude]`. Bez `Date`, `Map`, `Set`, `BigInt` i transformacji Zod w schematach przesyłanych po sieci.
 
-API waliduje wejścia i wyjścia. Mobilny klient waliduje odpowiedzi; obcy status nie jest domyślanym sukcesem. App i backend korzystają z tych samych fixtures. Zmiana kontraktu wymaga przykładu, testu, wersji i odbioru obu stron.
+API waliduje wejścia i wyjścia. Mobilny klient waliduje odpowiedzi; obcy status nie jest domyślanym sukcesem. App i backend korzystają z tych samych fixtures. Zmiana kontraktu wymaga przykładu, testu, wersji i weryfikacji integracji klienta oraz serwera przez obecnego wykonawcę.
 
 Logikę kosztu grafu i rozstrzygania faktów implementuj jako czyste funkcje z wstrzykiwanym zegarem. Nie rozpraszaj współczynników po komponentach. Koszty krawędzi nie mogą być ujemne; podział krawędzi bez zmiany terenu nie może zmieniać wyniku metryk.
 
@@ -40,10 +67,10 @@ Nie dodawaj zależności natywnej bez sprawdzenia zgodności z ustaloną wersją
 
 Przed edycją sprawdź Git status, istniejące manifesty, instrukcje katalogowe i zależności zadania. Nie nadpisuj cudzej niezatwierdzonej pracy. Wybierz jedno zadanie z planu, zapisz krótko zakres, założenia i kryteria odbioru. Mały PR powinien mieć test i opis ograniczeń.
 
-Nie zgaduj komend. Docelowe skrypty w README są jeszcze niezaimplementowane; podczas F-01/F-03 utwórz je i sprawdź. Później uruchamiaj właściwy zestaw: lint, typecheck, testy zmienionego pakietu, testy kontraktowe, a przy zmianie UI test web i odnotowany test telefonu. Zmiana plików generowanych wymaga regeneracji i czystego diffu.
+Nie zgaduj komend. Skrypty już istnieją; sprawdź aktualne manifesty, nie odtwarzaj F-01/F-03. Przy implementacji uruchamiaj właściwy zestaw: lint, typecheck, testy zmienionego pakietu, testy kontraktowe, a przy zmianie UI test web i odnotowany test telefonu. Zmiana plików generowanych wymaga regeneracji i czystego diffu. Przy samym planie sprawdź dokumentację i diff; nie raportuj tego jako testów aplikacji.
 
 Bez dostępu do telefonu raportuj "nieprzetestowane na urządzeniu". Nie deklaruj audytu WCAG ani VoiceOver/TalkBack na podstawie testów jednostkowych. Nie twórz kont, nie publikuj aplikacji, nie kupuj usług, nie uruchamiaj produkcyjnych migracji ani nie usuwaj danych bez wyraźnego polecenia.
 
 ## Koniec iteracji
 
-Raport: wykonane zadanie, zmienione pliki, uruchomione komendy i wyniki, niewykonane testy, ryzyka oraz jedno konkretne przekazanie pracy drugiej osobie. Aktualizuj tylko swój wpis w `docs/status.md`. Nigdy nie zaznaczaj zadania jako odebrane bez spełnienia kryteriów.
+Raport: wykonane zadanie, zmienione pliki, uruchomione komendy i wyniki, niewykonane testy, ryzyka oraz następne konkretne zadanie. Dopisuj własny wpis w `docs/status.md`, zachowując historyczne raporty A/B. Nigdy nie zaznaczaj zadania jako odebrane bez spełnienia kryteriów.

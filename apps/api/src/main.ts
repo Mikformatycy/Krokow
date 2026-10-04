@@ -2,16 +2,25 @@ import { buildApi } from './app';
 import { readConfig } from './config';
 import { createDatabaseProbe } from './database';
 import { createSnapshotServices, createSyntheticServices } from './routing';
-import { loadKrakowPilot } from '@krok/ingestion';
+import { loadKrakowCityCatalog, loadKrakowPrototype } from '@krok/ingestion';
 import { PILOT_POLICY } from '@krok/routing';
+import { createCitySearch } from './place-search';
+import type { PlaceSearch } from './place-search';
 
 async function main() {
   const config = readConfig(process.env);
   const database = createDatabaseProbe(config.database);
-  const services = config.dataMode === 'pilot' ? createSnapshotServices((await loadKrakowPilot()).snapshot, PILOT_POLICY)
+  const pilot = config.dataMode === 'pilot' ? (await loadKrakowPrototype()).snapshot : undefined;
+  const services = pilot ? createSnapshotServices(pilot, PILOT_POLICY)
     : config.dataMode === 'synthetic' ? createSyntheticServices() : {};
+  let placeSearch: PlaceSearch | undefined;
+  if (pilot) {
+    try { placeSearch = createCitySearch(await loadKrakowCityCatalog(), pilot); }
+    catch { console.error('City search catalog unavailable. Existing route catalog remains active.'); }
+  }
   const app = buildApi({
     ...services,
+    ...(placeSearch ? { placeSearch } : {}),
     databaseReady: () => database.ready(), allowedOrigins: config.allowedOrigins,
   });
   app.addHook('onClose', () => database.close());

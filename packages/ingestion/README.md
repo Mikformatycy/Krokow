@@ -1,85 +1,74 @@
-# @krok/ingestion — lokalny audyt OSM
+# Ingestion — archiwa, normalizacja i graf
 
-Aktualny pilot jest dostępny przez `loadKrakowPilot()` i `pnpm audit:pilot`:
-[rzeczywisty eksport](data/krakow/README.md), [reguły grafu](../../docs/real-pilot.md).
-API wybiera go jawnie przez `API_DATA_MODE=pilot`. Loader używa archiwum,
-bez ponownego pobierania. Poniższa instrukcja `import:osm` dotyczy osobnego
-adaptera Overpass i lokalnego stagingu.
+Aktualny runtime używa **loadKrakowPrototype()** dla grafu i
+**loadKrakowCityCatalog()** dla wyszukiwarki. Dane są lokalne, sprawdzane
+checksumem; API nie pobiera OSM przy obliczaniu trasy.
 
-Adapter B-04 pobiera mały, stały bbox Krakowa: południe 50.065, zachód
-19.939, północ 50.071, wschód 19.950. Uruchamia go operator, poza obsługą
-zapytań użytkownika. Wynik jest stagingiem danych, bez grafu, katalogu
-punktów aplikacji i nawigacji terenowej.
+- [krakow-prototype](data/krakow-prototype/README.md): graf centrum, 30 punktów.
+- [krakow-search](data/krakow-search/README.md): katalog miejski.
+- [krakow](data/krakow/README.md): starszy fixture regresji pięciu wejść;
+  loadKrakowPilot() i pnpm audit:pilot dotyczą tego starszego zbioru.
+- [Audyt danych](../../docs/data-audit-report.md), [rejestr źródeł](../../docs/data-sources.md).
 
-Z katalogu głównego, przy Node 24 / pnpm przypiętym w repo:
+## Aktualny audyt
+
+Z root, Node/pnpm zgodne z README:
+
+```sh
+pnpm --filter @krok/ingestion exec tsx src/audit-accessibility-cli.ts data/audits/accessibility-audit.json
+pnpm test:ingestion
+```
+
+CLI zapisuje raport; nie pobiera nowych danych, nie zmienia archiwum ani
+nie wykonuje obserwacji w terenie. Raport przed wcześniejszą poprawką
+pozostaje osobnym artefaktem historycznym.
+
+Nowe dane prototypu/katalogu przygotowuje się według README danego archiwum,
+do nowego katalogu, z rzeczywistą datą pozyskania. Zmiana danych runtime
+wymaga audytu, zgodnych metadanych/checksum i kontrolowanego restartu API.
+
+## Oddzielny adapter Overpass — import:osm
+
+Istniejący adapter B-04 ma stały bbox: południe 50.065, zachód 19.939,
+północ 50.071, wschód 19.950. Wynik jest stagingiem; komenda nie podmienia
+automatycznie aktualnego grafu ani miejskiej wyszukiwarki.
 
 ```sh
 pnpm import:osm --help
 pnpm import:osm
-pnpm test:ingestion
-```
-
-Na Windows można użyć wrappera z głównego README:
-
-```powershell
-npm.cmd exec --yes --package=node@24.21.0 --package=pnpm@10.34.6 --call "pnpm import:osm"
-```
-
-Domyślny zapis: `%LOCALAPPDATA%/Krokow/osm` na Windows,
-`~/.local/share/Krokow/osm` na innych systemach. `--root DIR` wybiera
-oddzielny katalog. Pliki nie są automatycznie dodawane do Git.
-
-Można odtworzyć zapisany wcześniej pełny wynik tego samego zapytania
-Overpass `out meta`, podając rzeczywistą datę jego pozyskania:
-
-```sh
 pnpm import:osm --file /absolute/path/raw.json --fetched-at 2026-10-03T18:00:00Z
 ```
 
-To przykład składni; data nie może zastępować nieznanej daty pobrania.
-Plik musi zawierać węzły wszystkich dróg oraz wersje i daty edycji.
-Nie należy przekazywać danych z innego obszaru jako tego snapshotu.
+Ostatnia komenda to przykład składni — trzeba podać rzeczywistą datę
+pozyskania pełnego wyniku Overpass out meta, nie datę ponownego przetworzenia.
+Pobieranie uruchamia operator zgodnie z warunkami źródła.
 
-Układ zapisu:
+Domyślny zapis: %LOCALAPPDATA%/Krokow/osm na Windows lub
+~/.local/share/Krokow/osm na innych systemach; --root DIR wskazuje inny
+katalog. runs/<uuid> przechowuje zapytanie/raw/checksum/manifest i wynik,
+snapshots/<semantic-sha256> niezmienny poprawny snapshot,
+current.json atomowo wskazuje ostatni dobry staging. import.lock blokuje
+równoległy zapis; po awarii operator najpierw sprawdza działanie procesu.
 
-- `runs/<uuid>/query.overpassql`, `raw.json`, `candidate.json`, `manifest.json`:
-  surowe bajty i checksum, wersja adaptera, źródło/licencja, daty i raport.
-  Błąd zapisuje `failure.json`; przed pobraniem raw może nie istnieć.
-- `snapshots/<semantic-sha256>/snapshot.json`: niezmienny poprawny wynik.
-  Kolejne pobranie tej samej treści zachowuje jego pierwotne daty; osobny
-  run zachowuje nowy fetch. Kolejność elementów/tagów i nagłówek Overpass
-  nie tworzą nowej wersji semantycznej. Wersja OSM/tagi/geometria tworzą.
-- `current.json`: atomowo zastępowany wskaźnik ostatniego poprawnego
-  stagingu. Jest rozstrzygający przy przerwaniu procesu, nie sam manifest.
-- `import.lock`: blokada równoległego zapisu. Po awarii procesu operator
-  powinien najpierw potwierdzić, że importer nie działa; adapter nie usuwa
-  samodzielnie zastanej blokady.
+Downloader: jeden endpoint, bez redirectów, do dwóch prób po 40 s,
+limit 8 MiB, respektowane Retry-After. Oczekiwanie ponad 60 s kończy import.
+Niepełny JSON, brak referencji, przyszłe daty, cofnięcie rewizji lub duża
+zmiana pokrycia zatrzymują publikację stagingu. Awaria zachowuje ostatni
+dobry wynik; nie ma cichego fallbacku do synthetic.
 
-Downloader używa jednego endpointu, bez redirectów, najwyżej dwóch prób,
-40 s na próbę i limitu 8 MiB. Respektuje Retry-After; oczekiwanie ponad
-60 s kończy import. Błędny JSON, częściowa odpowiedź, brak referencji,
-daty z przyszłości, cofnięte rewizje i zmiana bez podniesienia wersji są
-odrzucane. Spadek liczby highway ways poniżej połowy lub wzrost ponad
-dwukrotność blokuje zmianę wskaźnika do przeglądu. Nie ma automatycznego
-obejścia blokady. Inny bbox wymaga osobnego katalogu.
+## Semantyka i ograniczenia
 
-Normalizacja obejmuje jawne yes/no akustyki, crossing:signals i poręczy,
-cztery wartości tactile_paving, wybrane nawierzchnie oraz highway=steps.
-Brak tagu nie generuje false. Nieobsługiwane wartości i wieloznaczny level
-trafiają do raportu; tags pozostają w raw i elements. Nie wyprowadzamy
-ciągłych oznaczeń dotykowych z pojedynczego punktu ani poziomu z layer.
-Ogólne check_date nie jest potwierdzeniem konkretnego udogodnienia.
-Paved opisuje klasę nawierzchni, nie równość czy dostępność chodnika.
+Normalizujemy jawne wartości akustyki, crossing:signals, poręczy,
+tactile_paving, nawierzchni i highway=steps. Brak tagu nie tworzy false;
+nieobsługiwane wartości i wieloznaczne poziomy są raportowane.
+Paved nie oznacza równej/dostępnej nawierzchni. Tagi punktu nie przechodzą
+automatycznie na całe przejście, a level nie wynika z samego layer.
 
-Evidence przechodzi istniejący schemat kontraktu i resolver B-03.
-observation/verification pozostają null, freshness unknown. Audyt dotyczy
-pojedynczych obiektów w jednym snapshotcie; nie zamyka konfliktów między
-historycznymi rewizjami ani obserwacjami terenowymi. Przed publikacją grafu
-trzeba połączyć historię dowodów i przejść osobny przegląd B-05/B-06/A.
+Evidence waliduje kontrakt i resolver B-03. Dla OSM observation/verification
+pozostają null; ponowny import nie nadaje świeżości terenowej. Łączenie
+historii wielu źródeł i moderacja wymagają dalszej integracji.
+Nie tworzymy połączeń wyłącznie z bliskości geometrii.
 
-Ograniczenia: lokalny staging, bez trwałości transakcyjnej PostGIS,
-bez gwarancji odporności na awarię zasilania/fsync i bez odzyskiwania blokady
-po zabiciu procesu. Nie powstają połączenia z bliskości geometrycznej.
-Nie ma potwierdzonego pobrania realnego snapshotu w tej iteracji:
-połączenie do publicznego endpointu kończyło się timeoutem.
-Raport i wyniki testów: [B-04](../../docs/b04-ingestion.md).
+Staging nie jest transakcyjną bazą PostGIS ani gwarancją fsync/odporności
+na awarię zasilania. Historyczny timeout Overpass z B-04 nie oznacza braku
+dzisiejszych archiwów pozyskanych później. [Proces aktualizacji](../../docs/operations.md).

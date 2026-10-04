@@ -186,7 +186,8 @@ describe('generated contract artifacts', () => {
     const document = createOpenApiDocument();
     expect(document.openapi).toBe('3.1.0');
     expect(document.info.version).toBe(SCHEMA_VERSION);
-    expect(Object.keys(document.paths)).toHaveLength(8);
+    expect(Object.keys(document.paths)).toHaveLength(9);
+    expect(document.paths['/v1/place-search'].get.operationId).toBe('placeSearch');
   });
   it('validates all generated JSON examples against the same schemas', async () => {
     const base = new URL('../../../examples/', import.meta.url);
