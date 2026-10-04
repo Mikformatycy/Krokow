@@ -1,5 +1,43 @@
 # Status prac
 
+## Film „VoiceOver w ciemności”, 2026-10-04 (Claude Code)
+
+- Zadanie użytkownika: jeden film z nagrań `vid_source/1–3.MP4` (iPhone,
+  VoiceOver). Kadr czarny poza elementem czytanym przez VoiceOver; „światło”
+  przesuwa się za fokusem. Wycięte przerwy i komunikaty techniczne, na końcu
+  czarny ekran z logo i hasłem „To mały krok dla człowieka, ale wielki krok
+  dla Krakowa”.
+- Wynik: `deliverables/Kroków — film.mp4` (2:31,8; 1920×1080, 30 fps,
+  H.264 + AAC, 5,5 MB) z wtopionymi napisami oraz `deliverables/Kroków —
+  film.srt`. Na początku jest czerń z odczytem „VoiceOver włączona” (bez
+  „Expo Go”). Potem jest 1 s ciszy i właściwy montaż. Przy dyktowaniu
+  słychać nagranie użytkownika `vid_source/pawia5.m4a`, zsynchronizowane
+  z pojawianiem się tekstu. Napis tego głosu jest kursywą, a VoiceOver ma
+  zwykłe napisy. Film pokazuje rzeczywisty interfejs i dane OSM: wyszukiwanie,
+  punkt bez potwierdzonego połączenia z siecią pieszą, preferencję akustyki,
+  plan 358 m z „Brak danych o sygnalizacji dźwiękowej”, zastrzeżenia do
+  zapisów OSM, nawierzchnię i źródło „© OpenStreetMap contributors”.
+- Wycięto m.in.: „nagłówek”, „łącze”, „przycisk”, „pole tekstowe”, „edycja”,
+  „tryb znaków/wyrazów”, „punkt wstawiania…”, podpowiedź gestu Z, „Expo Go”,
+  „expanded”, „Inserted”, literowanie fonetyczne, odczyt paska nagrywania
+  i powtórne przejścia przez te same ekrany.
+- Kontrole: ffmpeg — czas 151,8 s (< 180 s), pełne dekodowanie bez błędów,
+  szczyt dźwięku −1,5 dBFS. Ponowna transkrypcja ścieżki montażu (Whisper
+  small, lokalnie) nie zawiera słów technicznych ani uciętych początków słów.
+  Arkusze klatek co 1–2 s: światło na elemencie zgodnym z odczytem.
+  Ostatni render z oryginalnych nagrań (`2.MP4` przywrócono jako
+  `2MP4.MP4`). Poza dyktowaniem dźwięk ma korelację ≥ 0,9987 z poprzednią
+  wersją. Na życzenie użytkownika głos dyktowania brzmi jak półszept:
+  ma −21,9 dB RMS, około 10 dB mniej niż odczyt VoiceOver (−11,6 dB).
+  Przy tej zmianie wymieniono tylko ścieżkę audio, a obraz skopiowano.
+- Ograniczenia: nagrania nie obejmują sekcji „Porównanie, źródła i daty”
+  ani odczytu statusu wiarygodności, więc film nie pokazuje dat pozyskania.
+  Obraz jest skalowany z 384×848, dlatego jest lekko miękki. Nie było
+  odsłuchu przez człowieka; sprawdzono go automatycznie. To montaż nagrań,
+  nie nowy test telefonu.
+- Publikacja: `.gitignore` (`*.mp4`) pomija film, więc wymaga wyjątku albo
+  `git add -f` oraz osobnego polecenia commit/push. Link nie istnieje.
+
 ## Commit całości i wyłączenie nagrań MP4, 2026-10-04
 
 - Użytkownik jawnie zlecił commit i push wszystkich bieżących zmian jako
@@ -64,7 +102,19 @@
   wiarygodność danych, model biznesowy, utrzymanie („pętla danych”),
   przenoszenie („paczka miasta”, „3 × 0 dla Miasta”), skalowanie i plan
   0–3/3–9/9–18 mies. z prośbą do Miasta, partnerów i środowiska.
-- Liczby z repo: 96 556, 30 punktów, 420 m, 479/479, 8 344, 620 PASS,
+- Na prośbę użytkownika slajd 4 pokazuje trasę Galeria Krakowska (drugie
+  wejście północno-zachodnie) → High5ive 1 (wejście wschodnie): 358 m,
+  około 5 min, 1 przejście, brak danych o akustyce — nowy zrzut z aplikacji.
+  Slajd 5 przyjął wpis z tej trasy: way/766325834, zmiana rekordu 2024-04-10.
+- Na polecenie użytkownika usunięto slajd „Od prototypu do usługi”
+  i dodano slajd 2 „Zobacz Kroków oczami osoby niewidomej” z linkiem
+  https://youtu.be/f04loK-2Fmc oraz kodem QR (odczyt OpenCV: PASS).
+  Plan dalszych prac z §6 briefu nie ma już osobnego slajdu.
+- Po pytaniach jury slajd 7 to trzy odpowiedzi: uszkodzenie na trasie
+  (zgłoszenie → ostrzeżenie „niesprawdzone” → audytor i zarządca drogi;
+  formularz zgłoszeń nie istnieje), kto to robi i „płaci ten, kto zaprasza”
+  (link dojścia z coroczną weryfikacją). Ceny i koszty tylko w notatkach.
+- Liczby z repo: 96 556, 30 punktów, 479/479, 8 344, 620 PASS,
   5 prób iPhone/VoiceOver, 200–500 zł/mies. i 8–16 h. Zewnętrzne: WHO 2,2 mld;
   ruch turystyczny Krakowa 2024 (UMK/MOT, komunikat 2025-05-28): 14,72 mln,
   7,95 mln z noclegiem, 2,33 mln z zagranicy.
